@@ -3,6 +3,7 @@ package node;
 import log.Log;
 import log.LogLevel;
 import network.Node;
+import network.connection.packet.Packet;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -22,6 +23,7 @@ public class LocalNode extends Thread {
     private MulticastSocket multicastSocket;
     private ServerSocket clientSocket;
     private ServerSocket nodeSocket;
+    private List<Packet> packetBuffer;
     public LocalNode() {
         this((short)8000, (short)8001);
     }
@@ -41,6 +43,7 @@ public class LocalNode extends Thread {
         lastAnounce = 0;
         clientPort = cPort;
         nodePort = nPort;
+        packetBuffer = new LinkedList<Packet>();
         peers = new LinkedList<Node>();
         try {
             multicastSocket.getChannel().configureBlocking(false);
@@ -76,10 +79,13 @@ public class LocalNode extends Thread {
         }
     }
 
-    public void HandleConnections() {
+    public void handleConnections() {
         for (Node n : peers) {
             if (n.isConnected()) {
-                n.handleConnection();
+                List<Packet> packets = n.handleConnection();
+                if (packets != null) {
+                    packetBuffer.addAll(packets);
+                }
             }
         }
     }
@@ -121,7 +127,7 @@ public class LocalNode extends Thread {
                     }
                 }
             }
-
+            handleConnections();
 
         }
     }
