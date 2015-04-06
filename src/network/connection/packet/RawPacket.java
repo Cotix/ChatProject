@@ -28,4 +28,11 @@ public class RawPacket implements Packet{
         return ret;
     }
 
+    public byte getFirstDataByte() {
+        if (data.length <= 4) {
+            return -128;
+        }
+        return data[4];
+    }
+
 }

@@ -35,4 +35,11 @@ public class StringPacket implements Packet{
         return data.length;
     }
 
+    public byte getFirstDataByte() {
+        if (data.length <= 4) {
+            return -128;
+        }
+        return data[4];
+    }
+
 }
