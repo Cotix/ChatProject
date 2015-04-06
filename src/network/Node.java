@@ -1,6 +1,10 @@
 package network;
 
 import network.connection.*;
+import network.connection.packet.Packet;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -39,11 +43,19 @@ public class Node extends Thread {
         }
     }
 
-    public void handleConnection() {
+    public List<Packet> handleConnection() {
         if (!isConnected()) {
-            return;
+            return null;
         }
+        List<Packet> list = new LinkedList<Packet>();
         con.handleConnection();
+        while (true) {
+            Packet p = con.readPacket();
+            if (p == null) {
+                return list;
+            }
+            list.add(p);
+        }
     }
 
 }
