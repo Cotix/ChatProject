@@ -1,14 +1,14 @@
-package network.connection;
+package network.connection.packet;
 
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by cotix on 4/2/15.
  */
-public class Packet {
+public class StringPacket implements Packet{
     private byte[] data;
 
-    public Packet(byte[] pData) {
+    public StringPacket(byte[] pData) {
         byte[] data = new byte[pData.length + 4];
         data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
         data[1] = (byte)(((pData.length & 0xFF0000) >> 16) & 0xFF);
@@ -17,8 +17,14 @@ public class Packet {
         System.arraycopy(pData, 0, data, 4, pData.length);
     }
 
-    public Packet(String pData) throws UnsupportedEncodingException {
+    public StringPacket(String pData) throws UnsupportedEncodingException {
         this(pData.getBytes("US-ASCII"));
+    }
+
+    public byte[] getData() {
+        byte[] ret = new byte[data.length - 4];
+        System.arraycopy(data, 4, ret, 0, ret.length);
+        return ret;
     }
 
     public byte[] getRawData() {
