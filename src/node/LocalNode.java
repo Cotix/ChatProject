@@ -75,7 +75,7 @@ public class LocalNode extends Thread {
     }
 
     public void Announce() {
-        if (System.currentTimeMillis() - lastAnounce <= 60000) {
+        if (System.currentTimeMillis() - lastAnounce <= 5000) {
             return;
         }
         String msg = null;
@@ -87,6 +87,7 @@ public class LocalNode extends Thread {
         } catch (IOException e) {
             Log.Log("Announcing went wrong!", LogLevel.ERROR);
         }
+        Log.Log("Announcement sent!", LogLevel.NONE);
     }
 
     public void handleConnections() {
@@ -121,8 +122,11 @@ public class LocalNode extends Thread {
             try {
                 msg = new String(buf, "US-ASCII");
                 msg = msg.substring(0, recv.getLength());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                //
+            }
+            if (msg != null) {
+                Log.Log("Received announcement: " + msg, LogLevel.NONE);
             }
             if (msg != null && msg.contains("HELLO")) {
                 String[] announcements = msg.split("HELLO");
