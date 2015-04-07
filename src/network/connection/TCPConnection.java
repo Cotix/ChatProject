@@ -49,6 +49,7 @@ public class TCPConnection implements Connection {
                 Log.Log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
             }
         }
+        Log.Log("TCPConnection to " + ipAddress + " on port " + port + " connected!", LogLevel.INFO);
     }
 
     @Override

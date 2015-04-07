@@ -1,4 +1,4 @@
-package client.view.model;
+package client.model;
 
 /**
  * Created by destion on 7-4-15.

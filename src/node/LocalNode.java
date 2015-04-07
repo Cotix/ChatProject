@@ -30,14 +30,13 @@ public class LocalNode extends Thread {
     public LocalNode(short cPort, short nPort, String IP) {
         localhost = IP;
         try {
-            multicastGroup = InetAddress.getByName("224.0.2.1");
+            multicastGroup = InetAddress.getByName("228.2.2.2");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         try {
             multicastSocket = new MulticastSocket(6789);
             multicastSocket.joinGroup(multicastGroup);
-            multicastSocket.setInterface(InetAddress.getByName(IP));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,8 +65,8 @@ public class LocalNode extends Thread {
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
                     n.connect();
-                    return;
                 }
+                return;
             }
         }
         Log.Log("Adding node " + ip + ":" + port, LogLevel.INFO);
