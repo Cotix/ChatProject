@@ -18,10 +18,7 @@ public class Node extends Thread {
     }
 
     public boolean isConnected() {
-        if (con == null) {
-            return false;
-        }
-        return con.isConnected();
+        return con != null && con.isConnected();
     }
 
     public String getIp() {

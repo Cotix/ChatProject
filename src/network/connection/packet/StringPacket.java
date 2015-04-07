@@ -39,4 +39,14 @@ public class StringPacket implements Packet{
         return data[4];
     }
 
+    public String getDataAsString() {
+        try {
+            return new String(getData(), "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            // TODO: better catching?
+        }
+        return "";
+    }
+
 }

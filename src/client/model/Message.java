@@ -7,24 +7,29 @@ public class Message {
 
     private long timestamp;
     private String message;
-    private String publicKey;
+    private String publicKeySender;
+    private String publicKeyReceiver;
 
 
     //TODO public key
 
-    public Message(String message, String publicKey){
+    public Message(String message, String sender, String receiver){
         this.timestamp = System.currentTimeMillis() / 1000L;
 
         this.message = message;
 
-        this.publicKey = publicKey;
+        this.publicKeySender = sender;
+        this.publicKeyReceiver = receiver;
     }
 
     public String getMessage(){
         return this.message;
     }
-    public String getPublicKey(){
-        return this.publicKey;
+    public String getPublicKeySender(){
+        return this.publicKeySender;
+    }
+    public String getPublicKeyReceiver(){
+        return this.publicKeyReceiver;
     }
     public long getTimestamp(){
         return this.timestamp;
@@ -32,6 +37,6 @@ public class Message {
 
     public String toString(){
         //TODO format so node understands
-        return String.format("%s %s %s \n", timestamp, publicKey, message);
+        return String.format("%s %s %s %s \n", timestamp, publicKeySender, publicKeyReceiver, message);
     }
 }
