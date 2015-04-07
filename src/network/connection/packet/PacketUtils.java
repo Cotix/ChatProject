@@ -1,8 +1,5 @@
 package network.connection.packet;
 
-/**
- * Created by cotix on 4/6/15.
- */
 public class PacketUtils {
     public static enum PacketType {
         UNKNOWN((byte)-128);

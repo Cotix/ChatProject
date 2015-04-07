@@ -11,9 +11,6 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by cotix on 4/6/15.
- */
 public class LocalNode extends Thread {
     private short clientPort;
     private short nodePort;

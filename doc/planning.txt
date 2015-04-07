@@ -26,9 +26,9 @@ we 8-04  | node & client                                                 |
 th 9-04  | node & client                                                 |
 fr 10-04 | node & client                                                 | TODO: specify stuff
 ---------+---------------+---------------+---------------+---------------+
-mo 13-04 |                               | demo          |               |
-tu 14-04 |                                                               |
-we 15-04 |                               | final demo                    |
+mo 13-04 | hotfixes because broken       | demo          |               |
+tu 14-04 | report                                                        |
+we 15-04 | report                        | final demo                    |
 th 16-04 | test resit    |                                               |
 fr 17-04 |                               | math resit    | failed demo   |
 ---------+---------------+---------------+---------------+---------------+

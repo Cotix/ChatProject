@@ -2,9 +2,6 @@ package network.connection.packet;
 
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by cotix on 4/2/15.
- */
 public class StringPacket implements Packet{
     private byte[] data;
 

@@ -6,10 +6,6 @@ import network.connection.packet.Packet;
 import java.util.LinkedList;
 import java.util.List;
 
-
-/**
- * Created by cotix on 4/2/15.
- */
 public class Node extends Thread {
     private String ip;
     private short port;
