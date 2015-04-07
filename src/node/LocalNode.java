@@ -22,11 +22,13 @@ public class LocalNode extends Thread {
     private ServerSocket clientSocket;
     private ServerSocket nodeSocket;
     private List<Packet> packetBuffer;
-    public LocalNode() {
-        this((short)8000, (short)8001);
+    private String localhost;
+    public LocalNode(String myIP) {
+        this((short)8000, (short)8001, myIP);
     }
 
-    public LocalNode(short cPort, short nPort) {
+    public LocalNode(short cPort, short nPort, String IP) {
+        localhost = IP;
         try {
             multicastGroup = InetAddress.getByName("228.5.6.7");
         } catch (UnknownHostException e) {
@@ -52,7 +54,13 @@ public class LocalNode extends Thread {
     }
 
     public void addNode(String ip, short port) {
-        Log.Log("Calling addNode with " + ip + ":" + port, LogLevel.INFO);
+        try {
+            if (ip.equals(localhost)) {
+                return;
+            }
+        } catch (Exception e) {
+            return;
+        }
         for (Node n : peers) {
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
@@ -71,11 +79,7 @@ public class LocalNode extends Thread {
             return;
         }
         String msg = null;
-        try {
-            msg = "HELLO" + Inet4Address.getLocalHost() + ":" + nodeSocket.getLocalPort();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+       msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
             multicastSocket.send(hi);
@@ -126,7 +130,7 @@ public class LocalNode extends Thread {
                     String[] split = announcement.split(":");
                     if (split.length == 2) {
                         try {
-                            addNode(split[0].split("/")[1], Short.parseShort(split[1]));
+                            addNode(split[0], Short.parseShort(split[1]));
                         } catch (Exception e) {
                             Log.Log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
