@@ -58,7 +58,7 @@ public class TCPConnection implements Connection {
         if (!isConnected) {
             try {
                 isConnected = true;
-                sock = new Socket(ipAddress, port);
+                sock = ne0w Socket(ipAddress, port);
                 in = new DataInputStream(sock.getInputStream());
                 out = new DataOutputStream(sock.getOutputStream());
             } catch (IOException e) {
