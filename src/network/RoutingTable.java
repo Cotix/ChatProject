@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class RoutingTable {
-    private Map<Address, Node> routingMap;
-    private Map<Node, Set<Address>> neighbourNodes;
+    private Map<Address, Node> routes;
+    private Map<Node, Map<Address, Integer>> neighbourNodes;
 
     public RoutingTable() {
-        routingMap = new HashMap();
-        neighbourNodes = new HashMap<Node, Set<Address>>();
+        routes = new HashMap();
+        neighbourNodes = new HashMap<>();
     }
 
 
