@@ -1,4 +1,4 @@
-package client.view.view;
+package client.view;
 
 /**
  * Created by destion on 7-4-15.
