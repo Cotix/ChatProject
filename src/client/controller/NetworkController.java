@@ -30,7 +30,7 @@ public class NetworkController implements Runnable {
 
     public void send(String message) throws UnsupportedEncodingException {
         //TODO switch out placeholders (PH)
-        Message mess = new Message(message, "PH");
+        Message mess = new Message(message, "PH", "PH");
         connection.sendPacket(new StringPacket(mess.toString()));
     }
 }
