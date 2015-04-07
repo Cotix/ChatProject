@@ -13,9 +13,6 @@ import network.connection.packet.Packet;
 import network.connection.packet.RawPacket;
 import network.connection.packet.StringPacket;
 
-/**
- * Created by cotix on 4/2/15.
- */
 public class TCPConnection implements Connection {
     private String ipAddress;
     private short port;

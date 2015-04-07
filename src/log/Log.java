@@ -6,9 +6,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by cotix on 4/2/15.
- */
 public class Log {
     private static PrintStream logOut = System.out;
     private static Set<LogLevel> enabledLogLevels = new HashSet<LogLevel>();
