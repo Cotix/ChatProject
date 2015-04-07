@@ -22,19 +22,22 @@ public class LocalNode extends Thread {
     private ServerSocket clientSocket;
     private ServerSocket nodeSocket;
     private List<Packet> packetBuffer;
-    public LocalNode() {
-        this((short)8000, (short)8001);
+    private String localhost;
+    public LocalNode(String myIP) {
+        this((short)8000, (short)8001, myIP);
     }
 
-    public LocalNode(short cPort, short nPort) {
+    public LocalNode(short cPort, short nPort, String IP) {
+        localhost = IP;
         try {
-            multicastGroup = InetAddress.getByName("228.5.6.7");
+            multicastGroup = InetAddress.getByName("224.0.2.1");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         try {
             multicastSocket = new MulticastSocket(6789);
             multicastSocket.joinGroup(multicastGroup);
+            multicastSocket.setInterface(InetAddress.getByName(IP));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,10 +46,22 @@ public class LocalNode extends Thread {
         nodePort = nPort;
         packetBuffer = new LinkedList<Packet>();
         peers = new LinkedList<Node>();
+        try {
+            multicastSocket.setSoTimeout(1);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         Log.Log("Setting up a localnode.", LogLevel.INFO);
     }
 
     public void addNode(String ip, short port) {
+        try {
+            if (ip.equals(localhost)) {
+                return;
+            }
+        } catch (Exception e) {
+            return;
+        }
         for (Node n : peers) {
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
@@ -61,15 +76,11 @@ public class LocalNode extends Thread {
     }
 
     public void Announce() {
-        if (System.currentTimeMillis() - lastAnounce <= 60000) {
+        if (System.currentTimeMillis() - lastAnounce <= 5000) {
             return;
         }
         String msg = null;
-        try {
-            msg = "HELLO" + Inet4Address.getLocalHost() + ":" + nodeSocket.getLocalPort();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
             multicastSocket.send(hi);
@@ -77,6 +88,7 @@ public class LocalNode extends Thread {
         } catch (IOException e) {
             Log.Log("Announcing went wrong!", LogLevel.ERROR);
         }
+        Log.Log("Announcement sent!", LogLevel.NONE);
     }
 
     public void handleConnections() {
@@ -106,13 +118,16 @@ public class LocalNode extends Thread {
             try {
                 multicastSocket.receive(recv);
             } catch (IOException e) {
-                Log.Log("LocalNode failed to read multicast!", LogLevel.ERROR);
             }
             String msg = null;
             try {
                 msg = new String(buf, "US-ASCII");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                msg = msg.substring(0, recv.getLength());
+            } catch (Exception e) {
+                //
+            }
+            if (msg != null && msg.length() != buf.length) {
+                Log.Log("Received announcement: " + msg, LogLevel.NONE);
             }
             if (msg != null && msg.contains("HELLO")) {
                 String[] announcements = msg.split("HELLO");
@@ -120,15 +135,20 @@ public class LocalNode extends Thread {
                     String[] split = announcement.split(":");
                     if (split.length == 2) {
                         try {
-                            addNode(split[0].split("/")[1], Short.parseShort(split[1]));
-                        } catch (Exception E) {
-                            //Not a good format!
+                            addNode(split[0], Short.parseShort(split[1]));
+                        } catch (Exception e) {
+                            Log.Log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
                     }
                 }
             }
             handleConnections();
 
+            try {
+                this.sleep(100);
+            } catch (InterruptedException e) {
+                Log.Log("Sleep got interrupted of localnode!", LogLevel.INFO);
+            }
         }
     }
 }

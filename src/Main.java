@@ -7,7 +7,7 @@ import node.LocalNode;
 public class Main {
     public static void main(String[] arg) {
         Log.enableAllLevels();
-        LocalNode myNode = new LocalNode();
+        LocalNode myNode = new LocalNode("130.89.226.131");
         myNode.run();
 
     }
