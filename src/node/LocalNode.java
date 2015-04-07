@@ -43,12 +43,6 @@ public class LocalNode extends Thread {
         nodePort = nPort;
         packetBuffer = new LinkedList<Packet>();
         peers = new LinkedList<Node>();
-        try {
-            DatagramChannel c = multicastSocket.getChannel();
-            System.out.println(c);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Log.Log("Setting up a localnode.", LogLevel.INFO);
     }
 
