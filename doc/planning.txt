@@ -1,0 +1,34 @@
+1. Tasks
+
+Node:				Noah, Erik
+- Forwarding
+- Broadcast presence
+- "packet loss"
+- Data types
+
+Client:				Mick, Martijn
+- GUI
+- Connection to node
+- Authentication
+- Encryption
+
+Report:
+- State Diagram
+- Description
+- Tests
+
+2. Planning
+
+         | 8:45          | 10:45         | 13:45         | 15:45 - 16:30 |
+---------+---------------+---------------+---------------+---------------+
+tu 7-04  | lecture (?)   | planning      | node & client                 |
+we 8-04  | node & client                                                 |
+th 9-04  | node & client                                                 |
+fr 10-04 | node & client                                                 | TODO: specify stuff
+---------+---------------+---------------+---------------+---------------+
+mo 13-04 |                               | demo          |               |
+tu 14-04 |                                                               |
+we 15-04 |                               | final demo                    |
+th 16-04 | test resit    |                                               |
+fr 17-04 |                               | math resit    | failed demo   |
+---------+---------------+---------------+---------------+---------------+
