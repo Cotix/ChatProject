@@ -1,0 +1,6 @@
+# Compiled
+out/
+
+# JetBrains
+.idea/
+*.iml
