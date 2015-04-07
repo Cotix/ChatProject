@@ -1,5 +1,7 @@
 package network;
 
+import log.Log;
+import log.LogLevel;
 import network.connection.*;
 import network.connection.packet.Packet;
 
@@ -33,6 +35,14 @@ public class Node extends Thread {
         if (!isConnected()) {
             con = c;
             c.connect(ip, port);
+        }
+    }
+
+    public void send(Packet p) {
+        if (isConnected()) {
+            con.sendPacket(p);
+        } else {
+            Log.Log("Tried to send while not connected!", LogLevel.ERROR);
         }
     }
 

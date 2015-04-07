@@ -11,6 +11,10 @@ public class DistancePacket extends StringPacket {
         super(mapToString(table));
     }
 
+    public DistancePacket(byte[] data) {
+        super(data);
+    }
+
     public static String mapToString(Map<Address, Integer> map) {
         String result = "";
         for (Address entry : map.keySet()) {
