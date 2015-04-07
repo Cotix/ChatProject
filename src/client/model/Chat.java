@@ -3,10 +3,9 @@ package client.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by martijn on 7-4-15.
- */
 public class Chat {
+
+    public static final int BUFFER_SIZE = 100;
 
     private String publicKey;
     private List<Message> messages = new ArrayList<>();
@@ -15,17 +14,15 @@ public class Chat {
         this.publicKey = publicKey;
     }
 
-    public void addMessage(Message msg) {
-        int i = 0;
-        for (Message msgs : messages) {
-            if (msgs.getTimestamp() < msg.getTimestamp()) {
-                messages.add(i, msg);
+    public void addMessage(Message message) {
+        for (int i = 0; i < messages.size(); i++) {
+            if (message.getTimestamp() > messages.get(i).getTimestamp()) {
+                messages.add(i, message);
                 break;
             }
-            i++;
         }
-        if (messages.size() > 100) {
-            messages.remove(100);
+        if (messages.size() > BUFFER_SIZE) {
+            messages.remove(BUFFER_SIZE);
         }
     }
 
