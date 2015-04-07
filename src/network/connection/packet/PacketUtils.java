@@ -2,7 +2,7 @@ package network.connection.packet;
 
 public class PacketUtils {
     public static enum PacketType {
-        UNKNOWN((byte)-128), DISTANCE((byte) 1);
+        UNKNOWN((byte)-128), DISTANCE((byte) 1), PING((byte) 2), PONG((byte) 3);
         byte value;
         PacketType(byte v) {
             value = v;
