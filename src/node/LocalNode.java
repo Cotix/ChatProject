@@ -50,6 +50,7 @@ public class LocalNode extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.Log("Setting up a localnode.", LogLevel.INFO);
     }
 
     public void addNode(String ip, short port) {
@@ -61,6 +62,7 @@ public class LocalNode extends Thread {
                 }
             }
         }
+        Log.Log("Adding node " + ip + ":" + port, LogLevel.INFO);
         Node node = new Node(ip, port);
         node.connect();
     }
