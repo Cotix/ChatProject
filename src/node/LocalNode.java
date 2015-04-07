@@ -143,8 +143,11 @@ public class LocalNode extends Thread {
                 List<Packet> packets = packetBuffer.get(n);
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
-                    handlePacket(p, n);
+                    if (handlePacket(p, n)) {
+                        toRemove.add(p);
+                    }
                 }
+                packets.removeAll(toRemove);
             }
         }
     }
@@ -190,7 +193,7 @@ public class LocalNode extends Thread {
                 }
             }
             handleConnections();
-
+            forwardPackets();
             try {
                 this.sleep(10);
             } catch (InterruptedException e) {
