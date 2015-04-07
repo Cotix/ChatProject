@@ -30,7 +30,7 @@ public class LocalNode extends Thread {
     public LocalNode(short cPort, short nPort, String IP) {
         localhost = IP;
         try {
-            multicastGroup = InetAddress.getByName("228.5.6.7");
+            multicastGroup = InetAddress.getByName("224.0.0.0");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
