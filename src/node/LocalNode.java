@@ -43,10 +43,16 @@ public class LocalNode extends Thread {
         nodePort = nPort;
         packetBuffer = new LinkedList<Packet>();
         peers = new LinkedList<Node>();
+        try {
+            multicastSocket.setSoTimeout(1);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         Log.Log("Setting up a localnode.", LogLevel.INFO);
     }
 
     public void addNode(String ip, short port) {
+        Log.Log("Calling addNode with " + ip + ":" + port, LogLevel.INFO);
         for (Node n : peers) {
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
@@ -106,11 +112,11 @@ public class LocalNode extends Thread {
             try {
                 multicastSocket.receive(recv);
             } catch (IOException e) {
-                Log.Log("LocalNode failed to read multicast!", LogLevel.ERROR);
             }
             String msg = null;
             try {
                 msg = new String(buf, "US-ASCII");
+                msg = msg.substring(0, recv.getLength());
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -121,14 +127,19 @@ public class LocalNode extends Thread {
                     if (split.length == 2) {
                         try {
                             addNode(split[0].split("/")[1], Short.parseShort(split[1]));
-                        } catch (Exception E) {
-                            //Not a good format!
+                        } catch (Exception e) {
+                            Log.Log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
                     }
                 }
             }
             handleConnections();
 
+            try {
+                this.sleep(100);
+            } catch (InterruptedException e) {
+                Log.Log("Sleep got interrupted of localnode!", LogLevel.INFO);
+            }
         }
     }
 }
