@@ -10,23 +10,23 @@ public class Log {
     private static PrintStream logOut = System.out;
     private static Set<LogLevel> enabledLogLevels = new HashSet<LogLevel>();
 
-    public void enableLevel(LogLevel lvl) {
+    public static void enableLevel(LogLevel lvl) {
         if (!enabledLogLevels.contains(lvl)) {
             enabledLogLevels.add(lvl);
         }
     }
 
-    public void disableLevel(LogLevel lvl) {
+    public static void disableLevel(LogLevel lvl) {
         enabledLogLevels.remove(lvl);
     }
 
-    public void enableAllLevels() {
+    public static void enableAllLevels() {
         for(LogLevel lvl : LogLevel.values()) {
             enableLevel(lvl);
         }
     }
 
-    public void disableAllLevels() {
+    public static void disableAllLevels() {
         enabledLogLevels = new HashSet<LogLevel>();
     }
 

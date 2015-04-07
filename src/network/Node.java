@@ -33,7 +33,7 @@ public class Node extends Thread {
     }
 
     public void connect(Connection c) {
-        if (isConnected() == false) {
+        if (!isConnected()) {
             con = c;
             c.connect(ip, port);
         }
