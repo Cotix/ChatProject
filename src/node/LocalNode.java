@@ -75,7 +75,7 @@ public class LocalNode extends Thread {
     }
 
     public void Announce() {
-        if (System.currentTimeMillis() - lastAnounce <= 5000) {
+        if (System.currentTimeMillis() - lastAnounce <= 30000) {
             return;
         }
         String msg = null;
@@ -144,7 +144,7 @@ public class LocalNode extends Thread {
             handleConnections();
 
             try {
-                this.sleep(100);
+                this.sleep(10);
             } catch (InterruptedException e) {
                 Log.Log("Sleep got interrupted of localnode!", LogLevel.INFO);
             }
