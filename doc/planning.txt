@@ -1,12 +1,12 @@
 1. Tasks
 
-Node:				Noah, Erik
+Node:			   	    Noah, Erik
 - Forwarding
 - Broadcast presence
 - "packet loss"
 - Data types
 
-Client:				Mick, Martijn
+Client:			   	    Mick, Martijn
 - GUI
 - Connection to node
 - Authentication
