@@ -125,7 +125,7 @@ public class LocalNode extends Thread {
             } catch (Exception e) {
                 //
             }
-            if (msg != null && msg.length() > 0) {
+            if (msg != null && msg.length() != buf.length) {
                 Log.Log("Received announcement: " + msg, LogLevel.NONE);
             }
             if (msg != null && msg.contains("HELLO")) {
