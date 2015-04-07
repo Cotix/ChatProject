@@ -8,6 +8,7 @@ import network.connection.packet.Packet;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.channels.DatagramChannel;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,11 +43,7 @@ public class LocalNode extends Thread {
         nodePort = nPort;
         packetBuffer = new LinkedList<Packet>();
         peers = new LinkedList<Node>();
-        try {
-            multicastSocket.getChannel().configureBlocking(false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Log.Log("Setting up a localnode.", LogLevel.INFO);
     }
 
     public void addNode(String ip, short port) {
@@ -58,6 +55,7 @@ public class LocalNode extends Thread {
                 }
             }
         }
+        Log.Log("Adding node " + ip + ":" + port, LogLevel.INFO);
         Node node = new Node(ip, port);
         node.connect();
     }
@@ -66,7 +64,12 @@ public class LocalNode extends Thread {
         if (System.currentTimeMillis() - lastAnounce <= 60000) {
             return;
         }
-        String msg = "HELLO" + nodeSocket.getInetAddress() + ":" + nodeSocket.getLocalPort();
+        String msg = null;
+        try {
+            msg = "HELLO" + Inet4Address.getLocalHost() + ":" + nodeSocket.getLocalPort();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
             multicastSocket.send(hi);
@@ -117,7 +120,7 @@ public class LocalNode extends Thread {
                     String[] split = announcement.split(":");
                     if (split.length == 2) {
                         try {
-                            addNode(split[0], Short.parseShort(split[1]));
+                            addNode(split[0].split("/")[1], Short.parseShort(split[1]));
                         } catch (Exception E) {
                             //Not a good format!
                         }
