@@ -30,13 +30,14 @@ public class LocalNode extends Thread {
     public LocalNode(short cPort, short nPort, String IP) {
         localhost = IP;
         try {
-            multicastGroup = InetAddress.getByName("224.0.0.0");
+            multicastGroup = InetAddress.getByName("224.0.2.1");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         try {
             multicastSocket = new MulticastSocket(6789);
             multicastSocket.joinGroup(multicastGroup);
+            multicastSocket.setInterface(InetAddress.getByName(IP));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,7 +80,7 @@ public class LocalNode extends Thread {
             return;
         }
         String msg = null;
-       msg = "HELLO" + localhost + ":" + nodePort;
+        msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
             multicastSocket.send(hi);
