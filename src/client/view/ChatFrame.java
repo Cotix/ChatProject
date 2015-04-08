@@ -14,7 +14,7 @@ public class ChatFrame extends JFrame {
     private EntryBar bar;
     private JMenu menu = new JMenu("Window");
     private JMenuBar menuBar = new JMenuBar();
-    private JCheckBoxMenuItem fullcreen = new JCheckBoxMenuItem("Fullscreen", false);
+    private JCheckBoxMenuItem fullscreen = new JCheckBoxMenuItem("Fullscreen", false);
     private NetworkController net;
 
     private JList<String> chatJList = new JList<String>();
@@ -39,10 +39,10 @@ public class ChatFrame extends JFrame {
 
 
         this.menuBar.add(menu);
-        menu.add(fullcreen);
+        menu.add(fullscreen);
 
 
-        fullcreen.setMnemonic(KeyEvent.VK_F11);
+        fullscreen.setMnemonic(KeyEvent.VK_F11);
 
         this.getContentPane().add(this.menuBar, BorderLayout.NORTH);
         this.getContentPane().add(this.bar, BorderLayout.SOUTH);
@@ -51,6 +51,7 @@ public class ChatFrame extends JFrame {
 
         this.setSize(400, 400);
         this.setResizable(false);
+        setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
 
