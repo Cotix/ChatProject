@@ -2,8 +2,6 @@ package node;
 
 import log.Log;
 import log.LogLevel;
-import network.Node;
-import network.RoutingTable;
 import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
@@ -181,6 +179,14 @@ public class LocalNode extends Thread {
                 break;
             case PING:
                 Log.log("Received a ping packet!", LogLevel.INFO);
+                CurrentTimePacket pong = new CurrentTimePacket(packet.getRawData());
+                pong.setType(PacketType.PONG);
+                n.send(pong);
+                break;
+            case PONG:
+                CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
+
+                Log.log("Received a pong packet time diff: " + pongPacket.getTimeDifference(), LogLevel.INFO);
         }
 
         return true;

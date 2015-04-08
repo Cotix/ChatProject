@@ -1,4 +1,4 @@
-package network;
+package node;
 
 import log.Log;
 import log.LogLevel;
