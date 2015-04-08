@@ -19,6 +19,12 @@ public class Node implements Runnable {
         this.port = port;
     }
 
+    public Node(Connection c, String ip, short port) {
+        con = c;
+        this.ip = ip;
+        this.port = port;
+    }
+
     public boolean isConnected() {
         return con != null && con.isConnected();
     }
