@@ -130,7 +130,7 @@ public class LocalNode extends Thread {
         if (System.currentTimeMillis() - lastAnounce <= 30000) {
             return;
         }
-        String msg = null;
+        String msg;
         msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
