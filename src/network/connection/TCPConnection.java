@@ -35,6 +35,24 @@ public class TCPConnection implements Connection {
         sock = new Socket();
     }
 
+    public TCPConnection(Socket s) {
+        sock = s;
+        packetQueue = new LinkedBlockingQueue<Packet>();
+        this.port = (short) s.getPort();
+        this.ipAddress = s.getLocalAddress().toString();
+
+        try {
+            in = new DataInputStream(sock.getInputStream());
+            out = new DataOutputStream(sock.getOutputStream());
+            isConnected = true;
+            Log.log("TCPConnection to " + ipAddress + " on port " + port + " connected!", LogLevel.INFO);
+        } catch (IOException e) {
+            isConnected = false;
+            Log.log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
+        }
+
+    }
+
     @Override
     public void connect() {
         if (!isConnected) {
