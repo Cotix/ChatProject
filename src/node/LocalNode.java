@@ -1,10 +1,12 @@
 package node;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import log.Log;
 import log.LogLevel;
 import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
+import settings.Configuration;
 
 import java.io.IOException;
 import java.net.*;
@@ -90,15 +92,12 @@ public class LocalNode extends Thread {
         if (ip.equals(localhost) && port == nodePort) {
             return;
         }
-        if (settings.Configuration.ONENODEPERIP) {
-            for (Node n : peers) {
-                Log.log(n.getIp() + " <> " + ip, LogLevel.NONE);
-                if (n.getIp().equals(ip)) {
-                    if (!n.isConnected()) {
-                        n.connect();
-                    }
-                    return;
+        for (Node n : peers) {
+            if (n.getIp().equals(ip) && (n.getPort() == port || Configuration.ONENODEPERIP)) {
+                if (!n.isConnected()) {
+                    n.connect();
                 }
+                return;
             }
         }
         Log.log("Adding node " + ip + ":" + port, LogLevel.INFO);
@@ -110,8 +109,7 @@ public class LocalNode extends Thread {
 
     private void addNode(Node node) {
         for (Node n : peers) {
-            Log.log(n.getIp() + " <> " + node.getIp(), LogLevel.NONE);
-            if (n.getIp().equals(node.getIp())) {
+            if (n.getIp().equals(node.getIp()) && (n.getPort() == node.getPort() || Configuration.ONENODEPERIP)) {
                 if (!n.isConnected()) {
                     n.connect();
                 }
@@ -124,7 +122,7 @@ public class LocalNode extends Thread {
     }
 
     public void Announce() {
-        if (System.currentTimeMillis() - lastAnounce <= 30000) {
+        if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCETIME) {
             return;
         }
         pingAllNodes();
@@ -150,10 +148,11 @@ public class LocalNode extends Thread {
         for (Node n : peers) {
             if (n.isConnected()) {
                 List<Packet> packets = n.handleConnection();
-                if (packets != null) {
+                if (packets != null && packets.size() > 0) {
                     if (!packetBuffer.containsKey(n)) {
                         packetBuffer.put(n, new LinkedList<Packet>());
                     }
+                    Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.INFO);
                     packetBuffer.get(n).addAll(packets);
                 }
             }
@@ -171,6 +170,7 @@ public class LocalNode extends Thread {
     }
 
     private boolean handlePacket(Packet packet, Node n) {
+        Log.log("Received a packet!", LogLevel.INFO);
         PacketType type = getPacketType(packet);
         switch(type) {
             case UNKNOWN:
@@ -192,6 +192,7 @@ public class LocalNode extends Thread {
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
 
                 Log.log("Received a pong packet time diff: " + pongPacket.getTimeDifference(), LogLevel.INFO);
+                break;
         }
 
         return true;
@@ -231,7 +232,8 @@ public class LocalNode extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        clientThread.start();
+        nodeThread.start();
         while (true) {
             Announce();
             byte[] buf = new byte[1000];
@@ -250,7 +252,7 @@ public class LocalNode extends Thread {
             if (msg != null && msg.length() != buf.length) {
                 Log.log("Received announcement: " + msg, LogLevel.NONE);
             }
-            if (msg != null && msg.contains("HELLO")) {
+            if (msg != null && msg.contains("HELLO") && Math.random() >= 0.75) {
                 String[] announcements = msg.split("HELLO");
                 for (String announcement : announcements) {
                     String[] split = announcement.split(":");
