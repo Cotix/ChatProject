@@ -8,7 +8,7 @@ import network.connection.packet.Packet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Node extends Thread {
+public class Node implements Runnable {
     private String ip;
     private short port;
     private Connection con;
@@ -50,8 +50,7 @@ public class Node extends Thread {
         if (!isConnected()) {
             return null;
         }
-        List<Packet> list = new LinkedList<Packet>();
-        con.handleConnection();
+        List<Packet> list = new LinkedList<>();
         while (true) {
             Packet p = con.readPacket();
             if (p == null) {
@@ -61,4 +60,8 @@ public class Node extends Thread {
         }
     }
 
+    @Override
+    public void run() {
+        con.handleConnection();
+    }
 }

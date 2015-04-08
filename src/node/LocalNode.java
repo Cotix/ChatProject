@@ -68,6 +68,7 @@ public class LocalNode extends Thread {
             return;
         }
         for (Node n : peers) {
+            Log.Log(n.getIp() + " <> " + ip, LogLevel.INFO);
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
                     n.connect();
@@ -77,7 +78,9 @@ public class LocalNode extends Thread {
         }
         Log.Log("Adding node " + ip + ":" + port, LogLevel.INFO);
         Node node = new Node(ip, port);
+        peers.add(node);
         node.connect();
+        (new Thread(node)).start();
     }
 
     public void Announce() {
@@ -195,7 +198,7 @@ public class LocalNode extends Thread {
             handleConnections();
             forwardPackets();
             try {
-                this.sleep(10);
+                sleep(10);
             } catch (InterruptedException e) {
                 Log.Log("Sleep got interrupted of localnode!", LogLevel.INFO);
             }
