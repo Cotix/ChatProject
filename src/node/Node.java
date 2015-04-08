@@ -34,6 +34,8 @@ public class Node implements Runnable {
         return ip;
     }
 
+    public short getPort() {return port;}
+
     public void connect() {
         connect(new TCPConnection());
     }
