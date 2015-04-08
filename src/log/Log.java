@@ -30,7 +30,7 @@ public class Log {
         enabledLogLevels = new HashSet<LogLevel>();
     }
 
-    public static void Log(String msg, LogLevel lvl) {
+    public static void log(String msg, LogLevel lvl) {
         if (enabledLogLevels.contains(lvl)) {
             Date now = new Date();
             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss a");

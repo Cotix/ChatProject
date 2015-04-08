@@ -42,7 +42,7 @@ public class Node implements Runnable {
         if (isConnected()) {
             con.sendPacket(p);
         } else {
-            Log.Log("Tried to send while not connected!", LogLevel.ERROR);
+            Log.log("Tried to send while not connected!", LogLevel.ERROR);
         }
     }
 
