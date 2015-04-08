@@ -13,11 +13,9 @@ public class Message {
 
     //TODO public key
 
-    public Message(String message, String sender, String receiver){
-        this.timestamp = System.currentTimeMillis() / 1000L;
-
+    public Message(String message, String sender, String receiver, long timestamp){
+        this.timestamp = timestamp;
         this.message = message;
-
         this.publicKeySender = sender;
         this.publicKeyReceiver = receiver;
     }

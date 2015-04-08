@@ -25,7 +25,6 @@ public class NetworkController implements Runnable {
     @Override
     public void run() {
         connection.handleConnection();
-
     }
 
     public void send(String message) throws UnsupportedEncodingException {
