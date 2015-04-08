@@ -127,6 +127,7 @@ public class LocalNode extends Thread {
         if (System.currentTimeMillis() - lastAnounce <= 30000) {
             return;
         }
+        pingAllNodes();
         String msg;
         msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
@@ -139,10 +140,15 @@ public class LocalNode extends Thread {
         Log.log("Announcement sent!", LogLevel.NONE);
     }
 
+    public void pingAllNodes() {
+        for (Node n : peers) {
+            n.ping();
+        }
+    }
+
     public void handleConnections() {
         for (Node n : peers) {
             if (n.isConnected()) {
-                n.send(new CurrentTimePacket());
                 List<Packet> packets = n.handleConnection();
                 if (packets != null) {
                     if (!packetBuffer.containsKey(n)) {
