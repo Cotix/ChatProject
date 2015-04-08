@@ -4,6 +4,7 @@ import log.Log;
 import log.LogLevel;
 import network.Node;
 import network.RoutingTable;
+import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 import java.io.IOException;
@@ -12,18 +13,46 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static network.connection.packet.PacketUtils.*;
 
 public class LocalNode extends Thread {
+
+    private class ListenThread extends Thread {
+        ServerSocket socket;
+        ConcurrentLinkedQueue<Socket> queue;
+        public ListenThread(ServerSocket s) {
+            socket = s;
+            queue = new ConcurrentLinkedQueue<>();
+        }
+
+        public void run() {
+            while (true) {
+                Socket s = null;
+                try {
+                    s = socket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.log("New incomming node connection!", LogLevel.INFO);
+                queue.add(s);
+            }
+        }
+
+        public Socket accept() {
+            return queue.poll();
+        }
+    }
+
     private short clientPort;
     private short nodePort;
     private List<Node> peers;
     private long lastAnounce;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
-    private ServerSocket clientSocket;
-    private ServerSocket nodeSocket;
+    private ListenThread clientThread;
+    private ListenThread nodeThread;
     private Map<Node, List<Packet>> packetBuffer;
     private String localhost;
     private RoutingTable routing;
@@ -58,7 +87,7 @@ public class LocalNode extends Thread {
         Log.log("Setting up a localnode.", LogLevel.INFO);
     }
 
-    public void addNode(String ip, short port) {
+    public void connectToNode(String ip, short port) {
         try {
             if (ip.equals(localhost)) {
                 return;
@@ -67,7 +96,7 @@ public class LocalNode extends Thread {
             return;
         }
         for (Node n : peers) {
-            Log.log(n.getIp() + " <> " + ip, LogLevel.INFO);
+            Log.log(n.getIp() + " <> " + ip, LogLevel.NONE);
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
                     n.connect();
@@ -79,6 +108,21 @@ public class LocalNode extends Thread {
         Node node = new Node(ip, port);
         peers.add(node);
         node.connect();
+        (new Thread(node)).start();
+    }
+
+    private void addNode(Node node) {
+        for (Node n : peers) {
+            Log.log(n.getIp() + " <> " + node.getIp(), LogLevel.NONE);
+            if (n.getIp().equals(node.getIp())) {
+                if (!n.isConnected()) {
+                    n.connect();
+                }
+                return;
+            }
+        }
+        Log.log("Accepting node " + node.getIp(), LogLevel.INFO);
+        peers.add(node);
         (new Thread(node)).start();
     }
 
@@ -157,11 +201,22 @@ public class LocalNode extends Thread {
         }
     }
 
+    private void acceptNodeConnections() {
+        while (true) {
+            Socket s = nodeThread.accept();
+            if (s == null) {
+                return;
+            }
+            Node n = new Node(new TCPConnection(s), s.getRemoteSocketAddress().toString(), (short)s.getPort());
+            addNode(n);
+        }
+    }
+
     @Override
     public void run() {
         try {
-            clientSocket = new ServerSocket(clientPort);
-            nodeSocket = new ServerSocket(nodePort);
+            clientThread = new ListenThread(new ServerSocket(clientPort));
+            nodeThread = new ListenThread(new ServerSocket(nodePort));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,7 +245,7 @@ public class LocalNode extends Thread {
                     String[] split = announcement.split(":");
                     if (split.length == 2) {
                         try {
-                            addNode(split[0], Short.parseShort(split[1]));
+                            connectToNode(split[0], Short.parseShort(split[1]));
                         } catch (Exception e) {
                             Log.log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
