@@ -2,12 +2,11 @@ package node;
 
 import log.Log;
 import log.LogLevel;
-import network.DistanceTable;
 import network.Node;
 import network.RoutingTable;
+import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,7 +55,7 @@ public class LocalNode extends Thread {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        Log.Log("Setting up a localnode.", LogLevel.INFO);
+        Log.log("Setting up a localnode.", LogLevel.INFO);
     }
 
     public void addNode(String ip, short port) {
@@ -68,6 +67,7 @@ public class LocalNode extends Thread {
             return;
         }
         for (Node n : peers) {
+            Log.log(n.getIp() + " <> " + ip, LogLevel.INFO);
             if (n.getIp().equals(ip)) {
                 if (!n.isConnected()) {
                     n.connect();
@@ -75,9 +75,11 @@ public class LocalNode extends Thread {
                 return;
             }
         }
-        Log.Log("Adding node " + ip + ":" + port, LogLevel.INFO);
+        Log.log("Adding node " + ip + ":" + port, LogLevel.INFO);
         Node node = new Node(ip, port);
+        peers.add(node);
         node.connect();
+        (new Thread(node)).start();
     }
 
     public void Announce() {
@@ -91,14 +93,15 @@ public class LocalNode extends Thread {
             multicastSocket.send(hi);
             lastAnounce = System.currentTimeMillis();
         } catch (IOException e) {
-            Log.Log("Announcing went wrong!", LogLevel.ERROR);
+            Log.log("Announcing went wrong!", LogLevel.ERROR);
         }
-        Log.Log("Announcement sent!", LogLevel.NONE);
+        Log.log("Announcement sent!", LogLevel.NONE);
     }
 
     public void handleConnections() {
         for (Node n : peers) {
             if (n.isConnected()) {
+                n.send(new CurrentTimePacket());
                 List<Packet> packets = n.handleConnection();
                 if (packets != null) {
                     if (!packetBuffer.containsKey(n)) {
@@ -124,14 +127,16 @@ public class LocalNode extends Thread {
         PacketType type = getPacketType(packet);
         switch(type) {
             case UNKNOWN:
-                Log.Log("Got an unknown packettype!", LogLevel.INFO);
+                Log.log("Got an unknown packettype!", LogLevel.INFO);
                 break;
             case DISTANCE:
-                Log.Log("Distance packet received!", LogLevel.NONE);
+                Log.log("Distance packet received!", LogLevel.NONE);
                 if (routing.updateNode(n, packet)) {
                     sendDistanceTableToAll();
                 }
                 break;
+            case PING:
+                Log.log("Received a ping packet!", LogLevel.INFO);
         }
 
         return true;
@@ -177,7 +182,7 @@ public class LocalNode extends Thread {
                 //
             }
             if (msg != null && msg.length() != buf.length) {
-                Log.Log("Received announcement: " + msg, LogLevel.NONE);
+                Log.log("Received announcement: " + msg, LogLevel.NONE);
             }
             if (msg != null && msg.contains("HELLO")) {
                 String[] announcements = msg.split("HELLO");
@@ -187,7 +192,7 @@ public class LocalNode extends Thread {
                         try {
                             addNode(split[0], Short.parseShort(split[1]));
                         } catch (Exception e) {
-                            Log.Log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
+                            Log.log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
                     }
                 }
@@ -195,9 +200,9 @@ public class LocalNode extends Thread {
             handleConnections();
             forwardPackets();
             try {
-                this.sleep(10);
+                sleep(10);
             } catch (InterruptedException e) {
-                Log.Log("Sleep got interrupted of localnode!", LogLevel.INFO);
+                Log.log("Sleep got interrupted of localnode!", LogLevel.INFO);
             }
         }
     }

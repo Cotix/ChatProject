@@ -1,37 +1,40 @@
 package client.model;
 
+/**
+ * Created by destion on 7-4-15.
+ */
 public class Message {
 
     private long timestamp;
     private String message;
-    private String keyFrom;
-    private String keyTo;
+    private String publicKeySender;
+    private String publicKeyReceiver;
 
-    public Message(String from, String to, String message, long timestamp){
+
+    //TODO public key
+
+    public Message(String message, String sender, String receiver, long timestamp){
         this.timestamp = timestamp;
         this.message = message;
-        this.keyFrom = from;
-        this.keyTo = to;
+        this.publicKeySender = sender;
+        this.publicKeyReceiver = receiver;
     }
 
     public String getMessage(){
         return this.message;
     }
-
-    public String getFrom(){
-        return keyFrom;
+    public String getPublicKeySender(){
+        return this.publicKeySender;
     }
-
-    public String getTo(){
-        return keyTo;
+    public String getPublicKeyReceiver(){
+        return this.publicKeyReceiver;
     }
-
     public long getTimestamp(){
-        return timestamp;
+        return this.timestamp;
     }
 
     public String toString(){
         //TODO format so node understands
-        return String.format("%s %s %s %s \n", timestamp, keyFrom, keyTo, message);
+        return String.format("%s %s %s %s \n", timestamp, publicKeySender, publicKeyReceiver, message);
     }
 }

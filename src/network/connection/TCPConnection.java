@@ -11,7 +11,6 @@ import log.*;
 import network.connection.packet.InvalidPacketException;
 import network.connection.packet.Packet;
 import network.connection.packet.RawPacket;
-import network.connection.packet.StringPacket;
 
 public class TCPConnection implements Connection {
     private String ipAddress;
@@ -46,10 +45,10 @@ public class TCPConnection implements Connection {
                 out = new DataOutputStream(sock.getOutputStream());
             } catch (IOException e) {
                 isConnected = false;
-                Log.Log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
+                Log.log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
             }
         }
-        Log.Log("TCPConnection to " + ipAddress + " on port " + port + " connected!", LogLevel.INFO);
+        Log.log("TCPConnection to " + ipAddress + " on port " + port + " connected!", LogLevel.INFO);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class TCPConnection implements Connection {
                 out = new DataOutputStream(sock.getOutputStream());
             } catch (IOException e) {
                 isConnected = false;
-                Log.Log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
+                Log.log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
             }
         }
     }
@@ -72,7 +71,7 @@ public class TCPConnection implements Connection {
     @Override
     public void disconnect() {
         if (isConnected) {
-            Log.Log("TCPConnection with " + ipAddress + " on port " + port + " got closed.", LogLevel.INFO);
+            Log.log("TCPConnection with " + ipAddress + " on port " + port + " got closed.", LogLevel.INFO);
             isConnected = false;
             try {
                 sock.close();
@@ -85,12 +84,12 @@ public class TCPConnection implements Connection {
     @Override
     public void sendPacket(Packet pckt) {
         if (!isConnected) {
-            Log.Log("TCPConnection with " + ipAddress + " on port " + port + " was already closed, yet it tried to send a packet.", LogLevel.INFO);
+            Log.log("TCPConnection with " + ipAddress + " on port " + port + " was already closed, yet it tried to send a packet.", LogLevel.INFO);
             return;
         }
         int length = pckt.getSize();
         if (length >= Integer.MAX_VALUE) {
-            Log.Log("TCPConnection failed sending a packet with size " + length + " to " + ipAddress + ":" + port, LogLevel.ERROR);
+            Log.log("TCPConnection failed sending a packet with size " + length + " to " + ipAddress + ":" + port, LogLevel.ERROR);
             return;
         }
         try {
@@ -113,7 +112,7 @@ public class TCPConnection implements Connection {
                     try {
                         packetQueue.add(new RawPacket(data));
                     } catch (InvalidPacketException e) {
-                        Log.Log("Received a malformed packet from " + ipAddress + "!", LogLevel.INFO);
+                        Log.log("Received a malformed packet from " + ipAddress + "!", LogLevel.INFO);
                     }
                 }
             } catch (EOFException e) {
