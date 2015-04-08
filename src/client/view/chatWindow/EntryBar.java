@@ -1,4 +1,4 @@
-package client.view;
+package client.view.chatWindow;
 
 import client.controller.NetworkController;
 
@@ -13,13 +13,13 @@ import java.io.UnsupportedEncodingException;
 public class EntryBar extends JTextField implements KeyListener {
 
     private NetworkController networkController;
-    private ChatFrame chatFrame;
+    private TestFrame testFrame;
 
-    public EntryBar(NetworkController net, ChatFrame frame){
+    public EntryBar(NetworkController net, TestFrame frame){
         super();
         this.addKeyListener(this);
         this.networkController = net;
-        this.chatFrame = frame;
+        this.testFrame = frame;
     }
 
 
@@ -34,7 +34,7 @@ public class EntryBar extends JTextField implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER){
             try {
-                this.chatFrame.addMessage(this.getText());
+                this.testFrame.addMessage(this.getText());
                 this.setText("");
                 networkController.send(this.getText());
 
