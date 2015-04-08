@@ -15,7 +15,7 @@ public class CurrentTimePacket implements Packet {
             pData[7-i] = (byte)(time&0xFF);
             time >>= 8;
         }
-        byte[] data = new byte[pData.length + 5];
+        data = new byte[pData.length + 5];
         data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
         data[1] = (byte)(((pData.length & 0xFF0000) >> 16) & 0xFF);
         data[2] = (byte)(((pData.length & 0xFF00) >> 8) & 0xFF);
