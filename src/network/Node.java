@@ -3,6 +3,7 @@ package network;
 import log.Log;
 import log.LogLevel;
 import network.connection.*;
+import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 
 import java.util.LinkedList;
@@ -50,6 +51,10 @@ public class Node implements Runnable {
         } else {
             Log.log("Tried to send while not connected!", LogLevel.ERROR);
         }
+    }
+
+    public void ping() {
+        send(new CurrentTimePacket());
     }
 
     public List<Packet> handleConnection() {
