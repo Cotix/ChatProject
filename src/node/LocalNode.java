@@ -5,6 +5,7 @@ import log.LogLevel;
 import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
@@ -86,20 +87,18 @@ public class LocalNode extends Thread {
     }
 
     public void connectToNode(String ip, short port) {
-        try {
-            if (ip.equals(localhost)) {
-                return;
-            }
-        } catch (Exception e) {
+        if (ip.equals(localhost) && port == nodePort) {
             return;
         }
-        for (Node n : peers) {
-            Log.log(n.getIp() + " <> " + ip, LogLevel.NONE);
-            if (n.getIp().equals(ip)) {
-                if (!n.isConnected()) {
-                    n.connect();
+        if (settings.Configuration.ONENODEPERIP) {
+            for (Node n : peers) {
+                Log.log(n.getIp() + " <> " + ip, LogLevel.NONE);
+                if (n.getIp().equals(ip)) {
+                    if (!n.isConnected()) {
+                        n.connect();
+                    }
+                    return;
                 }
-                return;
             }
         }
         Log.log("Adding node " + ip + ":" + port, LogLevel.INFO);
