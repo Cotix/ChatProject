@@ -56,6 +56,7 @@ public class Node implements Runnable {
     }
 
     public void ping() {
+        Log.log("Pinging node " + getIp() + ":" + getPort(), LogLevel.INFO);
         send(new CurrentTimePacket());
     }
 

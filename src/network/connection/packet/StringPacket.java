@@ -6,7 +6,7 @@ public class StringPacket implements Packet{
     private byte[] data;
 
     public StringPacket(byte[] pData) {
-        byte[] data = new byte[pData.length + 4];
+        data = new byte[pData.length + 4];
         data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
         data[1] = (byte)(((pData.length & 0xFF0000) >> 16) & 0xFF);
         data[2] = (byte)(((pData.length & 0xFF00) >> 8) & 0xFF);
@@ -33,7 +33,7 @@ public class StringPacket implements Packet{
     }
 
     public byte getFirstDataByte() {
-        if (data.length <= 4) {
+        if (data == null || data.length <= 4) {
             return -128;
         }
         return data[4];
