@@ -265,6 +265,7 @@ public class LocalNode extends Thread {
             }
             handleConnections();
             forwardPackets();
+            acceptNodeConnections();
             try {
                 sleep(10);
             } catch (InterruptedException e) {
