@@ -6,10 +6,10 @@ import client.view.chatWindow.actionListeners.FullscreenActionListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-/**
- * Created by destion on 8-4-15.
- */
 public class TestFrame extends JFrame {
 
     private EntryBar bar;
@@ -21,17 +21,21 @@ public class TestFrame extends JFrame {
     private JMenuItem fileClose = new JMenuItem("Close chat");
     private NetworkController net;
     private JScrollBar chatScroll;
-    DefaultListModel chatModel;
+    private DefaultListModel chatModel;
     private String nickName;
-    JScrollPane chatPane;
-    JList<String> chatList;
+    private JScrollPane chatPane;
+    private JList<String> chatList;
+
+    private JList lobbyList;
+    private DefaultListModel lobbyModel;
+    private JScrollPane lobbyPane;
 
     private final int WIDTH = 500;
     private final int HEIGHT = 400;
 
-    public TestFrame(NetworkController net){
+    public TestFrame(NetworkController net, String nick){
         this.net = net;
-
+        this.nickName = nick;
         this.bar = new EntryBar(net , this);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -41,36 +45,34 @@ public class TestFrame extends JFrame {
         chatModel = new DefaultListModel();
         chatPane = new JScrollPane(chatList);
 
+        lobbyList = new JList<>();
+        lobbyModel = new DefaultListModel();
+        lobbyPane = new JScrollPane(this.lobbyList);
+
         gbc.anchor = GridBagConstraints.LAST_LINE_END;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
         gbc.weighty = 1;
         gbc.weightx = 1;
-        panel.add(new JButton("Test1"), gbc);
 
+
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(new JButton("Test2"), gbc);
-
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        panel.add(new JButton("Test3"), gbc);
-
-
-        /*
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(new JButton("Test4"), gbc);
-        */
-
-        chatPane.setSize(50, 300);
+        gbc.ipady = 340;
+        panel.add(lobbyPane, gbc);
 
         gbc.anchor = GridBagConstraints.FIRST_LINE_END;
         gbc.gridx = 2;
         gbc.gridy = 0;
+        gbc.ipadx = 150;
         panel.add(chatPane, gbc);
+
+        gbc.anchor = GridBagConstraints.LAST_LINE_END;
+        gbc.gridx = 2;
+        gbc.gridy = 10;
+        gbc.ipady = 1;
+        panel.add(this.bar, gbc);
+
 
 
         this.init(WIDTH, HEIGHT);
@@ -78,13 +80,14 @@ public class TestFrame extends JFrame {
         this.getContentPane().add(panel);
     }
 
-    public TestFrame(int width, int height){
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        this.init(width, height);
-    }
-
     private void init(int width, int height){
+        fileClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+            }
+        });
+
         this.menuBar.add(file);
         file.add(fileClear);
         file.add(fileClose);
@@ -95,12 +98,11 @@ public class TestFrame extends JFrame {
 
         fileClear.addActionListener(new FileClearListener(this.chatModel));
 
-        this.getContentPane().add(this.bar, BorderLayout.SOUTH);
-
         fullscreen.addActionListener(new FullscreenActionListener(this, this.fullscreen));
         this.getContentPane().add(this.menuBar, BorderLayout.NORTH);
 
         this.setSize(width, height);
+        this.setTitle("WhatsSwag messenger");
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -110,6 +112,14 @@ public class TestFrame extends JFrame {
         this.chatModel.addElement(String.format("%s: %s", this.nickName, message));
         this.chatList.setModel(this.chatModel);
         this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
+    }
+
+    public void updateLobby(ArrayList<String> names){
+        for (String name : names){
+            this.lobbyModel.addElement(name);
+        }
+        this.lobbyList.setModel(lobbyModel);
+        this.lobbyList.ensureIndexIsVisible(this.chatModel.size() - 1);
     }
 
 }

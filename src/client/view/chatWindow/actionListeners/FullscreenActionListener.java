@@ -1,6 +1,6 @@
 package client.view.chatWindow.actionListeners;
 
-import client.view.chatWindow.ChatFrame;
+
 import client.view.chatWindow.TestFrame;
 
 import javax.swing.*;
@@ -33,10 +33,11 @@ public class FullscreenActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (!this.cb.getState()){
-            this.frame.setSize(400, 400);
+            this.frame.setSize(500, 400);
             this.frame.setLocationRelativeTo(null);
         } else {
             this.frame.setSize(width, height);
+
         }
     }
 }
