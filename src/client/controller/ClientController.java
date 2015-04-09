@@ -16,7 +16,7 @@ public class ClientController {
     public static final short PORT = 8080;
     private CryptoKeyPair myKeyPair;
     private NetworkController networkController;
-    private Map<CryptoKeyPair, Chat> chats;
+    private Map<String, Chat> chats;
 
     public ClientController() {
         myKeyPair = new CryptoKeyPair();
@@ -28,12 +28,12 @@ public class ClientController {
         return networkController;
     }
 
-    public void addChat(CryptoKeyPair publicKey) {
+    public void addChat(String publicKey) {
         Chat chat = new Chat(publicKey);
-        chats.put(publicKey, chat);
+        chats.put(publicKey.toString(), chat);
     }
 
-    public Map<CryptoKeyPair, Chat> getChats() {
+    public Map<String, Chat> getChats() {
         return chats;
     }
 }

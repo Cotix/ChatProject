@@ -23,7 +23,8 @@ public class CryptoKeyPair {
     public CryptoKeyPair() {
         try {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance(Configuration.ENCRYPTION_SCHEME);
-            kpg.initialize(Configuration.KEY_LENGTH);
+            SecureRandom random = SecureRandom.getInstance(Configuration.RANDOM_SOURCE);
+            kpg.initialize(Configuration.KEY_LENGTH, random);
             KeyPair kp = kpg.genKeyPair();
             publicKey = kp.getPublic();
             privateKey = kp.getPrivate();
