@@ -6,9 +6,8 @@ import log.LogLevel;
 import node.LocalNode;
 import settings.Configuration;
 
-/**
- * Created by cotix on 4/8/15.
- */
+//A simple class that starts a few LocalNodes, used for testing
+
 public class Simulation {
 
     public static void main(String[] arg) {

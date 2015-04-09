@@ -1,5 +1,7 @@
 package network;
 
+//A simple class that allows us for advanced address handling
+
 public class Address {
     private String address;
     private String nickName;

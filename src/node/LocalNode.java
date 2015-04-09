@@ -17,8 +17,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static network.connection.packet.PacketUtils.*;
 
-public class LocalNode extends Thread {
 
+//This is one of the most important classes
+//It implements a node
+//It does a lot of things, which you can read all about in our report
+
+public class LocalNode extends Thread {
+    //ListenThread is needed cause java hardly offers non-blocking NIO
     private class ListenThread extends Thread {
         ServerSocket socket;
         ConcurrentLinkedQueue<Socket> queue;
@@ -90,11 +95,12 @@ public class LocalNode extends Thread {
         }
         Log.log("Setting up a localnode.", LogLevel.INFO);
     }
-
+    //Connecting to another node
     public void connectToNode(String ip, short port) {
         if (ip.equals(localhost) && port == nodePort) {
             return;
         }
+        //Check if we are already connected to this node
         for (Node n : peers) {
             if (n.getIp().equals(ip) && (n.getPort() == port || Configuration.ONENODEPERIP)) {
                 if (!n.isConnected()) {
@@ -103,14 +109,18 @@ public class LocalNode extends Thread {
                 return;
             }
         }
+        //Seems we are not, time to add the node
         Log.log("Adding node " + ip + ":" + port, LogLevel.INFO);
         Node node = new Node(ip, port);
+        //Add him to the peers list
         peers.add(node);
+        //Connect and start then connection!
         node.connect();
         (new Thread(node)).start();
     }
-
+    //Adds a node to the peers list. This function is used for incomming connections
     private void addNode(Node node) {
+        //Is he already in the list?
         for (Node n : peers) {
             if (n.getIp().equals(node.getIp()) && (n.getPort() == node.getPort() || Configuration.ONENODEPERIP)) {
                 if (!n.isConnected()) {
@@ -123,28 +133,30 @@ public class LocalNode extends Thread {
         peers.add(node);
         (new Thread(node)).start();
     }
-
+    //Adds a client to the client list
     private void addClient(ClientHandler client) {
         Log.log("Accepting client ", LogLevel.INFO);
         clients.add(client);
         (new Thread(client)).start();
     }
-
+    //Announce ourselves, and ping the neighbours
     public void Announce() {
+        //But only if we didn't do that too recently
         if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCETIME) {
             return;
         }
         pingAllNodes();
         String msg;
+        //Announcement is in the form of: HELLO127.0.0.1:8000
         msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
             multicastSocket.send(hi);
             lastAnounce = System.currentTimeMillis();
+            Log.log("Announcement sent!", LogLevel.NONE);
         } catch (IOException e) {
             Log.log("Announcing went wrong!", LogLevel.ERROR);
         }
-        Log.log("Announcement sent!", LogLevel.NONE);
     }
 
     public void pingAllNodes() {
@@ -152,7 +164,8 @@ public class LocalNode extends Thread {
             n.ping();
         }
     }
-
+    //This function handles all the node and client connections
+    //It polls the packet queues and saves it to our own queue
     public void handleConnections() {
         for (Node n : peers) {
             if (n.isConnected()) {
@@ -179,7 +192,7 @@ public class LocalNode extends Thread {
             }
         }
     }
-
+    //Sends our distance table to a node
     private void sendDistanceTable(Node target) {
         target.send(routing.getMyDistanceTable());
     }
@@ -189,7 +202,8 @@ public class LocalNode extends Thread {
             sendDistanceTable(n);
         }
     }
-
+    //Handles a packet. Basicly a big switch case on all packetTypes
+    //Than does what ever needs to be done to the packets
     private boolean handlePacket(Packet packet, Node n) {
         PacketType type = getPacketType(packet);
         switch(type) {
@@ -203,7 +217,7 @@ public class LocalNode extends Thread {
                 }
                 break;
             case PING:
-                Log.log("Received a ping packet!", LogLevel.INFO);
+                Log.log("Received a ping packet!", LogLevel.NONE);
                 CurrentTimePacket pong = new CurrentTimePacket(packet.getRawData());
                 pong.setType(PacketType.PONG);
                 n.send(pong);
@@ -212,13 +226,12 @@ public class LocalNode extends Thread {
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
                 int diff = pongPacket.getTimeDifference();
                 routing.updateNodePing(n, diff);
-                Log.log("Received a pong packet time diff: " + diff, LogLevel.INFO);
+                Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
         }
-
         return true;
     }
-
+    //Handle packets for client connections
     private boolean handlePacket(Packet packet, ClientHandler c) {
         PacketType type = getPacketType(packet);
         switch (type) {
@@ -233,7 +246,8 @@ public class LocalNode extends Thread {
         }
         return true;
     }
-
+    //Processes packets that are in our queue, basicly call handlePacket
+    //If it cant be handled, lets add it back to the queue and deal with it next iteration
     public void forwardPackets() {
         for (Node n : peers) {
             if (packetBuffer.containsKey(n)) {
@@ -260,7 +274,7 @@ public class LocalNode extends Thread {
             }
         }
     }
-
+    //Polls incomming connections from the NodeThread
     private void acceptNodeConnections() {
         while (true) {
             Socket s = nodeThread.accept();
@@ -271,7 +285,7 @@ public class LocalNode extends Thread {
             addNode(n);
         }
     }
-
+    //Polls incomming connections from the ClientThread
     private void acceptClientConnections() {
         while (true) {
             Socket s = clientThread.accept();
@@ -282,9 +296,10 @@ public class LocalNode extends Thread {
             addClient(client);
         }
     }
-
+    //The main loop
     @Override
     public void run() {
+        //Lets first start up the serversockets
         try {
             clientThread = new ListenThread(new ServerSocket(clientPort));
             nodeThread = new ListenThread(new ServerSocket(nodePort));
@@ -294,6 +309,7 @@ public class LocalNode extends Thread {
         clientThread.start();
         nodeThread.start();
         while (true) {
+            //Announce, than reads other announcements
             Announce();
             byte[] buf = new byte[1000];
             DatagramPacket recv = new DatagramPacket(buf, buf.length);
@@ -311,6 +327,8 @@ public class LocalNode extends Thread {
             if (msg != null && msg.length() != buf.length) {
                 Log.log("Received announcement: " + msg, LogLevel.NONE);
             }
+            //Add a random node that announced itself.
+            //A small random chance so we do not add every one right away
             if (msg != null && msg.contains("HELLO") && Math.random() >= 0.75) {
                 String[] announcements = msg.split("HELLO");
                 for (String announcement : announcements) {
@@ -324,11 +342,13 @@ public class LocalNode extends Thread {
                     }
                 }
             }
+            //Call all the handle functions
             handleConnections();
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
             try {
+                //Sleep a litle so we dont stress the computer too much
                 sleep(1);
             } catch (InterruptedException e) {
                 Log.log("Sleep got interrupted of localnode!", LogLevel.INFO);

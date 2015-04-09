@@ -19,7 +19,8 @@ public class MessagePacket implements Packet {
 
         byte[] header = ByteBuffer.allocate(5)
                 .putInt(data.length)
-                .put(PacketUtils.PacketType.MESSAGE.value).array();
+                .put(PacketUtils.PacketType.MESSAGE.value)
+                .array();
         this.data = new byte[header.length + data.length];
         System.arraycopy(header, 0, this.data, 0, header.length);
         System.arraycopy(data, 0, this.data, header.length, data.length);

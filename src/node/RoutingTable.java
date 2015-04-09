@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+//This class does all the routing calculations
+
 public class RoutingTable {
     private Map<Address, Node> routes;
     private Map<Node, DistanceTable> neighbourNodes;
@@ -35,7 +37,7 @@ public class RoutingTable {
         }
         return null;
     }
-
+    //calculate best neighbour node to forward our packet to an address
     private Node findBestNode(Address address) {
         int best = Integer.MAX_VALUE;
         Node bestNode = null;
@@ -51,7 +53,7 @@ public class RoutingTable {
         }
         return bestNode;
     }
-
+    //Reads cached best node to forward our packet, calls findBestNode if there is nothing cached
     public Node getNode(Address address) {
         if (routes.containsKey(address)) {
             Node n = routes.get(address);
@@ -61,7 +63,8 @@ public class RoutingTable {
         }
         return findBestNode(address);
     }
-
+    //Calculates best node to send to, but excludes an address
+    //Usefull to blacklist nodes
     public Node getAlternativeNode(Address address, Node exclude) {
         int best = Integer.MAX_VALUE;
         Node bestNode = null;
@@ -77,7 +80,7 @@ public class RoutingTable {
         }
         return bestNode;
     }
-
+    //Updates the routing table returns true if there are changes
     public boolean update() {
         Map<Address, Node> old = routes;
         lowestDelays = new HashMap<>();
@@ -105,7 +108,7 @@ public class RoutingTable {
         }
         return true;
     }
-
+    //Updates the table based on a change in distancetable from a neighbour node
     public boolean updateNode(Node n, Packet packet) {
         if (!neighbourNodes.containsKey(n)) {
             neighbourNodes.put(n, new DistanceTable());

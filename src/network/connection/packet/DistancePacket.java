@@ -5,6 +5,10 @@ import network.Address;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+//Distance packet is used for routing
+//The packet contains the distances to address from the sender node
+//Upon receiving this packet, the receiver can calculate his distances
+//to the addresses via this node by adding his distance to sending node.
 public class DistancePacket extends StringPacket {
 
     public DistancePacket(Map<Address, Integer> table) throws UnsupportedEncodingException {

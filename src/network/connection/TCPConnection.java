@@ -5,12 +5,17 @@ import log.Log;
 import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import log.*;
 import network.connection.packet.Packet;
 import network.connection.packet.StringPacket;
 import settings.Configuration;
+
+//A wrapper around the Socket class that allows us for very easy NIO
+//It maintains a packet queue, which other threads or classes can read
+//Also allows for easy sending of binary data using our Packet interface
 
 public class TCPConnection implements Connection {
     private String ipAddress;
@@ -22,7 +27,7 @@ public class TCPConnection implements Connection {
     private Queue<Packet> packetQueue;
 
     public TCPConnection(String ipAddress, short port) {
-        packetQueue = new LinkedBlockingQueue<Packet>();
+        packetQueue = new ConcurrentLinkedQueue<>();
         this.port = port;
         this.ipAddress = ipAddress;
         isConnected = false;
@@ -30,14 +35,14 @@ public class TCPConnection implements Connection {
     }
 
     public TCPConnection() {
-        packetQueue = new LinkedBlockingQueue<Packet>();
+        packetQueue = new ConcurrentLinkedQueue<>();
         isConnected = false;
         sock = new Socket();
     }
 
     public TCPConnection(Socket s) {
         sock = s;
-        packetQueue = new LinkedBlockingQueue<Packet>();
+        packetQueue = new ConcurrentLinkedQueue<>();
         this.port = (short) s.getPort();
         this.ipAddress = s.getLocalAddress().toString();
 

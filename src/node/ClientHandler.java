@@ -8,6 +8,10 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
+//This class handles the connection between the node and the client
+//It uses a Connection to communicate with the client.
+//The LocalNode can fetch packets from the connection, which maintains a packet queue
+
 public class ClientHandler implements Runnable {
     private Connection con;
 
