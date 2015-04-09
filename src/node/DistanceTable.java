@@ -1,5 +1,6 @@
-package network;
+package node;
 
+import network.Address;
 import network.connection.packet.DistancePacket;
 
 import java.util.HashMap;

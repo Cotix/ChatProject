@@ -1,29 +1,59 @@
 package node;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import log.Log;
 import log.LogLevel;
-import network.Node;
-import network.RoutingTable;
+import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
+import settings.Configuration;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static network.connection.packet.PacketUtils.*;
 
 public class LocalNode extends Thread {
+
+    private class ListenThread extends Thread {
+        ServerSocket socket;
+        ConcurrentLinkedQueue<Socket> queue;
+        public ListenThread(ServerSocket s) {
+            socket = s;
+            queue = new ConcurrentLinkedQueue<>();
+        }
+
+        public void run() {
+            while (true) {
+                Socket s = null;
+                try {
+                    s = socket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.log("New incomming node connection!", LogLevel.INFO);
+                queue.add(s);
+            }
+        }
+
+        public Socket accept() {
+            return queue.poll();
+        }
+    }
+
     private short clientPort;
     private short nodePort;
     private List<Node> peers;
     private long lastAnounce;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
-    private ServerSocket clientSocket;
-    private ServerSocket nodeSocket;
+    private ListenThread clientThread;
+    private ListenThread nodeThread;
     private Map<Node, List<Packet>> packetBuffer;
     private String localhost;
     private RoutingTable routing;
@@ -58,17 +88,12 @@ public class LocalNode extends Thread {
         Log.log("Setting up a localnode.", LogLevel.INFO);
     }
 
-    public void addNode(String ip, short port) {
-        try {
-            if (ip.equals(localhost)) {
-                return;
-            }
-        } catch (Exception e) {
+    public void connectToNode(String ip, short port) {
+        if (ip.equals(localhost) && port == nodePort) {
             return;
         }
         for (Node n : peers) {
-            Log.log(n.getIp() + " <> " + ip, LogLevel.INFO);
-            if (n.getIp().equals(ip)) {
+            if (n.getIp().equals(ip) && (n.getPort() == port || Configuration.ONENODEPERIP)) {
                 if (!n.isConnected()) {
                     n.connect();
                 }
@@ -82,11 +107,26 @@ public class LocalNode extends Thread {
         (new Thread(node)).start();
     }
 
+    private void addNode(Node node) {
+        for (Node n : peers) {
+            if (n.getIp().equals(node.getIp()) && (n.getPort() == node.getPort() || Configuration.ONENODEPERIP)) {
+                if (!n.isConnected()) {
+                    n.connect();
+                }
+                return;
+            }
+        }
+        Log.log("Accepting node " + node.getIp(), LogLevel.INFO);
+        peers.add(node);
+        (new Thread(node)).start();
+    }
+
     public void Announce() {
-        if (System.currentTimeMillis() - lastAnounce <= 30000) {
+        if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCETIME) {
             return;
         }
-        String msg = null;
+        pingAllNodes();
+        String msg;
         msg = "HELLO" + localhost + ":" + nodePort;
         DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), multicastGroup, 6789);
         try {
@@ -98,15 +138,21 @@ public class LocalNode extends Thread {
         Log.log("Announcement sent!", LogLevel.NONE);
     }
 
+    public void pingAllNodes() {
+        for (Node n : peers) {
+            n.ping();
+        }
+    }
+
     public void handleConnections() {
         for (Node n : peers) {
             if (n.isConnected()) {
-                n.send(new CurrentTimePacket());
                 List<Packet> packets = n.handleConnection();
-                if (packets != null) {
+                if (packets != null && packets.size() > 0) {
                     if (!packetBuffer.containsKey(n)) {
                         packetBuffer.put(n, new LinkedList<Packet>());
                     }
+                    Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.INFO);
                     packetBuffer.get(n).addAll(packets);
                 }
             }
@@ -124,6 +170,7 @@ public class LocalNode extends Thread {
     }
 
     private boolean handlePacket(Packet packet, Node n) {
+        Log.log("Received a packet!", LogLevel.INFO);
         PacketType type = getPacketType(packet);
         switch(type) {
             case UNKNOWN:
@@ -137,6 +184,15 @@ public class LocalNode extends Thread {
                 break;
             case PING:
                 Log.log("Received a ping packet!", LogLevel.INFO);
+                CurrentTimePacket pong = new CurrentTimePacket(packet.getRawData());
+                pong.setType(PacketType.PONG);
+                n.send(pong);
+                break;
+            case PONG:
+                CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
+
+                Log.log("Received a pong packet time diff: " + pongPacket.getTimeDifference(), LogLevel.INFO);
+                break;
         }
 
         return true;
@@ -157,15 +213,27 @@ public class LocalNode extends Thread {
         }
     }
 
+    private void acceptNodeConnections() {
+        while (true) {
+            Socket s = nodeThread.accept();
+            if (s == null) {
+                return;
+            }
+            Node n = new Node(new TCPConnection(s), s.getRemoteSocketAddress().toString(), (short)s.getPort());
+            addNode(n);
+        }
+    }
+
     @Override
     public void run() {
         try {
-            clientSocket = new ServerSocket(clientPort);
-            nodeSocket = new ServerSocket(nodePort);
+            clientThread = new ListenThread(new ServerSocket(clientPort));
+            nodeThread = new ListenThread(new ServerSocket(nodePort));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        clientThread.start();
+        nodeThread.start();
         while (true) {
             Announce();
             byte[] buf = new byte[1000];
@@ -184,13 +252,13 @@ public class LocalNode extends Thread {
             if (msg != null && msg.length() != buf.length) {
                 Log.log("Received announcement: " + msg, LogLevel.NONE);
             }
-            if (msg != null && msg.contains("HELLO")) {
+            if (msg != null && msg.contains("HELLO") && Math.random() >= 0.75) {
                 String[] announcements = msg.split("HELLO");
                 for (String announcement : announcements) {
                     String[] split = announcement.split(":");
                     if (split.length == 2) {
                         try {
-                            addNode(split[0], Short.parseShort(split[1]));
+                            connectToNode(split[0], Short.parseShort(split[1]));
                         } catch (Exception e) {
                             Log.log("Failed to add a host from announcement(" + announcement + ")", LogLevel.INFO);
                         }
@@ -199,6 +267,7 @@ public class LocalNode extends Thread {
             }
             handleConnections();
             forwardPackets();
+            acceptNodeConnections();
             try {
                 sleep(10);
             } catch (InterruptedException e) {

@@ -1,8 +1,9 @@
-package network;
+package node;
 
 import log.Log;
 import log.LogLevel;
 import network.connection.*;
+import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 
 import java.util.LinkedList;
@@ -19,6 +20,12 @@ public class Node implements Runnable {
         this.port = port;
     }
 
+    public Node(Connection c, String ip, short port) {
+        con = c;
+        this.ip = ip;
+        this.port = port;
+    }
+
     public boolean isConnected() {
         return con != null && con.isConnected();
     }
@@ -26,6 +33,8 @@ public class Node implements Runnable {
     public String getIp() {
         return ip;
     }
+
+    public short getPort() {return port;}
 
     public void connect() {
         connect(new TCPConnection());
@@ -44,6 +53,11 @@ public class Node implements Runnable {
         } else {
             Log.log("Tried to send while not connected!", LogLevel.ERROR);
         }
+    }
+
+    public void ping() {
+        Log.log("Pinging node " + getIp() + ":" + getPort(), LogLevel.INFO);
+        send(new CurrentTimePacket());
     }
 
     public List<Packet> handleConnection() {

@@ -8,9 +8,9 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import log.*;
-import network.connection.packet.InvalidPacketException;
 import network.connection.packet.Packet;
-import network.connection.packet.RawPacket;
+import network.connection.packet.StringPacket;
+import settings.Configuration;
 
 public class TCPConnection implements Connection {
     private String ipAddress;
@@ -33,6 +33,24 @@ public class TCPConnection implements Connection {
         packetQueue = new LinkedBlockingQueue<Packet>();
         isConnected = false;
         sock = new Socket();
+    }
+
+    public TCPConnection(Socket s) {
+        sock = s;
+        packetQueue = new LinkedBlockingQueue<Packet>();
+        this.port = (short) s.getPort();
+        this.ipAddress = s.getLocalAddress().toString();
+
+        try {
+            in = new DataInputStream(sock.getInputStream());
+            out = new DataOutputStream(sock.getOutputStream());
+            isConnected = true;
+            Log.log("TCPConnection to " + ipAddress + " on port " + port + " connected!", LogLevel.INFO);
+        } catch (IOException e) {
+            isConnected = false;
+            Log.log("TCPConnection to " + ipAddress + " on port " + port + " failed.", LogLevel.INFO);
+        }
+
     }
 
     @Override
@@ -94,6 +112,7 @@ public class TCPConnection implements Connection {
         }
         try {
             out.write(pckt.getRawData());
+            out.flush();
         } catch (IOException e) {
             disconnect();
         }
@@ -107,13 +126,12 @@ public class TCPConnection implements Connection {
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     length = in.readInt();
+                    if (length <= 0 || length >= Configuration.MAXPACKETSIZE) {
+                        continue;
+                    }
                     byte[] data = new byte[length];
                     in.read(data);
-                    try {
-                        packetQueue.add(new RawPacket(data));
-                    } catch (InvalidPacketException e) {
-                        Log.log("Received a malformed packet from " + ipAddress + "!", LogLevel.INFO);
-                    }
+                    packetQueue.add(new StringPacket(data));
                 }
             } catch (EOFException e) {
                 //Reached end of stream!
