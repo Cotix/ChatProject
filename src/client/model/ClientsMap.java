@@ -46,4 +46,18 @@ public class ClientsMap {
         }
         return names;
     }
+
+    public boolean contains(String nick){
+        for (Client client : clients){
+            if (client.getNick().equals(nick)){
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Client> getMap(){
+        return this.clients;
+    }
 }

@@ -24,14 +24,21 @@ public class ThreadPH implements Runnable {
         Message mess = new Message("Hoi Martijn", "a1b2c3", "z26y25x24", 1000);
         Message mess2 = new Message("Test test test", "test1test1", "z26y25x24", 1000);
         Chat chat = new Chat("a1b2c3");
-        Chat chat2 = new Chat("1234qwert");
+        Chat chat2 = new Chat("test1test1");
         chat.addMessage(mess);
         chat2.addMessage(mess2);
         ClientsMap map = new ClientsMap("Destion");
-        map.addClient( new Client("a1b2c3", "TestClient1"));
-        map.addClient( new Client("z26y25x24", "Destion"));
-        map.addClient( new Client("test1test1", "TestClient"));
 
+
+        Client client1 = new Client("a1b2c3", "TestClient1");
+        Client client2 = new Client("z26y25x24", "Destion");
+        Client client3 = new Client("test1test1", "TestClient");
+
+        map.addClient( client1);
+        map.addClient( client2);
+        map.addClient( client3);
+
+        System.out.println(map.getMap().size());
 
         ChatMap chats = new ChatMap();
         chats.addChat(chat);
@@ -40,7 +47,7 @@ public class ThreadPH implements Runnable {
 
 
 
-        TestFrame test = new TestFrame(null, "Destion", chats);
+        TestFrame test = new TestFrame(null, "Destion", chats, map);
 
 
 

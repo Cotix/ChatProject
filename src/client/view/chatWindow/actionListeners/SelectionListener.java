@@ -22,6 +22,6 @@ public class SelectionListener implements ListSelectionListener{
 
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        switcher.switchChat(chatList.getSelectedValue());
+        switcher.showList(switcher.switchChat(chatList.getSelectedValue()));
     }
 }
