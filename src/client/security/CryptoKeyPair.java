@@ -1,5 +1,7 @@
 package client.security;
 
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import log.Log;
 import log.LogLevel;
 import settings.Configuration;
@@ -9,6 +11,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.security.*;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 
 public class CryptoKeyPair {
@@ -27,14 +32,30 @@ public class CryptoKeyPair {
         }
     }
 
-    public CryptoKeyPair(PrivateKey priv, PublicKey pub) {
-        privateKey = priv;
-        publicKey = pub;
-    }
-
     public CryptoKeyPair(PublicKey pub) {
         publicKey = pub;
         privateKey = null;
+    }
+
+    public CryptoKeyPair(String pub) throws Base64DecodingException {
+        this(Base64.decode(pub));
+    }
+
+    public CryptoKeyPair(byte[] pub) {
+        this(bytesToKey(pub));
+    }
+
+    public static PublicKey bytesToKey(byte[] key) {
+        KeyFactory keyFactory;
+        PublicKey publicKey2 = null;
+        try {
+            keyFactory = KeyFactory.getInstance(Configuration.ENCRYPTION_SCHEME);
+            EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(key);
+            publicKey2 = keyFactory.generatePublic(publicKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return publicKey2;
     }
 
     public PublicKey getPublicKey() {
@@ -99,5 +120,13 @@ public class CryptoKeyPair {
             return new byte[0];
         }
         return res;
+    }
+
+    public byte[] getRawPublicKey() {
+        return publicKey.getEncoded();
+    }
+
+    public String toString() {
+        return Base64.encode(publicKey.getEncoded());
     }
 }
