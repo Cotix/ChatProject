@@ -55,6 +55,7 @@ public class LocalNode extends Thread {
     private ListenThread clientThread;
     private ListenThread nodeThread;
     private Map<Node, List<Packet>> packetBuffer;
+    private Map<ClientHandler, List<Packet>> clientBuffer;
     private String localhost;
     private RoutingTable routing;
     public LocalNode(String myIP) {
@@ -79,8 +80,9 @@ public class LocalNode extends Thread {
         clientPort = cPort;
         nodePort = nPort;
         packetBuffer = new HashMap<>();
-        peers = new LinkedList<Node>();
-        clients = new LinkedList<ClientHandler>();
+        clientBuffer = new HashMap<>();
+        peers = new LinkedList<>();
+        clients = new LinkedList<>();
         try {
             multicastSocket.setSoTimeout(1);
         } catch (SocketException e) {
@@ -122,6 +124,12 @@ public class LocalNode extends Thread {
         (new Thread(node)).start();
     }
 
+    private void addClient(ClientHandler client) {
+        Log.log("Accepting client ", LogLevel.INFO);
+        clients.add(client);
+        (new Thread(client)).start();
+    }
+
     public void Announce() {
         if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCETIME) {
             return;
@@ -155,6 +163,18 @@ public class LocalNode extends Thread {
                     }
                     Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.NONE);
                     packetBuffer.get(n).addAll(packets);
+                }
+            }
+        }
+        for (ClientHandler c : clients) {
+            if (c.isConnected()) {
+                List<Packet> packets = c.handleConnection();
+                if (packets != null && packets.size() > 0) {
+                    if (!clientBuffer.containsKey(c)) {
+                        clientBuffer.put(c, new LinkedList<Packet>());
+                    }
+                    Log.log("Added " + packets.size() + " packets to the client queue.", LogLevel.NONE);
+                    clientBuffer.get(c).addAll(packets);
                 }
             }
         }
@@ -199,6 +219,21 @@ public class LocalNode extends Thread {
         return true;
     }
 
+    private boolean handlePacket(Packet packet, ClientHandler c) {
+        PacketType type = getPacketType(packet);
+        switch (type) {
+            case IDENTIFY:
+                Log.log("Received an identify packet!", LogLevel.NONE);
+                // set client id
+                break;
+            case MESSAGE:
+                Log.log("Received a chat packet!", LogLevel.NONE);
+                // send a message
+                break;
+        }
+        return true;
+    }
+
     public void forwardPackets() {
         for (Node n : peers) {
             if (packetBuffer.containsKey(n)) {
@@ -206,6 +241,18 @@ public class LocalNode extends Thread {
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
                     if (handlePacket(p, n)) {
+                        toRemove.add(p);
+                    }
+                }
+                packets.removeAll(toRemove);
+            }
+        }
+        for (ClientHandler c : clients) {
+            if (clientBuffer.containsKey(c)) {
+                List<Packet> packets = clientBuffer.get(c);
+                List<Packet> toRemove = new LinkedList<>();
+                for (Packet p : packets) {
+                    if (handlePacket(p, c)) {
                         toRemove.add(p);
                     }
                 }
@@ -231,7 +278,8 @@ public class LocalNode extends Thread {
             if (s == null) {
                 return;
             }
-            clients.add(new ClientHandler(s));
+            ClientHandler client = new ClientHandler(s);
+            addClient(client);
         }
     }
 
@@ -279,6 +327,7 @@ public class LocalNode extends Thread {
             handleConnections();
             forwardPackets();
             acceptNodeConnections();
+            acceptClientConnections();
             try {
                 sleep(1);
             } catch (InterruptedException e) {
