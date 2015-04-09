@@ -6,7 +6,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import log.*;
 import network.connection.packet.Packet;
@@ -131,7 +130,7 @@ public class TCPConnection implements Connection {
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     length = in.readInt();
-                    if (length <= 0 || length >= Configuration.MAXPACKETSIZE) {
+                    if (length <= 0 || length >= Configuration.MAX_PACKET_SIZE) {
                         continue;
                     }
                     byte[] data = new byte[length];
