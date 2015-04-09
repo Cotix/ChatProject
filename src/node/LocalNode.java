@@ -1,6 +1,5 @@
 package node;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import log.Log;
 import log.LogLevel;
 import network.connection.TCPConnection;

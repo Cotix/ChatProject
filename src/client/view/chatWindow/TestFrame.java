@@ -77,7 +77,8 @@ public class TestFrame extends JFrame {
         gbc.ipady = 1;
         panel.add(this.bar, gbc);
 
-
+        this.chatScroll = chatPane.getVerticalScrollBar();
+        chatScroll.setAutoscrolls(true);
 
         this.init(WIDTH, HEIGHT);
 
@@ -113,9 +114,11 @@ public class TestFrame extends JFrame {
     }
 
     public void addMessage(String message){
-        this.chatModel.addElement(String.format("%s: %s", this.nickName, message));
-        this.chatList.setModel(this.chatModel);
-        this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
+        if (message.length() > 0) {
+            this.chatModel.addElement(String.format("%s: %s", this.nickName, message));
+            this.chatList.setModel(this.chatModel);
+            this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
+        }
     }
 
     public void updateLobby(ArrayList<String> names){

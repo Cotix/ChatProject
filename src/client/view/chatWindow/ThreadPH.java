@@ -13,8 +13,7 @@ public class ThreadPH implements Runnable {
     public ThreadPH(){
         this.temp = new ArrayList<>();
         temp.add("Erik");
-        temp.add("Noah");
-        temp.add("Martijn");
+        temp.add("a1b2c3");
 
     }
 
