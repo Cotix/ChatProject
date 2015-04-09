@@ -1,19 +1,30 @@
 package client.view.chatWindow;
 
+import client.model.Chat;
 import client.model.ChatMap;
+import javax.swing.*;
 
-/**
- * Created by destion on 9-4-15.
- */
 public class ChatSwitcher {
 
     private ChatMap chats;
+    private JList<String> chatList;
 
-    public ChatSwitcher(ChatMap chats){
+    public ChatSwitcher(ChatMap chats, JList chatList){
         this.chats = chats;
+        this.chatList = chatList;
     }
 
-    public void switchChat(String publicKey){
+    public Chat switchChat(String publicKey){
 
+        for (String key : chats.getKeys()){
+            if (key.equals(publicKey)){
+               return chats.getChatByName(key);
+            }
+        }
+        return null;
+    }
+
+    public void addChat(Chat chat){
+        this.chats.addChat(chat);
     }
 }

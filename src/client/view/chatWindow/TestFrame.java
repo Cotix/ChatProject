@@ -4,6 +4,7 @@ import client.controller.NetworkController;
 import client.view.chatWindow.actionListeners.FileClearListener;
 import client.view.chatWindow.actionListeners.FocusListener;
 import client.view.chatWindow.actionListeners.FullscreenActionListener;
+import client.view.chatWindow.actionListeners.SelectionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,6 +78,7 @@ public class TestFrame extends JFrame {
         gbc.ipady = 1;
         panel.add(this.bar, gbc);
 
+        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList));
         this.chatScroll = chatPane.getVerticalScrollBar();
         chatScroll.setAutoscrolls(true);
 
