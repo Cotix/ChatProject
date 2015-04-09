@@ -1,8 +1,6 @@
 package client.view.chatWindow;
 
-import client.model.Chat;
-import client.model.KeyNickMap;
-import client.model.Message;
+import client.model.*;
 
 import java.util.ArrayList;
 
@@ -29,11 +27,23 @@ public class ThreadPH implements Runnable {
         Chat chat2 = new Chat("1234qwert");
         chat.addMessage(mess);
         chat2.addMessage(mess2);
-        KeyNickMap map = new KeyNickMap();
-        map.addNick("a1b2c3", "Erik");
-        map.addNick("z26y25x24", "Destion");
-        map.addNick("test1test1", "TestClient");
-        TestFrame test = new TestFrame(null, "Destion");
+        ClientsMap map = new ClientsMap("Destion");
+        map.addClient( new Client("a1b2c3", "TestClient1"));
+        map.addClient( new Client("z26y25x24", "Destion"));
+        map.addClient( new Client("test1test1", "TestClient"));
+
+
+        ChatMap chats = new ChatMap();
+        chats.addChat(chat);
+        chats.addChat(chat2);
+
+
+
+
+        TestFrame test = new TestFrame(null, "Destion", chats);
+
+
+
         test.updateLobby(map.getNames());
     }
 }

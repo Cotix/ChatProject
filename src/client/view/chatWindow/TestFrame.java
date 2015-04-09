@@ -1,6 +1,7 @@
 package client.view.chatWindow;
 
 import client.controller.NetworkController;
+import client.model.ChatMap;
 import client.view.chatWindow.actionListeners.FileClearListener;
 import client.view.chatWindow.actionListeners.FocusListener;
 import client.view.chatWindow.actionListeners.FullscreenActionListener;
@@ -28,6 +29,8 @@ public class TestFrame extends JFrame {
     private JScrollPane chatPane;
     private JList<String> chatList;
 
+    private ChatMap chats;
+
     private JList lobbyList;
     private DefaultListModel lobbyModel;
     private JScrollPane lobbyPane;
@@ -35,7 +38,8 @@ public class TestFrame extends JFrame {
     private final int WIDTH = 500;
     private final int HEIGHT = 400;
 
-    public TestFrame(NetworkController net, String nick){
+    public TestFrame(NetworkController net, String nick, ChatMap chats){
+        this.chats = chats;
         this.net = net;
         this.nickName = nick;
         this.bar = new EntryBar(net , this);
@@ -78,7 +82,7 @@ public class TestFrame extends JFrame {
         gbc.ipady = 1;
         panel.add(this.bar, gbc);
 
-        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList));
+        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList)));
         this.chatScroll = chatPane.getVerticalScrollBar();
         chatScroll.setAutoscrolls(true);
 

@@ -14,11 +14,12 @@ public class ChatSwitcher {
         this.chatList = chatList;
     }
 
-    public Chat switchChat(String publicKey){
+    public Chat switchChat(String nick){
 
         for (String key : chats.getKeys()){
-            if (key.equals(publicKey)){
-               return chats.getChatByName(key);
+            if (key.equals(nick)){
+                System.out.println("Test");
+                return chats.getChatByName(key);
             }
         }
         return null;
