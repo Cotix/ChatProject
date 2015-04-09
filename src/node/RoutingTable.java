@@ -12,11 +12,16 @@ public class RoutingTable {
     private Map<Address, Node> routes;
     private Map<Node, DistanceTable> neighbourNodes;
     private Map<Address, Integer> lowestDelays;
-
+    private Map<Node, Integer> delayNodes;
     public RoutingTable() {
         routes = new HashMap();
         lowestDelays = null;
         neighbourNodes = new HashMap<>();
+        delayNodes = new HashMap<>();
+    }
+
+    public void updateNodePing(Node n, int latency) {
+        delayNodes.put(n, latency);
     }
 
     public DistancePacket getMyDistanceTable() {
@@ -78,9 +83,13 @@ public class RoutingTable {
         lowestDelays = new HashMap<>();
         routes = new HashMap<>();
         for (Node n : neighbourNodes.keySet()) {
+            if (!delayNodes.containsKey(n)) {
+                delayNodes.put(n, 1000);
+            }
+            int latency = delayNodes.get(n);
             Map<Address, Integer> map = neighbourNodes.get(n).getTable();
             for (Address address : map.keySet()) {
-                int delay = map.get(address);
+                int delay = map.get(address) + latency;
                 if (!lowestDelays.containsKey(address)) {
                     lowestDelays.put(address, delay);
                     routes.put(address, n);

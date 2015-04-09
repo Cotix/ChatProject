@@ -5,6 +5,16 @@ import java.io.UnsupportedEncodingException;
 public class StringPacket implements Packet{
     private byte[] data;
 
+    public StringPacket(byte[] pData, PacketUtils.PacketType type) {
+        data = new byte[pData.length + 5];
+        data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
+        data[1] = (byte)(((pData.length & 0xFF0000) >> 16) & 0xFF);
+        data[2] = (byte)(((pData.length & 0xFF00) >> 8) & 0xFF);
+        data[3] = (byte)  (pData.length & 0xFF);
+        data[4] = type.getValue();
+        System.arraycopy(pData, 0, data, 5, pData.length);
+    }
+
     public StringPacket(byte[] pData) {
         data = new byte[pData.length + 4];
         data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
@@ -14,13 +24,13 @@ public class StringPacket implements Packet{
         System.arraycopy(pData, 0, data, 4, pData.length);
     }
 
-    public StringPacket(String pData) throws UnsupportedEncodingException {
-        this(pData.getBytes("US-ASCII"));
+    public StringPacket(String pData, PacketUtils.PacketType type) throws UnsupportedEncodingException {
+        this(pData.getBytes("US-ASCII"), type);
     }
 
     public byte[] getData() {
-        byte[] ret = new byte[data.length - 4];
-        System.arraycopy(data, 4, ret, 0, ret.length);
+        byte[] ret = new byte[data.length - 5];
+        System.arraycopy(data, 5, ret, 0, ret.length);
         return ret;
     }
 

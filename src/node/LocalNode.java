@@ -152,7 +152,7 @@ public class LocalNode extends Thread {
                     if (!packetBuffer.containsKey(n)) {
                         packetBuffer.put(n, new LinkedList<Packet>());
                     }
-                    Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.INFO);
+                    Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.NONE);
                     packetBuffer.get(n).addAll(packets);
                 }
             }
@@ -170,7 +170,6 @@ public class LocalNode extends Thread {
     }
 
     private boolean handlePacket(Packet packet, Node n) {
-        Log.log("Received a packet!", LogLevel.INFO);
         PacketType type = getPacketType(packet);
         switch(type) {
             case UNKNOWN:
@@ -190,8 +189,9 @@ public class LocalNode extends Thread {
                 break;
             case PONG:
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
-
-                Log.log("Received a pong packet time diff: " + pongPacket.getTimeDifference(), LogLevel.INFO);
+                int diff = pongPacket.getTimeDifference();
+                routing.updateNodePing(n, diff);
+                Log.log("Received a pong packet time diff: " + diff, LogLevel.INFO);
                 break;
         }
 
@@ -269,7 +269,7 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             try {
-                sleep(10);
+                sleep(1);
             } catch (InterruptedException e) {
                 Log.log("Sleep got interrupted of localnode!", LogLevel.INFO);
             }
