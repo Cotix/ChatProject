@@ -2,6 +2,7 @@ package client.view.chatWindow;
 
 import client.controller.NetworkController;
 import client.view.chatWindow.actionListeners.FileClearListener;
+import client.view.chatWindow.actionListeners.FocusListener;
 import client.view.chatWindow.actionListeners.FullscreenActionListener;
 
 import javax.swing.*;
@@ -66,6 +67,9 @@ public class TestFrame extends JFrame {
         gbc.gridy = 0;
         gbc.ipadx = 150;
         panel.add(chatPane, gbc);
+
+        this.bar.addFocusListener(new FocusListener(this.bar));
+        this.bar.setText("Enter chat message here.");
 
         gbc.anchor = GridBagConstraints.LAST_LINE_END;
         gbc.gridx = 2;
