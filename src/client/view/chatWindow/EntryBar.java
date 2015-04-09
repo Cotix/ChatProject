@@ -34,10 +34,11 @@ public class EntryBar extends JTextField implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER){
             try {
-                this.testFrame.addMessage(this.getText());
-                this.setText("");
-                networkController.send(this.getText());
-
+                if (this.getText().length() > 0) {
+                    this.testFrame.addMessage(this.getText());
+                    this.setText("");
+                    networkController.send(this.getText());
+                }
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
