@@ -45,7 +45,7 @@ public class TestFrame extends JFrame {
         this.chats = chats;
         this.net = net;
         this.nickName = nick;
-        this.bar = new EntryBar(net , this, this.chats, this.lobbyList, this.clients);
+
 
         GridBagConstraints gbc = new GridBagConstraints();
         JPanel panel = new JPanel(new GridBagLayout());
@@ -57,6 +57,8 @@ public class TestFrame extends JFrame {
         lobbyList = new JList<>();
         lobbyModel = new DefaultListModel();
         lobbyPane = new JScrollPane(this.lobbyList);
+
+        this.bar = new EntryBar(net , this, this.chats, this.lobbyList, this.clients);
 
         gbc.anchor = GridBagConstraints.LAST_LINE_END;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -142,6 +144,7 @@ public class TestFrame extends JFrame {
 
         this.setSize(width, height);
         this.setTitle("WhatsSwag messenger");
+        this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
