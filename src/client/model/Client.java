@@ -1,18 +1,20 @@
 package client.model;
 
+import client.security.CryptoKeyPair;
+
 /**
  * Created by destion on 9-4-15.
  */
 public class Client {
-    private String pKey;
+    private CryptoKeyPair pKey;
     private String nick;
 
-    public Client(String pkey, String nick) {
+    public Client(CryptoKeyPair pkey, String nick) {
         this.pKey = pkey;
         this.nick = nick;
     }
 
-    public void setpKey(String pkey) {
+    public void setpKey(CryptoKeyPair pkey) {
         this.pKey = pkey;
     }
 
@@ -20,7 +22,7 @@ public class Client {
         this.nick = nick;
     }
 
-    public String getpKey() {
+    public CryptoKeyPair getpKey() {
         return this.pKey;
     }
 

@@ -1,5 +1,7 @@
 package client.model;
 
+import client.security.CryptoKeyPair;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +12,8 @@ import java.util.Map;
  */
 public class ChatMap {
 
-    Map<String, Chat> chatMap;
-    ArrayList<String> keys;
+    Map<CryptoKeyPair, Chat> chatMap;
+    ArrayList<CryptoKeyPair> keys;
 
     public ChatMap(){
         this.chatMap = new HashMap<>();
@@ -23,8 +25,8 @@ public class ChatMap {
         keys.add(chat.getPublicKey());
     }
 
-    public Chat getChatByKey(String pKey){
-        for (String key : chatMap.keySet()){
+    public Chat getChatByKey(CryptoKeyPair pKey){
+        for (CryptoKeyPair key : chatMap.keySet()){
             if (key.equals(pKey)){
                 return chatMap.get(key);
             }
@@ -34,7 +36,7 @@ public class ChatMap {
 
 
 
-    public ArrayList<String> getKeys(){
+    public ArrayList<CryptoKeyPair> getKeys(){
         return this.keys;
     }
 }

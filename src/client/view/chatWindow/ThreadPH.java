@@ -1,6 +1,7 @@
 package client.view.chatWindow;
 
 import client.model.*;
+import client.security.CryptoKeyPair;
 
 import java.util.ArrayList;
 
@@ -21,18 +22,18 @@ public class ThreadPH implements Runnable {
     //TODO remove placeholder code and replace when node connection is enabled
     @Override
     public void run() {
-        Message mess = new Message("Hoi", "a1b2c3", "z26y25x24", 1000);
-        Message mess2 = new Message("Test test test", "test1test1", "z26y25x24", 1000);
-        Chat chat = new Chat("a1b2c3");
-        Chat chat2 = new Chat("test1test1");
+        Message mess = new Message("Hoi", new CryptoKeyPair(), new CryptoKeyPair(), 1000);
+        Message mess2 = new Message("Test test test", new CryptoKeyPair(), new CryptoKeyPair(), 1000);
+        Chat chat = new Chat(new CryptoKeyPair());
+        Chat chat2 = new Chat( new CryptoKeyPair());
         chat.addMessage(mess);
         chat2.addMessage(mess2);
-        ClientsMap map = new ClientsMap("Destion", "z26y25x24");
+        ClientsMap map = new ClientsMap("Destion",  new CryptoKeyPair());
 
 
-        Client client1 = new Client("a1b2c3", "Noah");
-        Client client2 = new Client("z26y25x24", "Destion");
-        Client client3 = new Client("test1test1", "Erik");
+        Client client1 = new Client(new CryptoKeyPair(), "Noah");
+        Client client2 = new Client(new CryptoKeyPair(), "Destion");
+        Client client3 = new Client(new CryptoKeyPair(), "Erik");
 
         map.addClient( client1);
         map.addClient( client2);

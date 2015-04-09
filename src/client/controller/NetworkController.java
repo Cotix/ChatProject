@@ -41,7 +41,7 @@ public class NetworkController implements Runnable {
          */
 
         //TODO switch out placeholders (PH)
-        Message mess = new Message(message, "PH", "PH", 1000L);
+        Message mess = new Message(message, new CryptoKeyPair(), new CryptoKeyPair(), 1000L);
         connection.sendPacket(new StringPacket(mess.toString(), PacketUtils.PacketType.UNKNOWN));
     }
 }
