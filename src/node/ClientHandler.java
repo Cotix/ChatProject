@@ -11,8 +11,6 @@ import java.net.Socket;
 public class ClientHandler extends Thread{
     private Connection con;
 
-
-
     public ClientHandler(Socket s) {
         con = new TCPConnection(s);
     }
