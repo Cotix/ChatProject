@@ -37,6 +37,10 @@ public class CryptoKeyPair {
         privateKey = null;
     }
 
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+
     public byte[] encrypt(byte[] data) {
         byte[] cipherData;
         try {
