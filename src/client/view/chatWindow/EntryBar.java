@@ -1,6 +1,7 @@
 package client.view.chatWindow;
 
 import client.controller.NetworkController;
+import client.model.ChatMap;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -15,7 +16,7 @@ public class EntryBar extends JTextField implements KeyListener {
     private NetworkController networkController;
     private TestFrame testFrame;
 
-    public EntryBar(NetworkController net, TestFrame frame){
+    public EntryBar(NetworkController net, TestFrame frame, ChatMap chats){
         super();
         this.addKeyListener(this);
         this.networkController = net;

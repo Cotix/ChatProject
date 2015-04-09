@@ -3,10 +3,7 @@ package client.view.chatWindow;
 import client.controller.NetworkController;
 import client.model.ChatMap;
 import client.model.ClientsMap;
-import client.view.chatWindow.actionListeners.FileClearListener;
-import client.view.chatWindow.actionListeners.FocusListener;
-import client.view.chatWindow.actionListeners.FullscreenActionListener;
-import client.view.chatWindow.actionListeners.SelectionListener;
+import client.view.chatWindow.actionListeners.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +14,13 @@ import java.util.ArrayList;
 public class TestFrame extends JFrame {
 
     private EntryBar bar;
-    private JMenu menu = new JMenu("Window");
+    //private JMenu menu = new JMenu("Window");
     private JMenu file = new JMenu("File");
     private JMenuBar menuBar = new JMenuBar();
-    private JCheckBoxMenuItem fullscreen = new JCheckBoxMenuItem("Fullscreen", false);
+    //private JCheckBoxMenuItem fullscreen = new JCheckBoxMenuItem("Fullscreen", false);
     private JMenuItem fileClear = new JMenuItem("Clear chat");
-    private JMenuItem fileClose = new JMenuItem("Close chat");
+    private JMenuItem fileClose = new JMenuItem("Close client");
+    private JMenuItem fileOpenNewChat = new JMenuItem("Open new chat");
     private NetworkController net;
     private JScrollBar chatScroll;
     private DefaultListModel chatModel;
@@ -36,6 +34,8 @@ public class TestFrame extends JFrame {
     private JList lobbyList;
     private DefaultListModel lobbyModel;
     private JScrollPane lobbyPane;
+
+    JOptionPane newChatPane;
 
     private final int WIDTH = 500;
     private final int HEIGHT = 400;
@@ -73,7 +73,7 @@ public class TestFrame extends JFrame {
         gbc.anchor = GridBagConstraints.FIRST_LINE_END;
         gbc.gridx = 2;
         gbc.gridy = 0;
-        gbc.ipadx = 150;
+        gbc.ipadx = 250;
         panel.add(chatPane, gbc);
 
         this.bar.addFocusListener(new FocusListener(this.bar));
@@ -85,6 +85,16 @@ public class TestFrame extends JFrame {
         gbc.ipady = 1;
         panel.add(this.bar, gbc);
 
+        JButton newChatButton = new JButton("Open new chat");
+        newChatButton.addActionListener(new NewChatListener(this));
+
+        gbc.anchor = GridBagConstraints.LAST_LINE_START;
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.ipady = 0;
+        gbc.ipadx = 0;
+        panel.add(newChatButton, gbc);
+
         lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList, this.nickName, this.clients, this.chatModel)));
         this.chatScroll = chatPane.getVerticalScrollBar();
         chatScroll.setAutoscrolls(true);
@@ -95,24 +105,39 @@ public class TestFrame extends JFrame {
     }
 
     private void init(int width, int height){
+
+        this.newChatPane = new JOptionPane(
+                "The only way to close this dialog is by\n"
+                        + "pressing one of the following buttons.\n"
+                        + "Do you understand?",
+                JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.YES_NO_OPTION);
+
         fileClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 System.exit(0);
             }
         });
+        fileOpenNewChat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                openChat();
+            }
+        });
 
         this.menuBar.add(file);
+        file.add(fileOpenNewChat);
         file.add(fileClear);
         file.add(fileClose);
 
-        this.menuBar.add(menu);
-        menu.add(fullscreen);
+        //this.menuBar.add(menu);
+        //menu.add(fullscreen);
 
 
         fileClear.addActionListener(new FileClearListener(this.chatModel));
 
-        fullscreen.addActionListener(new FullscreenActionListener(this, this.fullscreen));
+        //fullscreen.addActionListener(new FullscreenActionListener(this, this.fullscreen));
         this.getContentPane().add(this.menuBar, BorderLayout.NORTH);
 
         this.setSize(width, height);
@@ -138,4 +163,50 @@ public class TestFrame extends JFrame {
         this.lobbyList.ensureIndexIsVisible(this.chatModel.size() - 1);
     }
 
+    public void openChat(){
+        JTextField field1 = new JTextField();
+        JTextField field2 = new JTextField();
+        Object[] inputs = {
+                "Public Key: ", field1,
+                "Username: ",
+        };
+        String uName = newChatPane.showInputDialog(this.getContentPane(), inputs, "Open new chat", JOptionPane.QUESTION_MESSAGE);
+        String pKey = field1.getText();
+
+        //TODO Add code to check if the public key is available in the network
+        boolean validPKey = false;
+        while (!validPKey){
+            if (pKey.length() <= 0){
+                pKey = newChatPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
+            } else {
+                validPKey = true;
+            }
+        }
+
+        boolean validName = false;
+        while (!validName){
+            if ((!(onlyContainsLetters(uName))) || (uName.length() <=0) || (uName.contains(" "))){
+                uName = newChatPane.showInputDialog(this.getContentPane(), "Username: ", "Please enter a valid Username", JOptionPane.QUESTION_MESSAGE);
+            } else {
+                validName = true;
+            }
+
+        }
+
+
+    }
+
+
+
+
+
+    public boolean onlyContainsLetters(String s){
+        char[] string = s.toCharArray();
+        for (char c : string){
+            if (!(Character.isLetter(c))){
+                return false;
+            }
+        }
+        return true;
+    }
 }
