@@ -1,6 +1,7 @@
 package client.view.chatWindow.actionListeners;
 
 import client.model.ChatMap;
+import client.security.CryptoKeyPair;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +14,7 @@ public class FileClearListener implements ActionListener {
 
     private DefaultListModel chatModel;
     private ChatMap chats;
-    private JList<String> lobbyList;
+    private JList<CryptoKeyPair> lobbyList;
 
     public FileClearListener(DefaultListModel chatModel, ChatMap chats, JList lobbyList){
         this.chatModel = chatModel;
