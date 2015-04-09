@@ -1,7 +1,5 @@
 package client.model;
 
-import client.security.CryptoKeyPair;
-
 import java.util.ArrayList;
 
 /**
@@ -10,9 +8,9 @@ import java.util.ArrayList;
 public class ClientsMap {
     private ArrayList<Client> clients;
     private String ownNick;
-    private CryptoKeyPair ownPKey;
+    private String ownPKey;
 
-    public ClientsMap(String ownNick, CryptoKeyPair pKey){
+    public ClientsMap(String ownNick, String pKey){
         this.clients = new ArrayList<>();
         this.ownNick = ownNick;
         this.ownPKey = pKey;
@@ -31,7 +29,7 @@ public class ClientsMap {
         return null;
     }
 
-    public CryptoKeyPair getpKey(String nick){
+    public String getpKey(String nick){
         for (Client client : clients){
             if (client.getNick().equals(nick)){
                 return client.getpKey();
@@ -74,7 +72,7 @@ public class ClientsMap {
         return null;
     }
 
-    public CryptoKeyPair getOwnPKey(){
+    public String getOwnPKey(){
         return this.ownPKey;
     }
 }

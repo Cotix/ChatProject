@@ -1,7 +1,5 @@
 package client.model;
 
-import client.security.CryptoKeyPair;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +7,10 @@ public class Chat {
 
     public static final int BUFFER_SIZE = 100;
 
-    private CryptoKeyPair publicKey;
+    private String publicKey;
     private ArrayList<Message> messages = new ArrayList<>();
 
-    public Chat(CryptoKeyPair publicKey) {
+    public Chat(String publicKey) {
         this.publicKey = publicKey;
     }
 
@@ -40,7 +38,7 @@ public class Chat {
         return messages;
     }
 
-    public CryptoKeyPair getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
     }
 

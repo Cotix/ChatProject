@@ -1,7 +1,6 @@
 package client.view.chatWindow;
 
 import client.model.*;
-import client.security.CryptoKeyPair;
 
 import javax.swing.*;
 
@@ -23,7 +22,7 @@ public class ChatSwitcher {
 
     public Chat switchChat(String nick){
         if (clientsMap.contains(nick)){
-            for (CryptoKeyPair key : chats.getKeys()){
+            for (String key : chats.getKeys()){
                 if (key.equals(clientsMap.getpKey(nick))){
                     return chats.getChatByKey(clientsMap.getpKey(nick));
                 }
@@ -40,7 +39,7 @@ public class ChatSwitcher {
         if (chat.getMessages().size() > 0) {
             this.chatModel.removeAllElements();
             for (Message mess : chat.getMessages()) {
-                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getPublicKeySender().toString()), mess.getMessage()));
+                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getPublicKeySender()), mess.getMessage()));
                 this.chatList.setModel(this.chatModel);
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
             }
