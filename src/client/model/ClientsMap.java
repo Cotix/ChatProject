@@ -60,4 +60,13 @@ public class ClientsMap {
     public ArrayList<Client> getMap(){
         return this.clients;
     }
+
+    public Client getClientByName(String name){
+        for (Client client : clients){
+            if (client.getNick().equals(name)){
+                return client;
+            }
+        }
+        return null;
+    }
 }

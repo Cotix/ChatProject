@@ -45,7 +45,7 @@ public class TestFrame extends JFrame {
         this.chats = chats;
         this.net = net;
         this.nickName = nick;
-        this.bar = new EntryBar(net , this);
+        this.bar = new EntryBar(net , this, this.chats, this.lobbyList, this.clients);
 
         GridBagConstraints gbc = new GridBagConstraints();
         JPanel panel = new JPanel(new GridBagLayout());

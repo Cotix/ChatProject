@@ -24,7 +24,7 @@ public class ChatSwitcher {
         if (clientsMap.contains(nick)){
             for (String key : chats.getKeys()){
                 if (key.equals(clientsMap.getpKey(nick))){
-                    return chats.getChatByName(clientsMap.getpKey(nick));
+                    return chats.getChatByKey(clientsMap.getpKey(nick));
                 }
             }
         }
