@@ -2,12 +2,14 @@ package node;
 
 import log.Log;
 import log.LogLevel;
+import network.Address;
 import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 import settings.Configuration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -238,6 +240,15 @@ public class LocalNode extends Thread {
             case IDENTIFY:
                 Log.log("Received an identify packet!", LogLevel.INFO);
                 byte[] key = packet.getData();
+                try {
+                    String keyString = new String(key, "US-ASCII");
+                    if (routing.addClient(new Address(keyString), c)) {
+                        sendDistanceTableToAll();
+                    }
+                    Log.log("New client with public key: " + keyString, LogLevel.INFO);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 break;
             case MESSAGE:
                 Log.log("Received a chat packet!", LogLevel.NONE);

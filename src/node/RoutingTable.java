@@ -15,6 +15,7 @@ public class RoutingTable {
     private Map<Node, DistanceTable> neighbourNodes;
     private Map<Address, Integer> lowestDelays;
     private Map<Node, Integer> delayNodes;
+    private Map<Address, ClientHandler> clients;
     public RoutingTable() {
         routes = new HashMap();
         lowestDelays = null;
@@ -24,6 +25,14 @@ public class RoutingTable {
 
     public void updateNodePing(Node n, int latency) {
         delayNodes.put(n, latency);
+    }
+
+    public boolean addClient(Address address, ClientHandler client) {
+        if (clients.containsKey(address)) {
+            return false;
+        }
+        clients.put(address, client);
+        return update();
     }
 
     public DistancePacket getMyDistanceTable() {
@@ -85,6 +94,10 @@ public class RoutingTable {
         Map<Address, Node> old = routes;
         lowestDelays = new HashMap<>();
         routes = new HashMap<>();
+        //First add our clients, we have the fastest connection to them!
+        for (Address client : clients.keySet()) {
+            lowestDelays.put(client, 1); // TODO: Belangrijk om de delay niet vast in te stellen voor privacy redenen! MOET GEFIXED WORDEN
+        }
         for (Node n : neighbourNodes.keySet()) {
             if (!delayNodes.containsKey(n)) {
                 delayNodes.put(n, 1000);
@@ -117,6 +130,13 @@ public class RoutingTable {
             return update();
         }
         return false;
+    }
+
+    public ClientHandler getDirectConnection(Address a) {
+        if (clients.containsKey(a)) {
+            return clients.get(a);
+        }
+        return null;
     }
 
 
