@@ -64,7 +64,7 @@ public class LocalNode extends Thread {
     private String localhost;
     private RoutingTable routing;
     public LocalNode(String myIP) {
-        this((short)8000, (short)8001, myIP);
+        this((short) 8000, (short) 8001, myIP);
     }
 
     public LocalNode(short cPort, short nPort, String IP) {
@@ -102,7 +102,7 @@ public class LocalNode extends Thread {
         }
         //Check if we are already connected to this node
         for (Node n : peers) {
-            if (n.getIp().equals(ip) && (n.getPort() == port || Configuration.ONENODEPERIP)) {
+            if (n.getIp().equals(ip) && (n.getPort() == port || Configuration.ONE_NODE_PER_IP)) {
                 if (!n.isConnected()) {
                     n.connect();
                 }
@@ -122,7 +122,7 @@ public class LocalNode extends Thread {
     private void addNode(Node node) {
         //Is he already in the list?
         for (Node n : peers) {
-            if (n.getIp().equals(node.getIp()) && (n.getPort() == node.getPort() || Configuration.ONENODEPERIP)) {
+            if (n.getIp().equals(node.getIp()) && (n.getPort() == node.getPort() || Configuration.ONE_NODE_PER_IP)) {
                 if (!n.isConnected()) {
                     n.connect();
                 }
@@ -142,7 +142,7 @@ public class LocalNode extends Thread {
     //Announce ourselves, and ping the neighbours
     public void Announce() {
         //But only if we didn't do that too recently
-        if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCETIME) {
+        if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCE_TIME) {
             return;
         }
         pingAllNodes();
@@ -236,8 +236,8 @@ public class LocalNode extends Thread {
         PacketType type = getPacketType(packet);
         switch (type) {
             case IDENTIFY:
-                Log.log("Received an identify packet!", LogLevel.NONE);
-                // set client id
+                Log.log("Received an identify packet!", LogLevel.INFO);
+                byte[] key = packet.getData();
                 break;
             case MESSAGE:
                 Log.log("Received a chat packet!", LogLevel.NONE);

@@ -11,7 +11,7 @@ import settings.Configuration;
 public class Simulation {
 
     public static void main(String[] arg) {
-        Configuration.ONENODEPERIP = false;
+        Configuration.ONE_NODE_PER_IP = false;
         Log.enableAllLevels();
         Log.disableLevel(LogLevel.NONE);
         LocalNode[] nodes = new LocalNode[4];
