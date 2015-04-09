@@ -23,7 +23,7 @@ public class ChatMap {
         keys.add(chat.getPublicKey());
     }
 
-    public Chat getChatByName(String pKey){
+    public Chat getChatByKey(String pKey){
         for (String key : chatMap.keySet()){
             if (key.equals(pKey)){
                 return chatMap.get(key);
@@ -31,6 +31,8 @@ public class ChatMap {
         }
         return null;
     }
+
+
 
     public ArrayList<String> getKeys(){
         return this.keys;
