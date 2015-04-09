@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class ClientsMap {
     private ArrayList<Client> clients;
     private String ownNick;
+    private String ownPKey;
 
-    public ClientsMap(String ownNick){
+    public ClientsMap(String ownNick, String pKey){
         this.clients = new ArrayList<>();
         this.ownNick = ownNick;
+        this.ownPKey = pKey;
     }
 
     public void addClient(Client client){
@@ -68,5 +70,9 @@ public class ClientsMap {
             }
         }
         return null;
+    }
+
+    public String getOwnPKey(){
+        return this.ownPKey;
     }
 }

@@ -8,7 +8,7 @@ public class Chat {
     public static final int BUFFER_SIZE = 100;
 
     private String publicKey;
-    private List<Message> messages = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
 
     public Chat(String publicKey) {
         this.publicKey = publicKey;

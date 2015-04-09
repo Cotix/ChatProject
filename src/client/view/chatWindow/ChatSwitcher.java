@@ -37,9 +37,9 @@ public class ChatSwitcher {
 
     public void showList(Chat chat){
         if (chat.getMessages().size() > 0) {
+            this.chatModel.removeAllElements();
             for (Message mess : chat.getMessages()) {
-                this.chatModel.removeAllElements();
-                this.chatModel.addElement(String.format("%s: %s", mess.getPublicKeySender(), mess.getMessage()));
+                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getPublicKeySender()), mess.getMessage()));
                 this.chatList.setModel(this.chatModel);
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
             }
