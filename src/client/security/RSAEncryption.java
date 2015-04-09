@@ -1,4 +1,4 @@
-package client.Encryption;
+package client.security;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -13,10 +13,10 @@ public class RSAEncryption {
 
     private static final String RSA = "RSA";
     private static final int KEY_LENGTH = 1024;
-    private Key publicKey;
-    private Key privateKey;
+    private static Key publicKey;
+    private static Key privateKey;
 
-    public RSAEncryption() {
+    public static void generateKeys() {
         try {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance(RSA);
             kpg.initialize(KEY_LENGTH);
@@ -28,7 +28,11 @@ public class RSAEncryption {
         }
     }
 
-    public byte[] rsaEncrypt(byte[] data) {
+    public Key getPublicKey() {
+        return publicKey;
+    }
+
+    public static byte[] rsaEncrypt(byte[] data, Key publicKey) {
         byte[] cipherData = null;
         try {
             Cipher cipher = Cipher.getInstance(RSA);
@@ -41,7 +45,7 @@ public class RSAEncryption {
         return cipherData;
     }
 
-    public byte[] rsaDecrypt(byte[] data) {
+    public static byte[] rsaDecrypt(byte[] data, Key privateKey) {
         byte[] cipherData = null;
         try {
             Cipher cipher = Cipher.getInstance(RSA);
@@ -52,10 +56,6 @@ public class RSAEncryption {
             e.printStackTrace();
         }
         return cipherData;
-    }
-
-    public Key getPublicKey() {
-        return publicKey;
     }
 
 }
