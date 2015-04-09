@@ -1,19 +1,18 @@
 package network.connection.packet;
 
-import log.Log;
-import log.LogLevel;
+//A packet used for pinging other nodes.
+//A currenttimepacket includes the current time when you construct it
+//This allows for stateless pinging, as we can send a CurrentTimePacket to a node
+//And that node can return the packet and we can read the time difference. This way
+//We dont need to store any information about who we are pinging and so on.
 
-import java.io.UnsupportedEncodingException;
-
-/**
- * Created by cotix on 4/7/15.
- */
 public class CurrentTimePacket implements Packet {
     private byte[] data;
 
     public CurrentTimePacket() {
         byte[] pData = new byte[8];
         long v = System.currentTimeMillis();
+        //Convert the long to a byte array
         pData[0] = (byte)(v >>> 56);
         pData[1] = (byte)(v >>> 48);
         pData[2] = (byte)(v >>> 40);
@@ -22,6 +21,7 @@ public class CurrentTimePacket implements Packet {
         pData[5] = (byte)(v >>> 16);
         pData[6] = (byte)(v >>>  8);
         pData[7] = (byte)(v >>>  0);
+        //Put the timestamp in a packet, which means it had to be prefixed with a length and a type
         data = new byte[pData.length + 5];
         data[0] = (byte)((((pData.length+1) & 0xFF000000) >> 24) & 0xFF);
         data[1] = (byte)((((pData.length+1) & 0xFF0000) >> 16) & 0xFF);

@@ -2,6 +2,9 @@ package network.connection.packet;
 
 import java.io.UnsupportedEncodingException;
 
+//A very allround packet. Constructs a regular packet from input data
+//Can be either a string or a byte array.
+
 public class StringPacket implements Packet{
     private byte[] data;
 

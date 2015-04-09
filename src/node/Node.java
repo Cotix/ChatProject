@@ -8,7 +8,10 @@ import network.connection.packet.Packet;
 
 import java.util.LinkedList;
 import java.util.List;
-
+//This class maintains the connection between our node and neighbour nodes.
+//Basicly it has a Connection, that it receives packets from in a thread
+//The LocalNode can poll packets from the queue
+//Also holds some information about the node, ip, port, etc
 public class Node implements Runnable {
     private String ip;
     private short port;
@@ -60,6 +63,8 @@ public class Node implements Runnable {
         send(new CurrentTimePacket());
     }
 
+    //We return a list of all packets for performance reasons
+    //Returning one packet at a time is a bottleneck
     public List<Packet> handleConnection() {
         if (!isConnected()) {
             return null;
