@@ -49,6 +49,7 @@ public class LocalNode extends Thread {
     private short clientPort;
     private short nodePort;
     private List<Node> peers;
+    private List<ClientHandler> clients;
     private long lastAnounce;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
@@ -80,6 +81,7 @@ public class LocalNode extends Thread {
         nodePort = nPort;
         packetBuffer = new HashMap<>();
         peers = new LinkedList<Node>();
+        clients = new LinkedList<ClientHandler>();
         try {
             multicastSocket.setSoTimeout(1);
         } catch (SocketException e) {
@@ -221,6 +223,16 @@ public class LocalNode extends Thread {
             }
             Node n = new Node(new TCPConnection(s), s.getRemoteSocketAddress().toString(), (short)s.getPort());
             addNode(n);
+        }
+    }
+
+    private void acceptClientConnections() {
+        while (true) {
+            Socket s = clientThread.accept();
+            if (s == null) {
+                return;
+            }
+            clients.add(new ClientHandler(s));
         }
     }
 
