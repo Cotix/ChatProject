@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class TestFrame extends JFrame {
@@ -18,7 +19,7 @@ public class TestFrame extends JFrame {
     private JMenu file = new JMenu("File");
     private JMenuBar menuBar = new JMenuBar();
     //private JCheckBoxMenuItem fullscreen = new JCheckBoxMenuItem("Fullscreen", false);
-    private JMenuItem fileClear = new JMenuItem("Clear chat");
+    private JMenuItem fileClear = new JMenuItem("Clear chat history");
     private JMenuItem fileClose = new JMenuItem("Close client");
     private JMenuItem fileOpenNewChat = new JMenuItem("Open new chat");
     private NetworkController net;
@@ -87,7 +88,8 @@ public class TestFrame extends JFrame {
         gbc.ipady = 1;
         panel.add(this.bar, gbc);
 
-        JButton newChatButton = new JButton("Open new chat");
+        JButton newChatButton = new JButton("New chat");
+        newChatButton.setMnemonic(KeyEvent.VK_N);
         newChatButton.addActionListener(new NewChatListener(this));
 
         gbc.anchor = GridBagConstraints.LAST_LINE_START;
@@ -128,6 +130,10 @@ public class TestFrame extends JFrame {
             }
         });
 
+
+        fileOpenNewChat.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        fileClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
+        fileClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.SHIFT_MASK));
         this.menuBar.add(file);
         file.add(fileOpenNewChat);
         file.add(fileClear);
@@ -137,7 +143,7 @@ public class TestFrame extends JFrame {
         //menu.add(fullscreen);
 
 
-        fileClear.addActionListener(new FileClearListener(this.chatModel));
+        fileClear.addActionListener(new FileClearListener(this.chatModel, this.chats, this.lobbyList));
 
         //fullscreen.addActionListener(new FullscreenActionListener(this, this.fullscreen));
         this.getContentPane().add(this.menuBar, BorderLayout.NORTH);
@@ -180,6 +186,7 @@ public class TestFrame extends JFrame {
         boolean validPKey = false;
         while (!validPKey){
             if (pKey.length() <= 0){
+                pKey = newChatPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
                 pKey = newChatPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
             } else {
                 validPKey = true;

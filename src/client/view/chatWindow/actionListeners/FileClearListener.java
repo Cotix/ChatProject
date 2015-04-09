@@ -1,5 +1,7 @@
 package client.view.chatWindow.actionListeners;
 
+import client.model.ChatMap;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,13 +12,21 @@ import java.awt.event.ActionListener;
 public class FileClearListener implements ActionListener {
 
     private DefaultListModel chatModel;
+    private ChatMap chats;
+    private JList<String> lobbyList;
 
-    public FileClearListener(DefaultListModel chatModel){
+    public FileClearListener(DefaultListModel chatModel, ChatMap chats, JList lobbyList){
         this.chatModel = chatModel;
+        this.chats = chats;
+        this.lobbyList = lobbyList;
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        System.out.println("Listener test");
+
+        //TODO waaor mwerkt niet
+        this.chats.getChatByKey(lobbyList.getSelectedValue()).removeAll();
         this.chatModel.removeAllElements();
     }
 }

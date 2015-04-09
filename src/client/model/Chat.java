@@ -41,4 +41,9 @@ public class Chat {
     public String getPublicKey() {
         return publicKey;
     }
+
+    public void removeAll(){
+        System.out.println("Chat test");
+        messages.removeAll(messages);
+    }
 }
