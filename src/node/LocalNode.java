@@ -203,7 +203,7 @@ public class LocalNode extends Thread {
                 }
                 break;
             case PING:
-                Log.log("Received a ping packet!", LogLevel.INFO);
+                Log.log("Received a ping packet!", LogLevel.NONE);
                 CurrentTimePacket pong = new CurrentTimePacket(packet.getRawData());
                 pong.setType(PacketType.PONG);
                 n.send(pong);
@@ -212,7 +212,7 @@ public class LocalNode extends Thread {
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
                 int diff = pongPacket.getTimeDifference();
                 routing.updateNodePing(n, diff);
-                Log.log("Received a pong packet time diff: " + diff, LogLevel.INFO);
+                Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
         }
 
