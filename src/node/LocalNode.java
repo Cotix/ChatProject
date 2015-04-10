@@ -121,7 +121,7 @@ public class LocalNode extends Thread {
         node.connect();
         (new Thread(node)).start();
     }
-    //Adds a node to the peers list. This function is used for incomming connections
+    //Adds a node to the peers list. This function is used for incoming connections
     private void addNode(Node node) {
         //Is he already in the list?
         for (Node n : peers) {
@@ -205,7 +205,7 @@ public class LocalNode extends Thread {
             sendDistanceTable(n);
         }
     }
-    //Handles a packet. Basicly a big switch case on all packetTypes
+    //Handles a packet. Basically a big switch case on all packetTypes
     //Than does what ever needs to be done to the packets
     private boolean handlePacket(Packet packet, Node n) {
         PacketType type = getPacketType(packet);
@@ -277,7 +277,7 @@ public class LocalNode extends Thread {
         }
         return true;
     }
-    //Processes packets that are in our queue, basicly call handlePacket
+    //Processes packets that are in our queue, basically call handlePacket
     //If it cant be handled, lets add it back to the queue and deal with it next iteration
     public void forwardPackets() {
         for (Node n : peers) {
@@ -305,7 +305,7 @@ public class LocalNode extends Thread {
             }
         }
     }
-    //Polls incomming connections from the NodeThread
+    //Polls incoming connections from the NodeThread
     private void acceptNodeConnections() {
         while (true) {
             Socket s = nodeThread.accept();
@@ -316,7 +316,7 @@ public class LocalNode extends Thread {
             addNode(n);
         }
     }
-    //Polls incomming connections from the ClientThread
+    //Polls incoming connections from the ClientThread
     private void acceptClientConnections() {
         while (true) {
             Socket s = clientThread.accept();
@@ -340,7 +340,7 @@ public class LocalNode extends Thread {
         clientThread.start();
         nodeThread.start();
         while (true) {
-            //Announce, than reads other announcements
+            //Announce, then reads other announcements
             Announce();
             byte[] buf = new byte[1000];
             DatagramPacket recv = new DatagramPacket(buf, buf.length);
@@ -379,7 +379,7 @@ public class LocalNode extends Thread {
             acceptNodeConnections();
             acceptClientConnections();
             try {
-                //Sleep a litle so we dont stress the computer too much
+                //Sleep a little so we don't stress the computer too much
                 sleep(1);
             } catch (InterruptedException e) {
                 Log.log("Sleep got interrupted of localnode!", LogLevel.INFO);

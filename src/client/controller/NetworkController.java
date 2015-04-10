@@ -3,21 +3,12 @@ package client.controller;
 import client.model.Message;
 import client.security.CryptoKeyPair;
 import network.connection.TCPConnection;
-import network.connection.packet.PacketUtils;
-import network.connection.packet.StringPacket;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.UnsupportedEncodingException;
 
 public class NetworkController implements Runnable {
 
     private TCPConnection connection;
-    private BufferedReader in;
-    private BufferedWriter out;
     private CryptoKeyPair myKeyPair;
-
-    StringPacket message;
 
     public NetworkController(String host, short port, CryptoKeyPair keyPair){
         this.connection = new TCPConnection(host, port);
@@ -40,8 +31,8 @@ public class NetworkController implements Runnable {
         fullSigMsg = keyPairOfReceiver.encrypt(fullSigMsg);
          */
 
-        //TODO switch out placeholders (PH)
-        Message mess = new Message(message, "PH", "PH", 1000L);
-        connection.sendPacket(new StringPacket(mess.toString(), PacketUtils.PacketType.UNKNOWN));
+        //TODO switch out placeholders
+        Message mess = new Message(message, null, null, 1000L);
+        connection.sendPacket(mess.makePacket());
     }
 }
