@@ -60,7 +60,7 @@ public class Message {
         encryptedBlob = keyReceiver.encrypt(encryptedBlob);
         byte[] recvKey = keyReceiver.getRawPublicKey();
         byte[] data = new byte[recvKey.length + encryptedBlob.length];
-        // [Destination key] [encryptedmessage]
+        // [Destination key] [Encrypted Message]
         System.arraycopy(recvKey, 0, data, 0, recvKey.length);
         System.arraycopy(encryptedBlob, 0, data, recvKey.length, encryptedBlob.length);
         return new StringPacket(data, PacketUtils.PacketType.MESSAGE);
@@ -70,7 +70,6 @@ public class Message {
      * returns a String representation of the Message class.
      */
     public String toString(){
-        //TODO format so node understands
         return String.format("%s %s %s %s \n", timestamp, getPublicKeySender(), getPublicKeyReceiver(), message);
     }
 }

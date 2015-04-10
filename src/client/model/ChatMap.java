@@ -1,7 +1,5 @@
 package client.model;
 
-
-import client.security.CryptoKeyPair;
 import network.Address;
 
 import java.security.PublicKey;
@@ -15,11 +13,11 @@ import java.util.Map;
 public class ChatMap {
 
     Map<Address, Chat> chatMap;
-    ArrayList<Address> adresses;
+    ArrayList<Address> addresses;
 
     public ChatMap(){
         this.chatMap = new HashMap<>();
-        this.adresses = new ArrayList<>();
+        this.addresses = new ArrayList<>();
     }
 
     public void addChat(Chat chat){
@@ -38,6 +36,6 @@ public class ChatMap {
 
 
     public ArrayList<Address> getAdresses(){
-        return this.adresses;
+        return this.addresses;
     }
 }

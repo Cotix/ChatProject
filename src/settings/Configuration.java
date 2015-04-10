@@ -4,6 +4,9 @@ package settings;
 //Can be used to easily change some settings
 
 public class Configuration {
+    public static final String HOST = "localhost";
+    public static final short PORT = 8080;
+    public static final int BUFFER_SIZE = 100;
     public static boolean ONE_NODE_PER_IP = true;
     public static int ANNOUNCE_TIME = 3000;
     public static int MAX_PACKET_SIZE = 1024*1024; // Must be smaller than Integer.MAX_SIZE

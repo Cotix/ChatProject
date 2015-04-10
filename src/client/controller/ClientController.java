@@ -3,6 +3,7 @@ package client.controller;
 import client.model.Chat;
 import client.security.CryptoKeyPair;
 import network.Address;
+import settings.Configuration;
 
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -14,8 +15,6 @@ import java.util.Map;
  */
 public class ClientController {
 
-    public static final String HOST = "localhost";
-    public static final short PORT = 8080;
     private CryptoKeyPair myKeyPair;
     private NetworkController networkController;
     private Map<String, Chat> chats;
@@ -23,7 +22,12 @@ public class ClientController {
     public ClientController() {
         myKeyPair = new CryptoKeyPair();
         chats  = new HashMap<>();
-        this.networkController =  new NetworkController(HOST, PORT, myKeyPair);
+        this.networkController =  new NetworkController(Configuration.HOST, Configuration.PORT, myKeyPair);
+    }
+
+    public ClientController(String host, short port) {
+        this.myKeyPair = new CryptoKeyPair();
+        this.networkController = new NetworkController(host, port, this.myKeyPair);
     }
 
     public NetworkController getNetworkController() {

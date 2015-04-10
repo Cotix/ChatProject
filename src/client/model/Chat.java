@@ -1,5 +1,7 @@
 package client.model;
 
+import settings.Configuration;
+
 import client.security.CryptoKeyPair;
 import network.Address;
 
@@ -9,8 +11,6 @@ import java.util.List;
 
 public class Chat {
 
-    public static final int BUFFER_SIZE = 100;
-
     private Address address;
     private ArrayList<Message> messages = new ArrayList<>();
 
@@ -19,7 +19,6 @@ public class Chat {
     }
 
     public void addMessage(Message message) {
-
         if (messages.size() != 0) {
             for (int i = 0; i < messages.size(); i++) {
                 if (message.getTimestamp() > messages.get(i).getTimestamp()) {
@@ -30,8 +29,8 @@ public class Chat {
         } else {
             messages.add(message);
         }
-        if (messages.size() > BUFFER_SIZE) {
-            messages.remove(BUFFER_SIZE);
+        if (messages.size() > Configuration.BUFFER_SIZE) {
+            messages.remove(Configuration.BUFFER_SIZE);
         }
     }
 
