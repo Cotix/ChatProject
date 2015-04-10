@@ -12,7 +12,7 @@ public class Address {
     public Address(String address) {
         try {
             this.address = new CryptoKeyPair(address);
-      } catch (Base64DecodingException e) {
+        } catch (Base64DecodingException e) {
             e.printStackTrace();
         }
     }

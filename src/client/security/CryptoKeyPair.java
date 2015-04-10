@@ -50,6 +50,7 @@ public class CryptoKeyPair {
     public static PublicKey bytesToKey(byte[] key) {
         KeyFactory keyFactory;
         PublicKey publicKey2 = null;
+        System.out.println("Key length: " + key.length);
         try {
             keyFactory = KeyFactory.getInstance(Configuration.ENCRYPTION_SCHEME);
             EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(key);
@@ -129,7 +130,7 @@ public class CryptoKeyPair {
     }
 
     public String toString() {
-        return Base64.encode(publicKey.getEncoded());
+        return Base64.encode(publicKey.getEncoded()).replace("\n","");
     }
 
     public boolean equals(Object k) {
