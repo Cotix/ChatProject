@@ -31,10 +31,10 @@ public class Chat {
             }
         } else {
             messages.add(message);
-        }
-        if (messages.size() > Configuration.BUFFER_SIZE) {
-            messages.remove(Configuration.BUFFER_SIZE);
         }*/
+        if (messages.size() > Configuration.BUFFER_SIZE) {
+            messages.remove(0);
+        }
     }
 
     public List<Message> getMessages() {
