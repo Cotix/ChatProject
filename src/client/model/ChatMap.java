@@ -3,30 +3,40 @@ package client.model;
 import client.security.CryptoKeyPair;
 import network.Address;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by destion on 9-4-15.
+ * Maps all chats to the corresponding client address.
  */
 public class ChatMap {
 
     Map<Address, Chat> chatMap;
     ArrayList<Address> addresses;
 
-    public ChatMap(){
+    /**
+     * Constructs a ChatMap.
+     */
+    public ChatMap() {
         this.chatMap = new HashMap<>();
         this.addresses = new ArrayList<>();
     }
 
-    public void addChat(Chat chat){
+    /**
+     * Adds a Chat.
+     * @param chat Chat model
+     */
+    public void addChat(Chat chat) {
         this.chatMap.put(chat.getAddress(), chat);
         this.addresses.add(chat.getAddress());
     }
 
+    /**
+     * Returns a Chat whose receiver hold given keypair.
+     * @param keyPair keypair of the receiver
+     * @return
+     */
     public Chat getChatByKey(CryptoKeyPair keyPair){
         for (Address address : chatMap.keySet()){
             if (address.getAddress().equals(keyPair)){
@@ -36,19 +46,11 @@ public class ChatMap {
         return null;
     }
 
-
-
-    public ArrayList<Address> getAdresses(){
+    /**
+     * Returns a list of addresses.
+     * @return
+     */
+    public ArrayList<Address> getAdresses() {
         return this.addresses;
-    }
-
-    public void handleNewMessages(List<Message> newMessages){
-        for (Address addr : this.chatMap.keySet()){
-            for (Message mess : newMessages){
-                if (mess.getPublicKeySender().equals(addr)){
-                    this.getChatByKey(addr.getAddress()).addMessage(mess);
-                }
-            }
-        }
     }
 }
