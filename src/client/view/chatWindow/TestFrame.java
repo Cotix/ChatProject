@@ -153,7 +153,7 @@ public class TestFrame extends JFrame {
         this.setSize(width, height);
         this.setTitle("WhatsSwag messenger");
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        //this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
