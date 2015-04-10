@@ -2,7 +2,6 @@ package client.security;
 
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import log.Log;
 import log.LogLevel;
 import settings.Configuration;
