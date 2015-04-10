@@ -5,6 +5,7 @@ import client.model.ChatMap;
 import client.model.ClientsMap;
 import client.view.chatWindow.actionListeners.*;
 import com.sun.corba.se.spi.orbutil.fsm.Input;
+import network.Address;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,7 +110,7 @@ public class TestFrame extends JFrame {
 
         this.clients.addClient(net.getSelf());
         JButton refresh = new JButton("Refresh chat");
-        refresh.addActionListener(new RefreshListener(this.chats, this.net, this.clients));
+        refresh.addActionListener(new RefreshListener(this.chats, this.net, this.clients, this));
 
         gbc.anchor = GridBagConstraints.LAST_LINE_START;
         gbc.gridx = 0;
@@ -216,7 +217,6 @@ public class TestFrame extends JFrame {
 
 
     }
-
 
 
 
