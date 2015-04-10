@@ -5,6 +5,7 @@ import log.LogLevel;
 import network.Address;
 import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
+import network.connection.packet.MessagePacket;
 import network.connection.packet.Packet;
 import settings.Configuration;
 
@@ -230,6 +231,8 @@ public class LocalNode extends Thread {
                 routing.updateNodePing(n, diff);
                 Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
+            case MESSAGE:
+                MessagePacket p = new MessagePacket(packet.getRawData());
         }
         return true;
     }

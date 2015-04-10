@@ -17,6 +17,10 @@ public class Address {
         }
     }
 
+    public Address(CryptoKeyPair a) {
+        address = a;
+    }
+
     public boolean equals(Object o) {
         return o instanceof Address && toString().equals(o.toString());
     }

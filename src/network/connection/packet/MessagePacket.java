@@ -1,5 +1,7 @@
 package network.connection.packet;
 
+import client.security.CryptoKeyPair;
+import network.Address;
 import settings.Configuration;
 
 import java.nio.ByteBuffer;
@@ -13,11 +15,11 @@ public class MessagePacket implements Packet {
     }
 
 
-    public byte[] getRecipient() {
+    public Address getRecipient() {
         byte[] data = getData();
         byte[] recipient = new byte[Configuration.KEY_LENGTH/8];
-        System.arraycopy(data, 0, recipient, 0, Configuration.KEY_LENGTH/8);
-        return recipient;
+        System.arraycopy(data, 5, recipient, 0, Configuration.KEY_LENGTH/8);
+        return new Address(new CryptoKeyPair(recipient));
     }
 
     @Override
