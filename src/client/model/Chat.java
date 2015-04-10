@@ -19,7 +19,10 @@ public class Chat {
     }
 
     public void addMessage(Message message) {
-        if (messages.size() != 0) {
+
+        messages.add(message);
+
+        /*if (messages.size() != 0) {
             for (int i = 0; i < messages.size(); i++) {
                 if (message.getTimestamp() > messages.get(i).getTimestamp()) {
                     messages.add(i, message);
@@ -31,7 +34,7 @@ public class Chat {
         }
         if (messages.size() > Configuration.BUFFER_SIZE) {
             messages.remove(Configuration.BUFFER_SIZE);
-        }
+        }*/
     }
 
     public List<Message> getMessages() {

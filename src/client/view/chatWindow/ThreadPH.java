@@ -26,7 +26,7 @@ public class ThreadPH implements Runnable {
         CryptoKeyPair keyPair1 = new CryptoKeyPair();
         CryptoKeyPair keyPair2 = new CryptoKeyPair();
 
-
+        CryptoKeyPair keyPair3 = new CryptoKeyPair();
 
         Message mess = new Message("Hoi", keyPair1, new CryptoKeyPair(), 1428654264136L * 3);
         Message mess2 = new Message("Test test test", keyPair2, new CryptoKeyPair(), 1428654264136L * 3);
@@ -37,13 +37,15 @@ public class ThreadPH implements Runnable {
         ChatMap chats = new ChatMap();
         chats.addChat(chat);
         chats.addChat(chat2);
-        ClientsMap map = new ClientsMap(new Address(new CryptoKeyPair(), "Destion"));
+        ClientsMap map = new ClientsMap(new Address(keyPair3, "Destion"));
 
         Address client1 = new Address(keyPair1, "Erik");
         Address client2 = new Address(keyPair2, "Noah");
+        Address self = new Address(keyPair3, "Destion");
 
         map.addClient(client1);
         map.addClient(client2);
+        map.addClient(self);
 
 
         System.out.println(map.getMap().size());
