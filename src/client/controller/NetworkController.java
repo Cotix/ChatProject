@@ -17,6 +17,7 @@ public class NetworkController implements Runnable {
 
     public NetworkController(String host, short port, CryptoKeyPair keyPair){
         this.connection = new TCPConnection(host, port);
+        connection.connect();
         myKeyPair = keyPair;
         sendIdentify(keyPair);
     }
