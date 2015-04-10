@@ -4,6 +4,8 @@ import client.controller.NetworkController;
 import client.model.ChatMap;
 import client.model.ClientsMap;
 import client.view.chatWindow.TestFrame;
+import log.Log;
+import log.LogLevel;
 import network.Address;
 
 import java.awt.event.ActionEvent;
@@ -35,7 +37,6 @@ public class RefreshListener implements ActionListener {
             a.setNickName(Integer.toString(a.hashCode()));
             clients.addClient(a);
             names.add(a.getNickName());
-
         }
         frame.updateLobby(names);
     }

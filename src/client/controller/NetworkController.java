@@ -2,6 +2,8 @@ package client.controller;
 
 import client.model.Message;
 import client.security.CryptoKeyPair;
+import log.Log;
+import log.LogLevel;
 import network.Address;
 import network.connection.TCPConnection;
 import network.connection.packet.DistancePacket;
@@ -69,7 +71,9 @@ public class NetworkController implements Runnable {
 
     @Override
     public void run() {
-        connection.handleConnection();
+        while(true) {
+            connection.handleConnection();
+        }
     }
 
     public DistanceTable getDistanceTable() {
@@ -86,8 +90,8 @@ public class NetworkController implements Runnable {
             if (p == null) {
                 return list;
             }
-            if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.IDENTIFY) {
-                distanceTable.update(new DistancePacket(p.getRawData()));
+            if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.DISTANCE) {
+                distanceTable.update(new DistancePacket(p.getData()));
             } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.MESSAGE) {
                 list.add(Message.makeMessage(p, myKeyPair));
             }

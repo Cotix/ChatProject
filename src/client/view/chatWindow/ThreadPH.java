@@ -54,11 +54,10 @@ public class ThreadPH implements Runnable {
 
 
         NetworkController net = new NetworkController(Configuration.HOST, Configuration.PORT, keyPair3, "Destion");
-
+        (new Thread(net)).start();
 
 
         TestFrame test = new TestFrame(net, "Destion", chats, map);
-
 
 
         test.updateLobby(map.getNames());
