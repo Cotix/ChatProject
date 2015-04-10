@@ -2,14 +2,13 @@ package client.security;
 
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import log.Log;
 import log.LogLevel;
 import settings.Configuration;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
@@ -64,7 +63,19 @@ public class CryptoKeyPair {
         return publicKey;
     }
 
-    public byte[] encrypt(byte[] data) {
+    private SecretKey generateSymmetricKey() {
+        KeyGenerator keyGen;
+        try {
+            keyGen = KeyGenerator.getInstance(Configuration.SYMMETRIC_SCHEME);
+        } catch (NoSuchAlgorithmException e) {
+            Log.log("No encryption scheme " + Configuration.SYMMETRIC_SCHEME + " found!", LogLevel.ERROR);
+            return null;
+        }
+        keyGen.init(Configuration.SYMMETRIC_KEY_LENGTH);
+        return keyGen.generateKey();
+    }
+
+    private byte[] publicKeyEncrypt(byte[] data) {
         byte[] cipherData;
         try {
             Cipher cipher = Cipher.getInstance(Configuration.ENCRYPTION_SCHEME);
@@ -72,13 +83,13 @@ public class CryptoKeyPair {
             cipherData = cipher.doFinal(data);
         } catch (InvalidKeyException | IllegalBlockSizeException
                 | BadPaddingException | NoSuchPaddingException | NoSuchAlgorithmException e) {
-            Log.log("Encryption failed! Public key:" + publicKey.toString(), LogLevel.ERROR);
+            Log.log("Encryption failed! Reason: " + e.getMessage() + "  Public key:" + publicKey.toString(), LogLevel.ERROR);
             cipherData = new byte[0];
         }
         return cipherData;
     }
 
-    public byte[] decrypt(byte[] data) {
+    private byte[] publicKeyDecrypt(byte[] data) {
         if (privateKey == null) {
             Log.log("Can not decrypt without private key! Only have the public key(" + publicKey.toString() + ")", LogLevel.ERROR);
         }
@@ -88,6 +99,50 @@ public class CryptoKeyPair {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             cipherData = cipher.doFinal(data);
         } catch (InvalidKeyException | IllegalBlockSizeException
+                | BadPaddingException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+            Log.log("Encryption failed! Reason: " + e.getMessage() + "  Public key:" + publicKey.toString(), LogLevel.ERROR);
+            cipherData = new byte[0];
+        }
+        return cipherData;
+    }
+
+    public byte[] encrypt(byte[] data) {
+        SecretKey key = generateSymmetricKey();
+        byte[] cryptedKey = publicKeyEncrypt(key.getEncoded());
+        byte[] cipherData;
+        try {
+            Cipher cipher = Cipher.getInstance(Configuration.SYMMETRIC_SCHEME);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            cipherData = cipher.doFinal(data);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            Log.log("No encryption scheme " + Configuration.SYMMETRIC_SCHEME + " found!", LogLevel.ERROR);
+            return new byte[0];
+        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            Log.log("Encryption failed! Reason: " + e.getMessage() + "  Public key:" + publicKey.toString(), LogLevel.ERROR);
+            cipherData = new byte[0];
+        }
+        byte[] res = new byte[cryptedKey.length + cipherData.length];
+        System.arraycopy(cryptedKey, 0, res, 0, cryptedKey.length);
+        System.arraycopy(cipherData, 0, res, cryptedKey.length, cipherData.length);
+        return res;
+    }
+
+    public byte[] decrypt(byte[] data) {
+        if (privateKey == null) {
+            Log.log("Can not decrypt without private key! Only have the public key(" + publicKey.toString() + ")", LogLevel.ERROR);
+        }
+        byte[] key = new byte[Configuration.SYMMETRIC_KEY_LENGTH];
+        byte[] d = new byte[data.length - key.length];
+        System.arraycopy(data, 0, key, 0, key.length);
+        System.arraycopy(data, key.length, d, 0, d.length);
+        key = publicKeyDecrypt(key);
+        SecretKey symKey = new SecretKeySpec(key, Configuration.SYMMETRIC_SCHEME);
+        byte[] cipherData;
+        try {
+            Cipher cipher = Cipher.getInstance(Configuration.SYMMETRIC_SCHEME);
+            cipher.init(Cipher.DECRYPT_MODE, symKey);
+            cipherData = cipher.doFinal(d);
+        } catch (IllegalBlockSizeException | InvalidKeyException
                 | BadPaddingException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             Log.log("Encryption failed! Public key:" + publicKey.toString(), LogLevel.ERROR);
             return new byte[0];

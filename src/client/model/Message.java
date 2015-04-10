@@ -45,7 +45,7 @@ public class Message {
         byte[] encryptedBlob = new byte[data.length - recv.length];
         System.arraycopy(data, recv.length, encryptedBlob, 0, encryptedBlob.length);
         encryptedBlob = myKey.decrypt(encryptedBlob);
-        if (encryptedBlob == null) {
+        if (encryptedBlob == null || encryptedBlob.length == 0) {
             return null;
         }
         byte[] sign = new byte[Configuration.SIGN_LENGTH];
