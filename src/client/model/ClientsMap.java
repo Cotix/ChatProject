@@ -31,10 +31,10 @@ public class ClientsMap {
         return null;
     }
 
-    public PublicKey getpKey(String nick){
+    public CryptoKeyPair getKeyPair(String nick){
         for (Address client : clients){
             if (client.getNickName().equals(nick)){
-                return client.getAddress().getPublicKey();
+                return client.getAddress();
             }
         }
         return null;

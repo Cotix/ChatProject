@@ -30,7 +30,7 @@ public class FileClearListener implements ActionListener {
         System.out.println("Listener test");
 
 
-        this.chats.getChatByKey(clients.getpKey(lobbyList.getSelectedValue())).removeAll();
+       // this.chats.getChatByKey(clients.getpKey(lobbyList.getSelectedValue())).removeAll();
         this.chatModel.removeAllElements();
     }
 }

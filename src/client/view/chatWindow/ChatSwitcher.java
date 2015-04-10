@@ -26,7 +26,7 @@ public class ChatSwitcher {
             for (Address adress : chats.getAdresses()){
                 if (adress.getAddress().equals(clientsMap.getClientByName(nick).getAddress())){
                     System.out.println("Test");
-                    return chats.getChatByKey(clientsMap.getpKey(nick));
+                    return chats.getChatByKey(clientsMap.getKeyPair(nick));
                 }
             }
         }
