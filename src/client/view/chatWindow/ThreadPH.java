@@ -27,8 +27,9 @@ public class ThreadPH implements Runnable {
         CryptoKeyPair keyPair2 = new CryptoKeyPair();
 
 
-        Message mess = new Message("Hoi", keyPair1, new CryptoKeyPair(), 1000);
-        Message mess2 = new Message("Test test test", keyPair2, new CryptoKeyPair(), 1000);
+
+        Message mess = new Message("Hoi", keyPair1, new CryptoKeyPair(), 1428654264136L * 3);
+        Message mess2 = new Message("Test test test", keyPair2, new CryptoKeyPair(), 1428654264136L * 3);
         Chat chat = new Chat(new Address(keyPair1, "Erik"));
         Chat chat2 = new Chat(new Address(keyPair2, "Noah"));
         chat.addMessage(mess);
