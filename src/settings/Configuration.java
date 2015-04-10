@@ -13,6 +13,7 @@ public class Configuration {
     public static String ENCRYPTION_SCHEME = "RSA";
     public static String SYMMETRIC_SCHEME = "AES";
     public static int KEY_LENGTH = 1024;
+    public static int ENCODED_KEY_LENGTH = 162;
     public static int SYMMETRIC_KEY_LENGTH = 128;
     public static String SIGN_INSTANCE = "SHA256withRSA";
     public static int SIGN_LENGTH = 128; //Has to be determined

@@ -5,6 +5,7 @@ import network.Address;
 import settings.Configuration;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class MessagePacket implements Packet {
 
@@ -17,8 +18,8 @@ public class MessagePacket implements Packet {
 
     public Address getRecipient() {
         byte[] data = getData();
-        byte[] recipient = new byte[Configuration.KEY_LENGTH/8];
-        System.arraycopy(data, 5, recipient, 0, Configuration.KEY_LENGTH/8);
+        byte[] recipient = new byte[Configuration.ENCODED_KEY_LENGTH];
+        System.arraycopy(data, 0, recipient, 0, Configuration.ENCODED_KEY_LENGTH);
         return new Address(new CryptoKeyPair(recipient));
     }
 
