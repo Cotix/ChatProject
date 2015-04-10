@@ -47,6 +47,7 @@ public class DistanceTable {
     public static Map<Address, Integer> stringToMap(String packet) {
         Map<Address, Integer> result = new HashMap<Address, Integer>();
         for (String line : packet.split("\n")) {
+            if (line.length() == 0) continue;
             String[] parts = line.split(",");
             result.put(new Address(parts[0]), Integer.parseInt(parts[1]));
         }

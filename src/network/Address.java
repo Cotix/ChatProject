@@ -30,6 +30,10 @@ public class Address {
         return (address.equals(((Address)o).getAddress()));
     }
 
+    public int hashCode() {
+        return address.hashCode();
+    }
+
     public String toString() {
         return address.toString();
     }

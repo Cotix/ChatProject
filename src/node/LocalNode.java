@@ -121,6 +121,7 @@ public class LocalNode extends Thread {
         //Connect and start then connection!
         node.connect();
         (new Thread(node)).start();
+        sendDistanceTable(node);
     }
     //Adds a node to the peers list. This function is used for incoming connections
     private void addNode(Node node) {
@@ -136,6 +137,7 @@ public class LocalNode extends Thread {
         Log.log("Accepting node " + node.getIp(), LogLevel.INFO);
         peers.add(node);
         (new Thread(node)).start();
+        sendDistanceTable(node);
     }
     //Adds a client to the client list
     private void addClient(ClientHandler client) {
