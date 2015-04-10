@@ -101,11 +101,13 @@ public class TestFrame extends JFrame {
         gbc.ipadx = 0;
         panel.add(newChatButton, gbc);
 
-        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList, this.clients, this.chatModel)));
+        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList, this.clients, this.chatModel, this.net)));
         this.chatScroll = chatPane.getVerticalScrollBar();
         chatScroll.setAutoscrolls(true);
 
         this.init(WIDTH, HEIGHT);
+
+        this.clients.addClient(net.getSelf());
 
         this.getContentPane().add(panel);
     }
