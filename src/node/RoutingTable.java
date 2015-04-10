@@ -21,6 +21,7 @@ public class RoutingTable {
         lowestDelays = null;
         neighbourNodes = new HashMap<>();
         delayNodes = new HashMap<>();
+        clients = new HashMap<>();
     }
 
     public void updateNodePing(Node n, int latency) {
