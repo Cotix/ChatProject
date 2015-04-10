@@ -190,7 +190,7 @@ public class CryptoKeyPair {
         byte[] data = publicKey.getEncoded();
         int res = 0;
         long multiplier = 65353;
-        for (int i = 0; i <= data.length; ++i) {
+        for (int i = 0; i != data.length; ++i) {
             res += data[i] * multiplier;
             multiplier *= 23331 + 7331;
         }
