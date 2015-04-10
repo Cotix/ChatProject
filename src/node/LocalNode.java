@@ -1,5 +1,6 @@
 package node;
 
+import client.security.CryptoKeyPair;
 import log.Log;
 import log.LogLevel;
 import network.Address;
@@ -260,15 +261,11 @@ public class LocalNode extends Thread {
             case IDENTIFY:
                 Log.log("Received an identify packet!", LogLevel.INFO);
                 byte[] key = packet.getData();
-                try {
-                    String keyString = new String(key, "US-ASCII");
-                    if (routing.addClient(new Address(keyString), c)) {
-                        sendDistanceTableToAll();
-                    }
-                    Log.log("New client with public key: " + keyString, LogLevel.INFO);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                CryptoKeyPair keyPublic = new CryptoKeyPair(key);
+                if (routing.addClient(new Address(keyPublic), c)) {
+                    sendDistanceTableToAll();
                 }
+                Log.log("New client with public key: " + keyPublic, LogLevel.INFO);
                 break;
             case MESSAGE:
                 Log.log("Received a chat packet from the client!", LogLevel.INFO);
