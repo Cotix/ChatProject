@@ -17,7 +17,7 @@ public class RoutingTable {
     private Map<Node, Integer> delayNodes;
     private Map<Address, ClientHandler> clients;
     public RoutingTable() {
-        routes = new HashMap();
+        routes = new HashMap<>();
         lowestDelays = null;
         neighbourNodes = new HashMap<>();
         delayNodes = new HashMap<>();
