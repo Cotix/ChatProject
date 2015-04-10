@@ -46,7 +46,7 @@ public class EntryBar extends JTextField implements KeyListener {
                 if (this.getText().length() > 0) {
                     this.testFrame.addMessage(this.getText());
                     if ((clientsMap.getClientByName(lobbyList.getSelectedValue())) != null) {
-                        chats.getChatByKey(clientsMap.getpKey(lobbyList.getSelectedValue())).addMessage(new Message(
+                        chats.getChatByKey(clientsMap.getKeyPair(lobbyList.getSelectedValue())).addMessage(new Message(
                             this.getText(),
                             this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getAddress(),
                             this.clientsMap.getOwnAddress().getAddress(),

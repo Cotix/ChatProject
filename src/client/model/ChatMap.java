@@ -1,5 +1,6 @@
 package client.model;
 
+import client.security.CryptoKeyPair;
 import network.Address;
 
 import java.security.PublicKey;
@@ -25,9 +26,9 @@ public class ChatMap {
         this.addresses.add(chat.getAddress());
     }
 
-    public Chat getChatByKey(PublicKey pKey){
+    public Chat getChatByKey(CryptoKeyPair keyPair){
         for (Address address : chatMap.keySet()){
-            if (address.getAddress().equals(pKey)){
+            if (address.getAddress().equals(keyPair)){
                 return chatMap.get(address);
             }
         }
