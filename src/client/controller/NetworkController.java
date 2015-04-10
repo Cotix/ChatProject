@@ -4,13 +4,16 @@ import client.model.Message;
 import client.security.CryptoKeyPair;
 import network.Address;
 import network.connection.TCPConnection;
+import network.connection.packet.DistancePacket;
 import network.connection.packet.Packet;
 import network.connection.packet.PacketUtils;
 import network.connection.packet.StringPacket;
+import node.DistanceTable;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * NetworkController used by the client to maintain a connection to the Node.
@@ -20,6 +23,7 @@ public class NetworkController implements Runnable {
     private TCPConnection connection;
     private CryptoKeyPair myKeyPair;
     private Address self;
+    private DistanceTable distanceTable;
 
     /**
      * Constructs a NetworkController used by the client that connects to a node.
@@ -29,6 +33,7 @@ public class NetworkController implements Runnable {
      */
     public NetworkController(String host, short port, CryptoKeyPair keyPair, String nick){
         this.connection = new TCPConnection(host, port);
+        distanceTable = new DistanceTable();
         connection.connect();
         myKeyPair = keyPair;
         this.self = new Address(myKeyPair, nick);
@@ -67,6 +72,10 @@ public class NetworkController implements Runnable {
         connection.handleConnection();
     }
 
+    public DistanceTable getDistanceTable() {
+        return distanceTable;
+    }
+
     public List<Message> getMessage() {
         if (!connection.isConnected()) {
             return null;
@@ -77,8 +86,11 @@ public class NetworkController implements Runnable {
             if (p == null) {
                 return list;
             }
-
-            list.add(Message.makeMessage(p, myKeyPair));
+            if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.IDENTIFY) {
+                distanceTable.update(new DistancePacket(p.getRawData()));
+            } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.MESSAGE) {
+                list.add(Message.makeMessage(p, myKeyPair));
+            }
         }
     }
 
