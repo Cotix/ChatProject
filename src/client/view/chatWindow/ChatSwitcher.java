@@ -1,6 +1,8 @@
 package client.view.chatWindow;
 
 import client.model.*;
+import client.security.CryptoKeyPair;
+import network.Address;
 
 import javax.swing.*;
 import java.security.PublicKey;
@@ -21,8 +23,8 @@ public class ChatSwitcher {
 
     public Chat switchChat(String nick){
         if (clientsMap.contains(nick)){
-            for (PublicKey key : chats.getKeys()){
-                if (key.equals(clientsMap.getpKey(nick))){
+            for (Address adress : chats.getAdresses()){
+                if (adress.getAddress().equals(clientsMap.getClientByName(nick).getAddress())){
                     return chats.getChatByKey(clientsMap.getpKey(nick));
                 }
             }

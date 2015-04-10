@@ -2,7 +2,6 @@ package client.view.chatWindow;
 
 import client.controller.NetworkController;
 import client.model.ChatMap;
-import client.model.Client;
 import client.model.ClientsMap;
 import client.model.Message;
 

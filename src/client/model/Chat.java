@@ -1,5 +1,8 @@
 package client.model;
 
+import client.security.CryptoKeyPair;
+import network.Address;
+
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +11,11 @@ public class Chat {
 
     public static final int BUFFER_SIZE = 100;
 
-    private PublicKey publicKey;
+    private Address address;
     private ArrayList<Message> messages = new ArrayList<>();
 
-    public Chat(PublicKey publicKey) {
-        this.publicKey = publicKey;
+    public Chat(Address address) {
+        this.address = address;
     }
 
     public void addMessage(Message message) {
@@ -36,8 +39,8 @@ public class Chat {
         return messages;
     }
 
-    public PublicKey getPublicKey() {
-        return publicKey;
+    public Address getAddress(){
+        return this.address;
     }
 
     public void removeAll(){

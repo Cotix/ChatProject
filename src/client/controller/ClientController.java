@@ -2,6 +2,7 @@ package client.controller;
 
 import client.model.Chat;
 import client.security.CryptoKeyPair;
+import network.Address;
 
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -29,9 +30,9 @@ public class ClientController {
         return networkController;
     }
 
-    public void addChat(PublicKey publicKey) {
-        Chat chat = new Chat(publicKey);
-        chats.put(publicKey.toString(), chat);
+    public void addChat(Address address) {
+        Chat chat = new Chat(address);
+        chats.put(address.getNickName(), chat);
     }
 
     public Map<String, Chat> getChats() {
