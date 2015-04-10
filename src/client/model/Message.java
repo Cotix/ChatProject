@@ -8,6 +8,7 @@ import settings.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Message that holds a receiver, origin, message and timestamp.
@@ -40,7 +41,8 @@ public class Message {
      * @param p packet
      */
     public static Message makeMessage(Packet p, CryptoKeyPair myKey) {
-        byte[] data = p.getData();        byte[] recv = new byte[myKey.getRawPublicKey().length];
+        byte[] data = p.getData();
+        byte[] recv = new byte[myKey.getRawPublicKey().length];
         System.arraycopy(data, 0, recv, 0, recv.length);
         byte[] encryptedBlob = new byte[data.length - recv.length];
         System.arraycopy(data, recv.length, encryptedBlob, 0, encryptedBlob.length);
@@ -65,7 +67,6 @@ public class Message {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        CryptoKeyPair send = new CryptoKeyPair(sendKey);
         long time = 0;
         time += ((long)(timeStamp[0]&0xFF)) << 56;
         time += ((long)(timeStamp[1]&0xFF)) << 48;
@@ -75,7 +76,7 @@ public class Message {
         time += ((long)(timeStamp[5]&0xFF)) << 16;
         time += ((long)(timeStamp[6]&0xFF)) << 8;
         time += ((long)(timeStamp[7]&0xFF));
-
+        CryptoKeyPair send = new CryptoKeyPair(sendKey);
         return new Message(message, send, myKey, time);
     }
 
@@ -146,7 +147,7 @@ public class Message {
             return null;
         }
         byte[] sign = keySender.sign(msg);
-        byte[] encryptedBlob = new byte[msg.length + sign.length + Configuration.KEY_LENGTH];
+        byte[] encryptedBlob = new byte[msg.length + sign.length + keyReceiver.getRawPublicKey().length];
         System.arraycopy(sign, 0, encryptedBlob, 0, sign.length);
         System.arraycopy(msg, 0, encryptedBlob, sign.length, msg.length);
         byte[] keySenderBytes = keySender.getRawPublicKey();
