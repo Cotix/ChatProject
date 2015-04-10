@@ -1,7 +1,9 @@
 package client.controller;
 
+import client.model.ClientsMap;
 import client.model.Message;
 import client.security.CryptoKeyPair;
+import network.Address;
 import network.connection.TCPConnection;
 import network.connection.packet.Packet;
 import network.connection.packet.PacketUtils;
@@ -18,6 +20,7 @@ public class NetworkController implements Runnable {
 
     private TCPConnection connection;
     private CryptoKeyPair myKeyPair;
+    private Address self;
 
     /**
      * Constructs a NetworkController used by the client that connects to a node.
@@ -29,6 +32,7 @@ public class NetworkController implements Runnable {
         this.connection = new TCPConnection(host, port);
         connection.connect();
         myKeyPair = keyPair;
+        this.self = new Address(myKeyPair);
         sendIdentify(keyPair);
     }
 
@@ -77,5 +81,9 @@ public class NetworkController implements Runnable {
 
             list.add(Message.makeMessage(p, myKeyPair));
         }
+    }
+
+    public Address getSelf(){
+        return this.self;
     }
 }
