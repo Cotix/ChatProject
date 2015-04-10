@@ -25,6 +25,11 @@ public class Message {
         this.keyReceiver = receiver;
     }
 
+    public Message(Packet p) {
+        byte[] data = p.getData();
+
+    }
+
     public String getMessage(){
         return this.message;
     }
