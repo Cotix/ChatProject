@@ -22,9 +22,9 @@ public class ClientsMap {
         this.clients.add(client);
     }
 
-    public String getNick(String key){
+    public String getNick(CryptoKeyPair keyPair){
         for (Address client : clients){
-            if (client.getAddress().getPublicKey().equals(key)){
+            if (client.getAddress().equals(keyPair)){
                 return client.getNickName();
             }
         }

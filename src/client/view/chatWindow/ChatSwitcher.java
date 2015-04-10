@@ -25,7 +25,6 @@ public class ChatSwitcher {
         if (clientsMap.contains(nick)){
             for (Address adress : chats.getAdresses()){
                 if (adress.getAddress().equals(clientsMap.getClientByName(nick).getAddress())){
-                    System.out.println("Test");
                     return chats.getChatByKey(clientsMap.getKeyPair(nick));
                 }
             }
@@ -41,7 +40,9 @@ public class ChatSwitcher {
         if (chat.getMessages().size() > 0) {
             this.chatModel.removeAllElements();
             for (Message mess : chat.getMessages()) {
-                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getPublicKeySender()), mess.getMessage()));
+
+                System.out.println(clientsMap.getNick(mess.getSenderPair()));
+                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getSenderPair()), mess.getMessage()));
                 this.chatList.setModel(this.chatModel);
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
             }

@@ -34,6 +34,15 @@ public class Message {
     public String getPublicKeyReceiver(){
         return this.keyReceiver.toString();
     }
+
+    public CryptoKeyPair getSenderPair(){
+        return this.keySender;
+    }
+
+    public CryptoKeyPair getReceiverPair(){
+        return this.keyReceiver;
+    }
+
     public long getTimestamp(){
         return this.timestamp;
     }
