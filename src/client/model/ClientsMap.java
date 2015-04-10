@@ -1,5 +1,6 @@
 package client.model;
 
+import client.security.CryptoKeyPair;
 import network.Address;
 
 import java.security.PublicKey;
@@ -72,8 +73,8 @@ public class ClientsMap {
         return null;
     }
 
-    public PublicKey getOwnPKey(){
-        return this.ownAddress.getAddress().getPublicKey();
+    public CryptoKeyPair getOwnKeyPair(){
+        return this.ownAddress.getAddress();
     }
 
     public Address getOwnAddress(){
