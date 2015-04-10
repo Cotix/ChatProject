@@ -58,7 +58,7 @@ public class EntryBar extends JTextField implements KeyListener {
 
                     this.setText("");
 
-                    networkController.send(this.getText());
+                    networkController.send(this.getText(), this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getpKey());
 
                 }
             } catch (UnsupportedEncodingException e1) {

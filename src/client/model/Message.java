@@ -18,9 +18,6 @@ public class Message {
     private CryptoKeyPair keySender;
     private CryptoKeyPair keyReceiver;
 
-
-    //TODO public key
-
     public Message(String message, CryptoKeyPair sender, CryptoKeyPair receiver, long timestamp){
         this.timestamp = timestamp;
         this.message = message;
@@ -41,6 +38,10 @@ public class Message {
         return this.timestamp;
     }
 
+    /**
+     * Signs and encrypts the message and puts it in a stringPacket.
+     * @return a stringPacket with the message signed and encrypted.
+     */
     public Packet makePacket() {
         byte[] msg;
         try {
@@ -65,6 +66,9 @@ public class Message {
         return new StringPacket(data, PacketUtils.PacketType.MESSAGE);
     }
 
+    /**
+     * returns a String representation of the Message class.
+     */
     public String toString(){
         //TODO format so node understands
         return String.format("%s %s %s %s \n", timestamp, getPublicKeySender(), getPublicKeyReceiver(), message);

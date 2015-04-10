@@ -20,19 +20,8 @@ public class NetworkController implements Runnable {
         connection.handleConnection();
     }
 
-    public void send(String message) throws UnsupportedEncodingException {
-        byte[] msg = message.getBytes();
-        byte[] signedMessage = myKeyPair.sign(msg);
-        byte[] fullSigMsg = new byte[signedMessage.length + msg.length];
-        System.arraycopy(msg, 0, fullSigMsg, 0, msg.length);
-        System.arraycopy(signedMessage, 0, fullSigMsg, msg.length, signedMessage.length);
-        //TODO encrypt data in message and send encrypted data
-        /*
-        fullSigMsg = keyPairOfReceiver.encrypt(fullSigMsg);
-         */
-
-        //TODO switch out placeholders
-        Message mess = new Message(message, null, null, 1000L);
+    public void send(String message, CryptoKeyPair recvKeyPair) throws UnsupportedEncodingException {
+        Message mess = new Message(message, myKeyPair, recvKeyPair, 1000L);
         connection.sendPacket(mess.makePacket());
     }
 }
