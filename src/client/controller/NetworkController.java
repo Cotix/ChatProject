@@ -64,6 +64,10 @@ public class NetworkController implements Runnable {
         connection.handleConnection();
     }
 
+    public void sendMessage(Message message, CryptoKeyPair recvKeyPair) throws UnsupportedEncodingException {
+        connection.sendPacket(message.makePacket());
+    }
+
     public List<Message> getMessage() {
         if (!connection.isConnected()) {
             return null;
@@ -75,7 +79,7 @@ public class NetworkController implements Runnable {
                 return list;
             }
 
-            //list.add(p);
+            list.add(Message.makeMessage(p, myKeyPair));
         }
     }
 }
