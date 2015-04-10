@@ -1,8 +1,10 @@
 package client.view.chatWindow;
 
+import client.controller.NetworkController;
 import client.model.*;
 import client.security.CryptoKeyPair;
 import network.Address;
+import settings.Configuration;
 
 import java.util.ArrayList;
 
@@ -51,11 +53,11 @@ public class ThreadPH implements Runnable {
         System.out.println(map.getMap().size());
 
 
+        NetworkController net = new NetworkController(Configuration.HOST, Configuration.PORT, keyPair3, "Destion");
 
 
 
-
-        TestFrame test = new TestFrame(null, "Destion", chats, map);
+        TestFrame test = new TestFrame(net, "Destion", chats, map);
 
 
 

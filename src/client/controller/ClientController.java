@@ -25,7 +25,7 @@ public class ClientController {
     public ClientController() {
         myKeyPair = new CryptoKeyPair();
         chats  = new HashMap<>();
-        this.networkController =  new NetworkController(Configuration.HOST, Configuration.PORT, myKeyPair);
+        this.networkController =  new NetworkController(Configuration.HOST, Configuration.PORT, myKeyPair, "Destion");
         view = new ThreadPH();
         view.run();
     }
@@ -37,7 +37,7 @@ public class ClientController {
      */
     public ClientController(String host, short port) {
         this.myKeyPair = new CryptoKeyPair();
-        this.networkController = new NetworkController(host, port, this.myKeyPair);
+        this.networkController = new NetworkController(host, port, this.myKeyPair, "Destion");
     }
 
     /**
