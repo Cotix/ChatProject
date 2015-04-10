@@ -1,6 +1,5 @@
 package client.controller;
 
-import client.model.ClientsMap;
 import client.model.Message;
 import client.security.CryptoKeyPair;
 import network.Address;

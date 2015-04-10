@@ -80,7 +80,7 @@ public class CryptoKeyPair {
 
     public byte[] decrypt(byte[] data) {
         if (privateKey == null) {
-            Log.log("Can not decrypt without privatekey! Only have the publickey(" + publicKey.toString() + ")", LogLevel.ERROR);
+            Log.log("Can not decrypt without private key! Only have the public key(" + publicKey.toString() + ")", LogLevel.ERROR);
         }
         byte[] cipherData;
         try {
@@ -109,7 +109,7 @@ public class CryptoKeyPair {
 
     public byte[] sign(byte[] data) {
         if (privateKey == null) {
-            Log.log("Can not sign without privatekey! Only have the publickey(" + publicKey.toString() + ")", LogLevel.ERROR);
+            Log.log("Can not sign without private key! Only have the public key(" + publicKey.toString() + ")", LogLevel.ERROR);
         }
         byte[] res;
         try {

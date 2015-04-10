@@ -1,8 +1,8 @@
 package network.connection.packet;
-
-//All packet types are listed here
-//The static getPacketType function can be used to read the packettype of a packet
-
+/**
+ * All packet types are listed here
+ * The static getPacketType function can be used to read the packet type of a packet
+ */
 public class PacketUtils {
     public enum PacketType {
         UNKNOWN((byte)-128), DISTANCE((byte) 1), PING((byte) 2), PONG((byte) 3), IDENTIFY((byte) 64), MESSAGE((byte) 65);

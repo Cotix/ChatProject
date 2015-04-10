@@ -11,11 +11,11 @@ import log.*;
 import network.connection.packet.Packet;
 import network.connection.packet.StringPacket;
 import settings.Configuration;
-
-//A wrapper around the Socket class that allows us for very easy NIO
-//It maintains a packet queue, which other threads or classes can read
-//Also allows for easy sending of binary data using our Packet interface
-
+/**
+ * A wrapper around the Socket class that allows us for very easy NIO
+ * It maintains a packet queue, which other threads or classes can read
+ * Also allows for easy sending of binary data using our Packet interface
+ */
 public class TCPConnection implements Connection {
     private String ipAddress;
     private short port;

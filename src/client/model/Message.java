@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 /**
- * Created by destion on 7-4-15.
+ * Message that holds a receiver, origin, message and timestamp.
  */
 public class Message {
 
@@ -19,16 +19,28 @@ public class Message {
     private CryptoKeyPair keySender;
     private CryptoKeyPair keyReceiver;
 
-    public Message(String message, CryptoKeyPair sender, CryptoKeyPair receiver, long timestamp){
+    /**
+     * Constructs a Message.
+     *
+     * @param message   message text
+     * @param sender    origin
+     * @param receiver  receiver
+     * @param timestamp timestamp of button press
+     */
+    public Message(String message, CryptoKeyPair sender, CryptoKeyPair receiver, long timestamp) {
         this.timestamp = timestamp;
         this.message = message;
         this.keySender = sender;
         this.keyReceiver = receiver;
     }
-
+    
+    /**
+     * Constructs a Message from a Packet.
+     *
+     * @param p packet
+     */
     public static Message makeMessage(Packet p, CryptoKeyPair myKey) {
-        byte[] data = p.getData();
-        byte[] recv = new byte[myKey.getRawPublicKey().length];
+        byte[] data = p.getData();        byte[] recv = new byte[myKey.getRawPublicKey().length];
         System.arraycopy(data, 0, recv, 0, recv.length);
         byte[] encryptedBlob = new byte[data.length - recv.length];
         System.arraycopy(data, recv.length, encryptedBlob, 0, encryptedBlob.length);
@@ -67,32 +79,61 @@ public class Message {
         return new Message(message, send, myKey, time);
     }
 
-    public String getMessage(){
+    /**
+     * Returns the message text.
+     *
+     * @return
+     */
+    public String getMessage() {
         return this.message;
-    }
-    public String getPublicKeySender(){
-        return this.keySender.toString();
-    }
-    public String getPublicKeyReceiver(){
-        return this.keyReceiver.toString();
-    }
-
-    public CryptoKeyPair getSenderPair(){
-        return this.keySender;
-    }
-
-    public CryptoKeyPair getReceiverPair(){
-        return this.keyReceiver;
-    }
-
-    public long getTimestamp(){
-        return this.timestamp;
     }
 
     /**
-     * Signs and encrypts the message and puts it in a stringPacket.
-     * @return a stringPacket with the message signed and encrypted.
+     * Returns the public key of the sender.
+     *
+     * @return
      */
+    public String getPublicKeySender() {
+        return this.keySender.toString();
+    }
+
+    /**
+     * Returns the public key of the receiver.
+     *
+     * @return
+     */
+    public String getPublicKeyReceiver() {
+        return this.keyReceiver.toString();
+    }
+
+    /**
+     * Returns the CryptoKeyPair of the sender.
+     *
+     * @return
+     */
+    public CryptoKeyPair getSenderPair() {
+        return this.keySender;
+    }
+
+    /**
+     * Returns the CryptoKeyPair of the receiver.
+     *
+     * @return
+     */
+    public CryptoKeyPair getReceiverPair() {
+        return this.keyReceiver;
+    }
+
+    /**
+     * Returns the timestamp.
+     *
+     * @return
+     */
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    
     public Packet makePacket() {
         byte[] msg;
         try {
@@ -120,9 +161,11 @@ public class Message {
     }
 
     /**
-     * returns a String representation of the Message class.
+     * Returns a String representation of the Message.
+     *
+     * @return
      */
-    public String toString(){
+    public String toString() {
         return String.format("%s %s %s %s \n", timestamp, getPublicKeySender(), getPublicKeyReceiver(), message);
     }
 }

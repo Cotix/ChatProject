@@ -4,7 +4,6 @@ import client.controller.NetworkController;
 import client.model.*;
 import network.Address;
 import javax.swing.*;
-import java.util.List;
 
 public class ChatSwitcher {
 
@@ -24,8 +23,8 @@ public class ChatSwitcher {
 
     public Chat switchChat(String nick){
         if (clientsMap.contains(nick)){
-            for (Address adress : chats.getAdresses()){
-                if (adress.getAddress().equals(clientsMap.getClientByName(nick).getAddress())){
+            for (Address address : chats.getAddresses()){
+                if (address.getAddress().equals(clientsMap.getClientByName(nick).getAddress())){
                     return chats.getChatByKey(clientsMap.getKeyPair(nick));
                 }
             }
@@ -46,7 +45,7 @@ public class ChatSwitcher {
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
             }
         } else {
-            System.out.println("Lege lijst");
+            System.out.println("Empty list");
         }
     }
 }
