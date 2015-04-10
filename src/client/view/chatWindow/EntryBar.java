@@ -49,8 +49,8 @@ public class EntryBar extends JTextField implements KeyListener {
                     if ((clientsMap.getClientByName(lobbyList.getSelectedValue())) != null) {
                         chats.getChatByKey(clientsMap.getpKey(lobbyList.getSelectedValue())).addMessage(new Message(
                             this.getText(),
-                            this.clientsMap.getOwnPKey(),
-                            this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getpKey(),
+                            this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getAddress(),
+                            this.clientsMap.getOwnAddress().getAddress(),
                             System.currentTimeMillis()
                         ));
                     }
@@ -58,7 +58,7 @@ public class EntryBar extends JTextField implements KeyListener {
 
                     this.setText("");
 
-                    networkController.send(this.getText(), this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getpKey());
+                    networkController.send(this.getText(), this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getAddress());
 
                 }
             } catch (UnsupportedEncodingException e1) {

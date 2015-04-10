@@ -99,7 +99,7 @@ public class TestFrame extends JFrame {
         gbc.ipadx = 0;
         panel.add(newChatButton, gbc);
 
-        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList, this.nickName, this.clients, this.chatModel)));
+        lobbyList.addListSelectionListener(new SelectionListener(this.lobbyList, new ChatSwitcher(chats, this.chatList, this.clients, this.chatModel)));
         this.chatScroll = chatPane.getVerticalScrollBar();
         chatScroll.setAutoscrolls(true);
 
@@ -143,7 +143,7 @@ public class TestFrame extends JFrame {
         //menu.add(fullscreen);
 
 
-        fileClear.addActionListener(new FileClearListener(this.chatModel, this.chats, this.lobbyList));
+        fileClear.addActionListener(new FileClearListener(this.chatModel, this.chats, this.lobbyList, this.clients));
 
         //fullscreen.addActionListener(new FullscreenActionListener(this, this.fullscreen));
         this.getContentPane().add(this.menuBar, BorderLayout.NORTH);

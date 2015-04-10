@@ -3,6 +3,7 @@ package client.controller;
 import client.model.Chat;
 import client.security.CryptoKeyPair;
 
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class ClientController {
         return networkController;
     }
 
-    public void addChat(String publicKey) {
+    public void addChat(PublicKey publicKey) {
         Chat chat = new Chat(publicKey);
         chats.put(publicKey.toString(), chat);
     }

@@ -1,6 +1,8 @@
 package client.view.chatWindow;
 
 import client.model.*;
+import client.security.CryptoKeyPair;
+import network.Address;
 
 import java.util.ArrayList;
 
@@ -21,28 +23,27 @@ public class ThreadPH implements Runnable {
     //TODO remove placeholder code and replace when node connection is enabled
     @Override
     public void run() {
-        Message mess = new Message("Hoi", "a1b2c3", "z26y25x24", 1000);
-        Message mess2 = new Message("Test test test", "test1test1", "z26y25x24", 1000);
-        Chat chat = new Chat("a1b2c3");
-        Chat chat2 = new Chat("test1test1");
+        Message mess = new Message("Hoi", new CryptoKeyPair(), new CryptoKeyPair(), 1000);
+        Message mess2 = new Message("Test test test", new CryptoKeyPair(), new CryptoKeyPair(), 1000);
+        Chat chat = new Chat(new Address(new CryptoKeyPair(), "Erik").getAddress().getPublicKey());
+        Chat chat2 = new Chat(new Address(new CryptoKeyPair(), "Noah").getAddress().getPublicKey());
         chat.addMessage(mess);
         chat2.addMessage(mess2);
-        ClientsMap map = new ClientsMap("Destion", "z26y25x24");
-
-
-        Client client1 = new Client("a1b2c3", "Noah");
-        Client client2 = new Client("z26y25x24", "Destion");
-        Client client3 = new Client("test1test1", "Erik");
-
-        map.addClient( client1);
-        map.addClient( client2);
-        map.addClient( client3);
-
-        System.out.println(map.getMap().size());
-
         ChatMap chats = new ChatMap();
         chats.addChat(chat);
         chats.addChat(chat2);
+        ClientsMap map = new ClientsMap(new Address(new CryptoKeyPair(), "Destion"));
+
+        Address client1 = new Address(new CryptoKeyPair(), "Erik");
+        Address client2 = new Address(new CryptoKeyPair(), "Noah");
+
+        map.addClient(client1);
+        map.addClient(client2);
+
+
+        System.out.println(map.getMap().size());
+
+
 
 
 
