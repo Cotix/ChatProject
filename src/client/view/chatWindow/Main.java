@@ -4,7 +4,6 @@ package client.view.chatWindow;
 import log.Log;
 import log.LogLevel;
 import node.LocalNode;
-import settings.Configuration;
 
 public class Main {
 

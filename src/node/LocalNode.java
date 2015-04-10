@@ -68,7 +68,7 @@ public class LocalNode extends Thread {
     private String localhost;
     private RoutingTable routing;
     public LocalNode(String myIP) {
-        this((short) 8000, (short) 8001, myIP);
+        this((short) Configuration.PORT, (short) 8001, myIP);
     }
 
     public LocalNode(short cPort, short nPort, String IP) {
