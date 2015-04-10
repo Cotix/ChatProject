@@ -53,7 +53,7 @@ public class NetworkController implements Runnable {
                 return list;
             }
 
-            list.add(p);
+            list.add(Message.makeMessage(p, myKeyPair));
         }
     }
 }

@@ -13,5 +13,6 @@ public class Configuration {
     public static String ENCRYPTION_SCHEME = "RSA";
     public static int KEY_LENGTH = 1024;
     public static String SIGN_INSTANCE = "SHA256withRSA";
+    public static int SIGN_LENGTH = 256;
     public static String RANDOM_SOURCE = "SHA1PRNG";
 }
