@@ -9,6 +9,8 @@ import network.connection.packet.StringPacket;
 
 import java.io.UnsupportedEncodingException;
 import java.security.PublicKey;
+import java.util.LinkedList;
+import java.util.List;
 
 public class NetworkController implements Runnable {
 
@@ -27,13 +29,31 @@ public class NetworkController implements Runnable {
         connection.sendPacket(packet);
     }
 
+    public CryptoKeyPair getMyKeyPair() {
+        return myKeyPair;
+    }
+
     @Override
     public void run() {
         connection.handleConnection();
     }
 
-    public void sendMessage(String message, CryptoKeyPair recvKeyPair) throws UnsupportedEncodingException {
-        Message mess = new Message(message, myKeyPair, recvKeyPair, 1000L);
-        connection.sendPacket(mess.makePacket());
+    public void sendMessage(Message message, CryptoKeyPair recvKeyPair) throws UnsupportedEncodingException {
+        connection.sendPacket(message.makePacket());
+    }
+
+    public List<Message> getMessage() {
+        if (!connection.isConnected()) {
+            return null;
+        }
+        List<Message> list = new LinkedList<>();
+        while (true) {
+            Packet p = connection.readPacket();
+            if (p == null) {
+                return list;
+            }
+
+            list.add(p);
+        }
     }
 }
