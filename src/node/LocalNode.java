@@ -233,6 +233,23 @@ public class LocalNode extends Thread {
                 break;
             case MESSAGE:
                 MessagePacket p = new MessagePacket(packet.getRawData());
+                Address dest = p.getRecipient();
+                ClientHandler client = routing.getDirectConnection(dest);
+                if (client != null) {
+                    // TODO: Verstuur chat message naar de client
+                } else {
+                    Node forwardNode = routing.getNode(dest);
+                    if (forwardNode == n) {
+                        forwardNode = routing.getAlternativeNode(dest, n);
+                    }
+                    if (forwardNode == null) {
+                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                        return false;
+                    }
+                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                    forwardNode.send(p);
+                }
+                break;
         }
         return true;
     }
