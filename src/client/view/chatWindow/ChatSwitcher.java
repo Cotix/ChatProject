@@ -3,26 +3,25 @@ package client.view.chatWindow;
 import client.model.*;
 
 import javax.swing.*;
+import java.security.PublicKey;
 
 public class ChatSwitcher {
 
     private ChatMap chats;
     private JList<String> chatList;
-    private String ownID;
     private ClientsMap clientsMap;
     private DefaultListModel chatModel;
 
-    public ChatSwitcher(ChatMap chats, JList chatList, String ownID, ClientsMap clients, DefaultListModel chatModel){
+    public ChatSwitcher(ChatMap chats, JList chatList, ClientsMap clients, DefaultListModel chatModel){
         this.chats = chats;
         this.chatList = chatList;
-        this.ownID = ownID;
         this.clientsMap = clients;
         this.chatModel = chatModel;
     }
 
     public Chat switchChat(String nick){
         if (clientsMap.contains(nick)){
-            for (String key : chats.getKeys()){
+            for (PublicKey key : chats.getKeys()){
                 if (key.equals(clientsMap.getpKey(nick))){
                     return chats.getChatByKey(clientsMap.getpKey(nick));
                 }

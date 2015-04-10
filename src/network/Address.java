@@ -12,7 +12,7 @@ public class Address {
     public Address(String address) {
         try {
             this.address = new CryptoKeyPair(address);
-        } catch (Base64DecodingException e) {
+      } catch (Base64DecodingException e) {
             e.printStackTrace();
         }
     }
@@ -21,11 +21,24 @@ public class Address {
         address = a;
     }
 
+    public Address(CryptoKeyPair a, String nickName){
+        address = a;
+        this.nickName = nickName;
+    }
+
     public boolean equals(Object o) {
         return o instanceof Address && toString().equals(o.toString());
     }
 
     public String toString() {
         return address.toString();
+    }
+
+    public String getNickName(){
+        return this.nickName;
+    }
+
+    public CryptoKeyPair getAddress(){
+        return this.address;
     }
 }

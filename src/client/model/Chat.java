@@ -1,5 +1,6 @@
 package client.model;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,18 +8,15 @@ public class Chat {
 
     public static final int BUFFER_SIZE = 100;
 
-    private String publicKey;
+    private PublicKey publicKey;
     private ArrayList<Message> messages = new ArrayList<>();
 
-    public Chat(String publicKey) {
+    public Chat(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 
     public void addMessage(Message message) {
 
-        this.messages.add(message);
-
-        /*
         if (messages.size() != 0) {
             for (int i = 0; i < messages.size(); i++) {
                 if (message.getTimestamp() > messages.get(i).getTimestamp()) {
@@ -31,14 +29,14 @@ public class Chat {
         }
         if (messages.size() > BUFFER_SIZE) {
             messages.remove(BUFFER_SIZE);
-        }*/
+        }
     }
 
     public List<Message> getMessages() {
         return messages;
     }
 
-    public String getPublicKey() {
+    public PublicKey getPublicKey() {
         return publicKey;
     }
 
