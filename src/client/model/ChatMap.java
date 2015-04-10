@@ -50,7 +50,7 @@ public class ChatMap {
      * Returns a list of addresses.
      * @return
      */
-    public ArrayList<Address> getAdresses() {
+    public ArrayList<Address> getAddresses() {
         return this.addresses;
     }
 }

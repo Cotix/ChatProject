@@ -13,6 +13,8 @@ public class ClientsMap {
     private ArrayList<Address> clients;
     private Address ownAddress;
 
+    private boolean first = true;
+
     public ClientsMap(Address ownAddress){
         this.clients = new ArrayList<>();
         this.ownAddress = ownAddress;
@@ -32,12 +34,19 @@ public class ClientsMap {
     }
 
     public CryptoKeyPair getKeyPair(String nick){
-        for (Address client : clients){
-            if (client.getNickName().equals(nick)){
-                return client.getAddress();
+
+        if(this.first){
+            this.first = false;
+            return ownAddress.getAddress();
+        } else {
+
+            for (Address client : clients) {
+                if (client.getNickName().equals(nick)) {
+                    return client.getAddress();
+                }
             }
+            return null;
         }
-        return null;
     }
 
     public ArrayList<String> getNames(){

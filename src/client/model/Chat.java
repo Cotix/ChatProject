@@ -1,6 +1,7 @@
 package client.model;
 
 import network.Address;
+import settings.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;

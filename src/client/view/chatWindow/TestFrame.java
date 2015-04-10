@@ -177,6 +177,7 @@ public class TestFrame extends JFrame {
     }
 
     public void openChat(){
+        //TODO field2 is not used
         JTextField field1 = new JTextField();
         JTextField field2 = new JTextField();
         Object[] inputs = {
@@ -190,7 +191,6 @@ public class TestFrame extends JFrame {
         boolean validPKey = false;
         while (!validPKey){
             if (pKey.length() <= 0){
-                pKey = JOptionPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
                 pKey = JOptionPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
             } else {
                 validPKey = true;

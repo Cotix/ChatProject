@@ -1,6 +1,5 @@
 package client.controller;
 
-import client.model.ClientsMap;
 import client.model.Message;
 import client.security.CryptoKeyPair;
 import network.Address;
@@ -28,11 +27,11 @@ public class NetworkController implements Runnable {
      * @param port node port
      * @param keyPair keypair of the client
      */
-    public NetworkController(String host, short port, CryptoKeyPair keyPair){
+    public NetworkController(String host, short port, CryptoKeyPair keyPair, String nick){
         this.connection = new TCPConnection(host, port);
         connection.connect();
         myKeyPair = keyPair;
-        this.self = new Address(myKeyPair);
+        this.self = new Address(myKeyPair, nick);
         sendIdentify(keyPair);
     }
 
