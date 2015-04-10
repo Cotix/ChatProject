@@ -1,6 +1,7 @@
 package testing;
 
 
+import client.controller.ClientController;
 import log.Log;
 import log.LogLevel;
 import node.LocalNode;
@@ -19,11 +20,13 @@ public class Simulation {
             nodes[i] = new LocalNode((short)(2000 + i), (short)(3000+i), "127.0.0.1");
             nodes[i].start();
         }
+        new ClientController();
         try {
             nodes[0].join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
 
     }
 }

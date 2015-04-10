@@ -10,10 +10,10 @@ public class StringPacket implements Packet{
 
     public StringPacket(byte[] pData, PacketUtils.PacketType type) {
         data = new byte[pData.length + 5];
-        data[0] = (byte)(((pData.length & 0xFF000000) >> 24) & 0xFF);
-        data[1] = (byte)(((pData.length & 0xFF0000) >> 16) & 0xFF);
-        data[2] = (byte)(((pData.length & 0xFF00) >> 8) & 0xFF);
-        data[3] = (byte)  (pData.length & 0xFF);
+        data[0] = (byte)((((pData.length+1) & 0xFF000000) >> 24) & 0xFF);
+        data[1] = (byte)((((pData.length+1) & 0xFF0000) >> 16) & 0xFF);
+        data[2] = (byte)((((pData.length+1) & 0xFF00) >> 8) & 0xFF);
+        data[3] = (byte)  ((pData.length+1) & 0xFF);
         data[4] = type.getValue();
         System.arraycopy(pData, 0, data, 5, pData.length);
     }

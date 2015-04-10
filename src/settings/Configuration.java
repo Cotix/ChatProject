@@ -5,7 +5,7 @@ package settings;
 
 public class Configuration {
     public static final String HOST = "localhost";
-    public static final short PORT = 8080;
+    public static final short PORT = 2001;
     public static final int BUFFER_SIZE = 100;
     public static boolean ONE_NODE_PER_IP = true;
     public static int ANNOUNCE_TIME = 3000;

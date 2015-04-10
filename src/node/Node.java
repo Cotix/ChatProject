@@ -59,7 +59,7 @@ public class Node implements Runnable {
     }
 
     public void ping() {
-        Log.log("Pinging node " + getIp() + ":" + getPort(), LogLevel.INFO);
+        Log.log("Pinging node " + getIp() + ":" + getPort(), LogLevel.NONE);
         send(new CurrentTimePacket());
     }
 
