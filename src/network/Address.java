@@ -1,7 +1,7 @@
 package network;
-
-//A simple class that allows us for advanced address handling
-
+/**
+ * A simple class that allows us for advanced address handling
+ */
 import client.security.CryptoKeyPair;
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 

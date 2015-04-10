@@ -6,9 +6,9 @@ import log.Log;
 import log.LogLevel;
 import node.LocalNode;
 import settings.Configuration;
-
-//A simple class that starts a few LocalNodes, used for testing
-
+/**
+ * A simple class that starts a few LocalNodes, used for testing
+ */
 public class Simulation {
 
     public static void main(String[] arg) {

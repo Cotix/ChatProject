@@ -5,15 +5,15 @@ import network.connection.packet.DistancePacket;
 
 import java.util.HashMap;
 import java.util.Map;
-
-//Distance table is a class that maintains the distances to addresses
-//It can maintain distances over several hops, by adding the distance of the hops to the distance
-//of the final hop to the destination address.
-//DistanceTables are used to construct the RoutingTable.
-//Our distance table is broadcasted to all neighbour nodes when it has a significant change
-//A significant change is defined as a change that adds or removes an entry
-//Changes in delay are not important enough for an update.
-
+/**
+ * Distance table is a class that maintains the distances to addresses
+ * It can maintain distances over several hops, by adding the distance of the hops to the distance
+ * of the final hop to the destination address.
+ * DistanceTables are used to construct the RoutingTable.
+ * Our distance table is broadcast to all neighbour nodes when it has a significant change
+ * A significant change is defined as a change that adds or removes an entry
+ * Changes in delay are not important enough for an update.
+ */
 public class DistanceTable {
     private Map<Address, Integer> table;
 
@@ -25,10 +25,11 @@ public class DistanceTable {
         return table;
     }
 
-
-    //Compares this table with a map, and returns if there are any
-    //significant differences. Read the comments above where it explains what
-    //a significant difference is.
+    /**
+     * Compares this table with a map, and returns if there are any
+     * significant differences. Read the comments above where it explains what
+     * a significant difference is.
+     */
     public boolean equalMap(Map<Address, Integer> target) {
         if (table.keySet().size() != target.keySet().size()) return false;
         for (Address entry : table.keySet()) {
@@ -37,7 +38,10 @@ public class DistanceTable {
         }
         return true;
     }
-    //Updates the distance table. Returns whether or not it made a significant difference.
+
+    /**
+     * Updates the distance table. Returns whether or not it made a significant difference.
+     */
     public boolean update(DistancePacket packet) {
         Map<Address, Integer> old = this.getTable();
         this.table = stringToMap(packet.getDataAsString());

@@ -116,7 +116,7 @@ public class Message {
     }
 
     /**
-     * Returns the CrypptoKeyPair of the receiver.
+     * Returns the CryptoKeyPair of the receiver.
      *
      * @return
      */
