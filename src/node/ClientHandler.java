@@ -13,10 +13,12 @@ import java.util.List;
 //The LocalNode can fetch packets from the connection, which maintains a packet queue
 
 public class ClientHandler implements Runnable {
+    private boolean running;
     private Connection con;
 
     public ClientHandler(Socket s) {
         con = new TCPConnection(s);
+        running = true;
     }
 
     /**
@@ -31,11 +33,23 @@ public class ClientHandler implements Runnable {
      * Handles the connection
      */
     public void run() {
-        while (true) {
+        while (running) {
             con.handleConnection();
         }
     }
 
+    /**
+     * Closes the connection and prevents the Thread from running
+     */
+    public void stop() {
+        this.running = false;
+        con.disconnect();
+    }
+
+    /**
+     * Sends a packet over the Connection.
+     * @param p
+     */
     public void send(Packet p) {
         con.sendPacket(p);
     }

@@ -12,9 +12,9 @@ public class ChatSwitcher {
     private ChatMap chats;
     private JList<String> chatList;
     private ClientsMap clientsMap;
-    private DefaultListModel chatModel;
+    private DefaultListModel<String> chatModel;
 
-    public ChatSwitcher(ChatMap chats, JList chatList, ClientsMap clients, DefaultListModel chatModel){
+    public ChatSwitcher(ChatMap chats, JList<String> chatList, ClientsMap clients, DefaultListModel<String> chatModel){
         this.chats = chats;
         this.chatList = chatList;
         this.clientsMap = clients;

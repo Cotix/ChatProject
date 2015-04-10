@@ -4,7 +4,7 @@ package network.connection.packet;
 //The static getPacketType function can be used to read the packettype of a packet
 
 public class PacketUtils {
-    public static enum PacketType {
+    public enum PacketType {
         UNKNOWN((byte)-128), DISTANCE((byte) 1), PING((byte) 2), PONG((byte) 3), IDENTIFY((byte) 64), MESSAGE((byte) 65);
         byte value;
         PacketType(byte v) {

@@ -24,7 +24,7 @@ Report:
 tu 7-04  | lecture (?)   | planning      | node & client                 |
 we 8-04  | node & client                                                 |
 th 9-04  | node & client                                                 |
-fr 10-04 | node & client                                                 | TODO: specify stuff
+fr 10-04 | node & client                                                 |
 ---------+---------------+---------------+---------------+---------------+
 mo 13-04 | hotfixes because broken       | demo          |               |
 tu 14-04 | report                                                        |

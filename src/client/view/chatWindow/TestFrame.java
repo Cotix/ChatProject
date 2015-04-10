@@ -4,11 +4,13 @@ import client.controller.NetworkController;
 import client.model.ChatMap;
 import client.model.ClientsMap;
 import client.view.chatWindow.actionListeners.*;
+import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class TestFrame extends JFrame {
     private JMenuItem fileOpenNewChat = new JMenuItem("Open new chat");
     private NetworkController net;
     private JScrollBar chatScroll;
-    private DefaultListModel chatModel;
+    private DefaultListModel<String> chatModel;
     private String nickName;
     private JScrollPane chatPane;
     private JList<String> chatList;
@@ -32,8 +34,8 @@ public class TestFrame extends JFrame {
     private ChatMap chats;
     private ClientsMap clients;
 
-    private JList lobbyList;
-    private DefaultListModel lobbyModel;
+    private JList<String> lobbyList;
+    private DefaultListModel<String> lobbyModel;
     private JScrollPane lobbyPane;
 
     JOptionPane newChatPane;
@@ -52,11 +54,11 @@ public class TestFrame extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
 
         chatList = new JList<>();
-        chatModel = new DefaultListModel();
+        chatModel = new DefaultListModel<>();
         chatPane = new JScrollPane(chatList);
 
         lobbyList = new JList<>();
-        lobbyModel = new DefaultListModel();
+        lobbyModel = new DefaultListModel<>();
         lobbyPane = new JScrollPane(this.lobbyList);
 
         this.bar = new EntryBar(net , this, this.chats, this.lobbyList, this.clients);
@@ -131,9 +133,9 @@ public class TestFrame extends JFrame {
         });
 
 
-        fileOpenNewChat.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        fileClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
-        fileClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.SHIFT_MASK));
+        fileOpenNewChat.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+        fileClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
+        fileClear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK));
         this.menuBar.add(file);
         file.add(fileOpenNewChat);
         file.add(fileClear);
@@ -179,15 +181,15 @@ public class TestFrame extends JFrame {
                 "Public Key: ", field1,
                 "Username: ",
         };
-        String uName = newChatPane.showInputDialog(this.getContentPane(), inputs, "Open new chat", JOptionPane.QUESTION_MESSAGE);
+        String uName = JOptionPane.showInputDialog(this.getContentPane(), inputs, "Open new chat", JOptionPane.QUESTION_MESSAGE);
         String pKey = field1.getText();
 
         //TODO Add code to check if the public key is available in the network
         boolean validPKey = false;
         while (!validPKey){
             if (pKey.length() <= 0){
-                pKey = newChatPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
-                pKey = newChatPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
+                pKey = JOptionPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
+                pKey = JOptionPane.showInputDialog(this.getContentPane(), "Public Key: ", "Please enter a valid Public Key", JOptionPane.QUESTION_MESSAGE);
             } else {
                 validPKey = true;
             }
@@ -196,7 +198,7 @@ public class TestFrame extends JFrame {
         boolean validName = false;
         while (!validName){
             if ((!(onlyContainsLetters(uName))) || (uName.length() <=0) || (uName.contains(" "))){
-                uName = newChatPane.showInputDialog(this.getContentPane(), "Username: ", "Please enter a valid Username", JOptionPane.QUESTION_MESSAGE);
+                uName = JOptionPane.showInputDialog(this.getContentPane(), "Username: ", "Please enter a valid Username", JOptionPane.QUESTION_MESSAGE);
             } else {
                 validName = true;
             }
