@@ -132,7 +132,8 @@ public class CryptoKeyPair {
         return Base64.encode(publicKey.getEncoded());
     }
 
-    public boolean equals(CryptoKeyPair k) {
-        return Arrays.equals(k.getRawPublicKey(), getRawPublicKey());
+    public boolean equals(Object k) {
+
+        return Arrays.equals(((CryptoKeyPair)k).getRawPublicKey(), getRawPublicKey());
     }
 }

@@ -27,7 +27,7 @@ public class Address {
     }
 
     public boolean equals(Object o) {
-        return o instanceof Address && toString().equals(o.toString());
+        return (address.equals(((Address)o).getAddress()));
     }
 
     public String toString() {
