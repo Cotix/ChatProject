@@ -271,8 +271,21 @@ public class LocalNode extends Thread {
                 }
                 break;
             case MESSAGE:
-                Log.log("Received a chat packet!", LogLevel.NONE);
-                // send a message
+                Log.log("Received a chat packet from the client!", LogLevel.INFO);
+                MessagePacket p = new MessagePacket(packet.getRawData());
+                Address dest = p.getRecipient();
+                ClientHandler client = routing.getDirectConnection(dest);
+                if (client != null) {
+                    // TODO: Verstuur chat message naar de client
+                } else {
+                    Node forwardNode = routing.getNode(dest);
+                    if (forwardNode == null) {
+                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                        return false;
+                    }
+                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                    forwardNode.send(p);
+                }
                 break;
         }
         return true;
