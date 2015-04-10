@@ -202,6 +202,7 @@ public class LocalNode extends Thread {
     }
 
     private void sendDistanceTableToAll() {
+        Log.log("Sending distancetable to all connected nodes", LogLevel.INFO);
         for (Node n : peers) {
             sendDistanceTable(n);
         }
