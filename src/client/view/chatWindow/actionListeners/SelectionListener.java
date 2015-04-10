@@ -15,7 +15,7 @@ public class SelectionListener implements ListSelectionListener{
     JList<String> chatList;
     ChatSwitcher switcher;
 
-    public SelectionListener(JList chatList, ChatSwitcher switcher){
+    public SelectionListener(JList<String> chatList, ChatSwitcher switcher){
         this.switcher = switcher;
         this.chatList = chatList;
     }

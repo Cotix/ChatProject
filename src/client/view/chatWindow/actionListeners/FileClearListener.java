@@ -18,7 +18,7 @@ public class FileClearListener implements ActionListener {
     private JList<String> lobbyList;
     private ClientsMap clients;
 
-    public FileClearListener(DefaultListModel chatModel, ChatMap chats, JList lobbyList, ClientsMap clients){
+    public FileClearListener(DefaultListModel chatModel, ChatMap chats, JList<String> lobbyList, ClientsMap clients){
         this.chatModel = chatModel;
         this.chats = chats;
         this.lobbyList = lobbyList;
