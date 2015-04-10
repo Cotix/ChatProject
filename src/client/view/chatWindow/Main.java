@@ -13,8 +13,13 @@ public class Main {
         Log.enableAllLevels();
         Log.disableLevel(LogLevel.NONE);
         LocalNode node = new LocalNode("127.0.0.1");
+        node.start();
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         temp = new ThreadPH();
         temp.run();
-        node.run();
     }
 }
