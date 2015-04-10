@@ -53,7 +53,6 @@ public class DistanceTable {
         for (String line : packet.split("\n")) {
             if (line.length() == 0) continue;
             String[] parts = line.split(",");
-            System.out.println(parts[0] + "  " + parts[1]);
             result.put(new Address(parts[0]), Integer.parseInt(parts[1]));
         }
         return result;
