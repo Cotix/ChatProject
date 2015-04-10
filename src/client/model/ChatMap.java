@@ -6,6 +6,7 @@ import network.Address;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,5 +40,15 @@ public class ChatMap {
 
     public ArrayList<Address> getAdresses(){
         return this.addresses;
+    }
+
+    public void handleNewMessages(List<Message> newMessages){
+        for (Address addr : this.chatMap.keySet()){
+            for (Message mess : newMessages){
+                if (mess.getPublicKeySender().equals(addr)){
+                    this.getChatByKey(addr.getAddress()).addMessage(mess);
+                }
+            }
+        }
     }
 }
