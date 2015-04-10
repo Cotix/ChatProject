@@ -14,6 +14,7 @@ import java.security.*;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 
 
 public class CryptoKeyPair {
@@ -129,5 +130,9 @@ public class CryptoKeyPair {
 
     public String toString() {
         return Base64.encode(publicKey.getEncoded());
+    }
+
+    public boolean equals(CryptoKeyPair k) {
+        return Arrays.equals(k.getRawPublicKey(), getRawPublicKey());
     }
 }
