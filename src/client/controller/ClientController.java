@@ -1,6 +1,7 @@
 package client.controller;
 
 import client.model.Chat;
+import client.model.ChatMap;
 import client.security.CryptoKeyPair;
 import client.view.chatWindow.ThreadPH;
 import network.Address;
@@ -16,7 +17,7 @@ public class ClientController {
 
     private CryptoKeyPair myKeyPair;
     private NetworkController networkController;
-    private Map<String, Chat> chats;
+    private ChatMap chats;
     private ThreadPH view;
 
     /**
@@ -24,7 +25,7 @@ public class ClientController {
      */
     public ClientController() {
         myKeyPair = new CryptoKeyPair();
-        chats  = new HashMap<>();
+        this.chats = new ChatMap();
         this.networkController =  new NetworkController(Configuration.HOST, Configuration.PORT, myKeyPair, "Destion");
         view = new ThreadPH();
         view.run();
@@ -55,14 +56,12 @@ public class ClientController {
      */
     public void addChat(Address address) {
         Chat chat = new Chat(address);
-        chats.put(address.getNickName(), chat);
+        chats.addChat(chat);
     }
 
     /**
      * Returns all chats
      * @return
      */
-    public Map<String, Chat> getChats() {
-        return chats;
-    }
+
 }

@@ -5,6 +5,7 @@ import network.Address;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,5 +53,15 @@ public class ChatMap {
      */
     public ArrayList<Address> getAddresses() {
         return this.addresses;
+    }
+
+    public void handleNewMessages(List<Message> newMessages){
+        for (Message mess : newMessages){
+            for (Address addr : this.chatMap.keySet()){
+                if (addr.getAddress().equals(mess.getSenderPair())){
+                    this.chatMap.get(addr).addMessage(mess);
+                }
+            }
+        }
     }
 }

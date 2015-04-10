@@ -26,6 +26,9 @@ public class Address {
         this.nickName = nickName;
     }
 
+    public void setNickName(String nick) {
+        nickName = nick;
+    }
     public boolean equals(Object o) {
         return (address.equals(((Address)o).getAddress()));
     }

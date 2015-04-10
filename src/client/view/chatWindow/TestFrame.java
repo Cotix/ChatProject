@@ -41,7 +41,7 @@ public class TestFrame extends JFrame {
     JOptionPane newChatPane;
 
     private final int WIDTH = 500;
-    private final int HEIGHT = 400;
+    private final int HEIGHT = 700;
 
     public TestFrame(NetworkController net, String nick, ChatMap chats, ClientsMap clients){
         this.clients = clients;
@@ -108,6 +108,13 @@ public class TestFrame extends JFrame {
         this.init(WIDTH, HEIGHT);
 
         this.clients.addClient(net.getSelf());
+        JButton refresh = new JButton("Refresh chat");
+        refresh.addActionListener(new RefreshListener(this.chats, this.net, this.clients));
+
+        gbc.anchor = GridBagConstraints.LAST_LINE_START;
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        panel.add(refresh, gbc);
 
         this.getContentPane().add(panel);
     }
