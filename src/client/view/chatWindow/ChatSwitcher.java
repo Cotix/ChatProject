@@ -1,11 +1,10 @@
 package client.view.chatWindow;
 
+import client.controller.NetworkController;
 import client.model.*;
-import client.security.CryptoKeyPair;
 import network.Address;
-
 import javax.swing.*;
-import java.security.PublicKey;
+import java.util.List;
 
 public class ChatSwitcher {
 
@@ -13,12 +12,14 @@ public class ChatSwitcher {
     private JList<String> chatList;
     private ClientsMap clientsMap;
     private DefaultListModel<String> chatModel;
+    private NetworkController netControl;
 
-    public ChatSwitcher(ChatMap chats, JList<String> chatList, ClientsMap clients, DefaultListModel<String> chatModel){
+    public ChatSwitcher(ChatMap chats, JList<String> chatList, ClientsMap clients, DefaultListModel<String> chatModel, NetworkController netControl){
         this.chats = chats;
         this.chatList = chatList;
         this.clientsMap = clients;
         this.chatModel = chatModel;
+        this.netControl = netControl;
     }
 
     public Chat switchChat(String nick){
@@ -40,8 +41,6 @@ public class ChatSwitcher {
         if (chat.getMessages().size() > 0) {
             this.chatModel.removeAllElements();
             for (Message mess : chat.getMessages()) {
-
-                System.out.println(clientsMap.getNick(mess.getSenderPair()));
                 this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getSenderPair()), mess.getMessage()));
                 this.chatList.setModel(this.chatModel);
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
