@@ -22,6 +22,7 @@ public class ChatMap {
 
     public void addChat(Chat chat){
         this.chatMap.put(chat.getAddress(), chat);
+        this.addresses.add(chat.getAddress());
     }
 
     public Chat getChatByKey(PublicKey pKey){
