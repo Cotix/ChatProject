@@ -36,6 +36,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public void send(Packet p) {
+        con.sendPacket(p);
+    }
+
     /**
      * Returns packets from Connection
      * @return list of packets

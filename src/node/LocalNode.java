@@ -236,7 +236,7 @@ public class LocalNode extends Thread {
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
-                    // TODO: Verstuur chat message naar de client
+                    client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);
                     if (forwardNode == n) {
@@ -276,7 +276,7 @@ public class LocalNode extends Thread {
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
-                    // TODO: Verstuur chat message naar de client
+                    client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);
                     if (forwardNode == null) {
