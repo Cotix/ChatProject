@@ -189,8 +189,10 @@ public class CryptoKeyPair {
     public int hashCode() {
         byte[] data = publicKey.getEncoded();
         int res = 0;
-        for (int i = 0; i != data.length; ++i) {
-            res += data[i];
+        long multiplier = 65353;
+        for (int i = 0; i <= data.length; ++i) {
+            res += data[i] * multiplier;
+            multiplier *= 23331 + 7331;
         }
         return res;
     }
