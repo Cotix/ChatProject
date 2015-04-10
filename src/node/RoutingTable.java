@@ -33,7 +33,8 @@ public class RoutingTable {
             return false;
         }
         clients.put(address, client);
-        return update();
+        update();
+        return true;
     }
 
     public DistancePacket getMyDistanceTable() {
