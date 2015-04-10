@@ -22,7 +22,7 @@ public class DistancePacket extends StringPacket {
     public static String mapToString(Map<Address, Integer> map) {
         String result = "";
         for (Address entry : map.keySet()) {
-            result += entry + "," + map.get(entry) + "\n";
+            result += entry.getAddress().toString() + "," + map.get(entry) + "\n";
         }
         return result;
     }
