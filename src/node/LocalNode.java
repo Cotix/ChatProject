@@ -205,8 +205,12 @@ public class LocalNode extends Thread {
 
     private void sendDistanceTableToAll() {
         Log.log("Sending distancetable to all connected nodes", LogLevel.INFO);
+        Packet p = routing.getMyDistanceTable();
         for (Node n : peers) {
-            sendDistanceTable(n);
+            n.send(p);
+        }
+        for (ClientHandler c : clients) {
+            c.send(p);
         }
     }
     //Handles a packet. Basically a big switch case on all packetTypes
