@@ -1,10 +1,13 @@
 package node;
 
+import log.Log;
+import log.LogLevel;
 import network.Address;
 import network.connection.packet.DistancePacket;
 import network.connection.packet.Packet;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,24 @@ public class RoutingTable {
         clients.put(address, client);
         update();
         return true;
+    }
+
+    public Collection<ClientHandler> getClients() {
+        return clients.values();
+    }
+
+    public void removeOldClient() {
+        boolean update = false;
+        for (Address a : clients.keySet()) {
+            if (clients.get(a).getRunning() == false) {
+                clients.remove(a);
+                Log.log("Removed client " + a, LogLevel.INFO);
+                update = true;
+            }
+        }
+        if (update) {
+            update();
+        }
     }
 
     public DistancePacket getMyDistanceTable() {

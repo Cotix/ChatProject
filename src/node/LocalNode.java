@@ -399,6 +399,12 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
+            routing.removeOldClient();
+            for (ClientHandler c : clients) {
+                if (c.getRunning() == false) {
+                    clients.remove(c);
+                }
+            }
             try {
                 //Sleep a little so we don't stress the computer too much
                 sleep(1);
