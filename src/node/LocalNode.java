@@ -44,7 +44,7 @@ public class LocalNode extends Thread {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Log.log("New incomming node connection!", LogLevel.INFO);
+                Log.log("New incoming node connection!", LogLevel.INFO);
                 queue.add(s);
             }
         }

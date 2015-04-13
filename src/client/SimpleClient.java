@@ -21,7 +21,7 @@ public class SimpleClient {
         com.sun.org.apache.xml.internal.security.Init.init();
         Log.enableAllLevels();
         //Log.disableLevel(LogLevel.NONE);
-        LocalNode node = new LocalNode("127.0.0.1");
+        LocalNode node = new LocalNode("192.168.5.4");
         node.start();
         try {
             Thread.sleep(10);

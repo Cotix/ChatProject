@@ -75,7 +75,7 @@ public class RoutingTable {
         return findBestNode(address);
     }
     //Calculates best node to send to, but excludes an address
-    //Usefull to blacklist nodes
+    //Useful to blacklist nodes
     public Node getAlternativeNode(Address address, Node exclude) {
         int best = Integer.MAX_VALUE;
         Node bestNode = null;
