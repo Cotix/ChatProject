@@ -11,7 +11,6 @@ import network.connection.packet.Packet;
 import settings.Configuration;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;

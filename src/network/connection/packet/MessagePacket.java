@@ -4,8 +4,6 @@ import client.security.CryptoKeyPair;
 import network.Address;
 import settings.Configuration;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 /**
  * A packet containing an actual message with the text entered in the chat
