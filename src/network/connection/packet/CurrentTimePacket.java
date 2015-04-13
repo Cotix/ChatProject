@@ -1,10 +1,11 @@
 package network.connection.packet;
 
-//A packet used for pinging other nodes.
-//A currenttimepacket includes the current time when you construct it
-//This allows for stateless pinging, as we can send a CurrentTimePacket to a node
-//And that node can return the packet and we can read the time difference. This way
-//We dont need to store any information about who we are pinging and so on.
+/**
+ * A packet used for pinging other nodes.
+ * This packet also includes the time at which the packet was constructed.
+ * This enables us to read the timedifference between sending and receiving without keeping
+ * track of any information about who we are pinging.
+ */
 
 public class CurrentTimePacket implements Packet {
     private byte[] data;
@@ -31,6 +32,10 @@ public class CurrentTimePacket implements Packet {
         System.arraycopy(pData, 0, data, 5, pData.length);
     }
 
+    /**
+     * Sets the type of the packet you are going to send
+     * @param t the type from the PacketUtils class.
+     */
     public void setType(PacketUtils.PacketType t) {
         data[4] = t.value;
     }
@@ -54,20 +59,37 @@ public class CurrentTimePacket implements Packet {
         return (int) (System.currentTimeMillis() - time);
     }
 
+    /**
+     * Returns the data which is inside the packet
+     * @return
+     */
     public byte[] getData() {
         byte[] ret = new byte[data.length - 5];
         System.arraycopy(data, 5, ret, 0, ret.length);
         return ret;
     }
 
+
+    /**
+     * Returns the raw data inside the packet
+     * @return
+     */
     public byte[] getRawData() {
         return data;
     }
 
+    /**
+     * Returns the size of the packet
+     * @return
+     */
     public int getSize() {
         return data.length;
     }
 
+    /**
+     * Return only the first DataByte of the packet
+     * @return
+     */
     public byte getFirstDataByte() {
         if (data.length <= 4) {
             return -128;

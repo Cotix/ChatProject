@@ -7,6 +7,10 @@ import settings.Configuration;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * A packet containing an actual message with the text entered in the chat
+ */
+
 public class MessagePacket implements Packet {
 
     private byte[] data;
@@ -15,7 +19,10 @@ public class MessagePacket implements Packet {
         this.data = rawData;
     }
 
-
+    /**
+     * Returns the recipient of the message
+     * @return
+     */
     public Address getRecipient() {
         byte[] data = getData();
         byte[] recipient = new byte[Configuration.ENCODED_KEY_LENGTH];
@@ -23,16 +30,28 @@ public class MessagePacket implements Packet {
         return new Address(new CryptoKeyPair(recipient));
     }
 
+    /**
+     * Returns the raw data of the packet
+     * @return
+     */
     @Override
     public byte[] getRawData() {
         return data;
     }
 
+    /**
+     * Returns the size of the packet
+     * @return
+     */
     @Override
     public int getSize() {
         return data.length;
     }
 
+    /**
+     * Returns the data of the packet
+     * @return
+     */
     @Override
     public byte[] getData() {
         byte[] ret = new byte[data.length - 5];
@@ -40,6 +59,10 @@ public class MessagePacket implements Packet {
         return ret;
     }
 
+    /**
+     * Returns the first DataByte of the packet
+     * @return
+     */
     @Override
     public byte getFirstDataByte() {
         if (data == null || data.length <= 4) {

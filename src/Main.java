@@ -4,9 +4,6 @@ import network.connection.packet.CurrentTimePacket;
 import node.LocalNode;
 import org.omg.CORBA.Current;
 
-/**
- * Created by cotix on 4/7/15.
- */
 public class Main {
     public static void main(String[] arg) {
         Log.enableAllLevels();

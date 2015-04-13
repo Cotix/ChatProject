@@ -1,7 +1,10 @@
 package settings;
 
-//A nice configuration file
-//Can be used to easily change some settings
+
+/**
+ * The configuration class for the node.
+ * This makes it easier to change the settings.
+ */
 
 public class Configuration {
     public static final String HOST = "localhost";
