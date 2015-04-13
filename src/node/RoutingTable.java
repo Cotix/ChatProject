@@ -1,10 +1,13 @@
 package node;
 
+import log.Log;
+import log.LogLevel;
 import network.Address;
 import network.connection.packet.DistancePacket;
 import network.connection.packet.Packet;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,25 @@ public class RoutingTable {
         clients.put(address, client);
         update();
         return true;
+    }
+
+    public Collection<ClientHandler> getClients() {
+        return clients.values();
+    }
+
+    public boolean removeOldClient() {
+        boolean update = false;
+        for (Address a : clients.keySet()) {
+            if (clients.get(a).getRunning() == false) {
+                clients.remove(a);
+                Log.log("Removed client " + a, LogLevel.INFO);
+                update = true;
+            }
+        }
+        if (update) {
+            return update();
+        }
+        return false;
     }
 
     public DistancePacket getMyDistanceTable() {
@@ -75,7 +97,7 @@ public class RoutingTable {
         return findBestNode(address);
     }
     //Calculates best node to send to, but excludes an address
-    //Usefull to blacklist nodes
+    //Useful to blacklist nodes
     public Node getAlternativeNode(Address address, Node exclude) {
         int best = Integer.MAX_VALUE;
         Node bestNode = null;

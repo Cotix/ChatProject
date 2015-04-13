@@ -11,7 +11,6 @@ import network.connection.packet.Packet;
 import settings.Configuration;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -44,7 +43,7 @@ public class LocalNode extends Thread {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Log.log("New incomming node connection!", LogLevel.INFO);
+                Log.log("New incoming node connection!", LogLevel.INFO);
                 queue.add(s);
             }
         }
@@ -254,7 +253,7 @@ public class LocalNode extends Thread {
                         forwardNode = routing.getAlternativeNode(dest, n);
                     }
                     if (forwardNode == null) {
-                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                        Log.log("Can not find route to address: " + dest, LogLevel.NONE);
                         return false;
                     }
                     Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
@@ -304,6 +303,9 @@ public class LocalNode extends Thread {
         for (Node n : peers) {
             if (packetBuffer.containsKey(n)) {
                 List<Packet> packets = packetBuffer.get(n);
+                if (packets.size() >= 100) {
+                    Log.log(packets.size() + " packets in queue for node: " + n.getIp(), LogLevel.WARNING);
+                }
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
                     if (handlePacket(p, n)) {
@@ -316,6 +318,9 @@ public class LocalNode extends Thread {
         for (ClientHandler c : clients) {
             if (clientBuffer.containsKey(c)) {
                 List<Packet> packets = clientBuffer.get(c);
+                if (packets.size() >= 100) {
+                    Log.log(packets.size() + " packets in queue for client", LogLevel.WARNING);
+                }
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
                     if (handlePacket(p, c)) {
@@ -381,7 +386,7 @@ public class LocalNode extends Thread {
             }
             //Add a random node that announced itself.
             //A small random chance so we do not add every one right away
-            if (msg != null && msg.contains("HELLO") && Math.random() >= 0.75) {
+            if (msg != null && msg.contains("HELLO")) {
                 String[] announcements = msg.split("HELLO");
                 for (String announcement : announcements) {
                     String[] split = announcement.split(":");
@@ -399,6 +404,14 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
+            if (routing.removeOldClient()) {
+                sendDistanceTableToAll();
+            }
+            for (ClientHandler c : clients) {
+                if (c.getRunning() == false) {
+                    clients.remove(c);
+                }
+            }
             try {
                 //Sleep a little so we don't stress the computer too much
                 sleep(1);

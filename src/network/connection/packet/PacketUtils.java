@@ -5,7 +5,8 @@ package network.connection.packet;
  */
 public class PacketUtils {
     public enum PacketType {
-        UNKNOWN((byte)-128), DISTANCE((byte) 1), PING((byte) 2), PONG((byte) 3), IDENTIFY((byte) 64), MESSAGE((byte) 65);
+        UNKNOWN((byte)-128), DISTANCE((byte) 1), PING((byte) 2), PONG((byte) 3), ACK((byte)4),
+        IDENTIFY((byte) 64), MESSAGE((byte) 65);
         byte value;
         PacketType(byte v) {
             value = v;

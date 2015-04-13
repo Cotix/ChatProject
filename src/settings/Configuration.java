@@ -1,7 +1,10 @@
 package settings;
 
-//A nice configuration file
-//Can be used to easily change some settings
+
+/**
+ * The configuration class for the node.
+ * This makes it easier to change the settings.
+ */
 
 public class Configuration {
     public static final String HOST = "localhost";
@@ -19,4 +22,6 @@ public class Configuration {
     public static int SIGN_LENGTH = 128; //Has to be determined
     public static String RANDOM_SOURCE = "SHA1PRNG";
     public static final String NICKNAME = "Erik";
+    public static int ADHOC_IDENTIFIER_LENGTH = 8;
+    public static long TIMEOUT = 5000;
 }

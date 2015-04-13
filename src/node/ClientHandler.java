@@ -35,6 +35,9 @@ public class ClientHandler implements Runnable {
     public void run() {
         while (running) {
             con.handleConnection();
+            if (!con.isConnected()) {
+                stop();
+            }
         }
     }
 
@@ -52,6 +55,10 @@ public class ClientHandler implements Runnable {
      */
     public void send(Packet p) {
         con.sendPacket(p);
+    }
+
+    public boolean getRunning() {
+        return running;
     }
 
     /**
