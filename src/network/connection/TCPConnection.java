@@ -1,6 +1,5 @@
 package network.connection;
 
-import log.Log;
 
 import java.io.*;
 import java.net.Socket;
