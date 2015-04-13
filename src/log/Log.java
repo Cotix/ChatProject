@@ -25,7 +25,7 @@ public class Log {
             enableLevel(lvl);
         }
     }
-
+    
     public static void disableAllLevels() {
         enabledLogLevels = new HashSet<LogLevel>();
     }
