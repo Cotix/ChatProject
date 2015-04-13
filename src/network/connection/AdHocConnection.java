@@ -22,8 +22,14 @@ public class AdHocConnection implements Connection {
     private boolean isConnected;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
+    private byte[] identifier;
+
 
     public AdHocConnection(short p) {
+        identifier = new byte[Configuration.ADHOC_IDENTIFIER_LENGTH];
+        for (int i = 0; i != Configuration.ADHOC_IDENTIFIER_LENGTH; ++i) {
+            identifier[i] = (byte)(Math.random()*255);
+        }
         port = p;
         try {
             multicastGroup = InetAddress.getByName("228.2.2.2");
@@ -55,9 +61,30 @@ public class AdHocConnection implements Connection {
         isConnected = false;
     }
 
+    private byte[] addIdentifier(byte[] msg) {
+        byte[] data = new byte[msg.length + Configuration.ADHOC_IDENTIFIER_LENGTH];
+        System.arraycopy(msg, 0, data, 0, 4);
+        System.arraycopy(identifier, 0, data, 4, Configuration.ADHOC_IDENTIFIER_LENGTH);
+        System.arraycopy(msg, 4, data, 4 + Configuration.ADHOC_IDENTIFIER_LENGTH, msg.length);
+        return data;
+
+    }
+
+    private byte[] checkIdentifier(byte[] data) {
+        for (int i = 0; i != Configuration.ADHOC_IDENTIFIER_LENGTH; ++i) {
+            if (data[i] != identifier[i]) {
+                byte[] out = new byte[data.length - Configuration.ADHOC_IDENTIFIER_LENGTH];
+                System.arraycopy(data, Configuration.ADHOC_IDENTIFIER_LENGTH, out, 0, out.length);
+                return out;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void sendPacket(Packet pckt) {
-        byte[] msg = pckt.getRawData();
+        byte[] data;
+        byte[] msg = addIdentifier(pckt.getRawData());
         DatagramPacket packet = new DatagramPacket(msg, msg.length, multicastGroup, port);
         try {
             multicastSocket.send(packet);
@@ -94,7 +121,10 @@ public class AdHocConnection implements Connection {
                 if (dataSize != length) {
                     Log.log("Wrong length prefix!", LogLevel.ERROR);
                 }
-                packetQueue.add(new StringPacket(data));
+                byte[] d = checkIdentifier(data);
+                if (d != null) {
+                    packetQueue.add(new StringPacket(d));
+                }
             }
         }
     }
