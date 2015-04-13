@@ -19,12 +19,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class AdHocConnection implements Connection {
     private Queue<Packet> packetQueue;
     private int port;
-    private Socket sock;
     private boolean isConnected;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
     private byte[] identifier;
-    private Queue<Packet> sendingQueue;
     private int ackCount;
 
     public AdHocConnection(short p) {
@@ -51,8 +49,6 @@ public class AdHocConnection implements Connection {
         }
         isConnected = true;
         packetQueue = new ConcurrentLinkedQueue<>();
-        sendingQueue = new ConcurrentLinkedQueue<>();
-        ackCount = 1;
     }
 
     @Override
@@ -92,10 +88,6 @@ public class AdHocConnection implements Connection {
 
     @Override
     public void sendPacket(Packet pckt) {
-        if (ackCount <= 0) {
-            sendingQueue.add(pckt);
-            return;
-        }
         byte[] data;
         byte[] msg = addIdentifier(pckt.getRawData());
         DatagramPacket packet = new DatagramPacket(msg, msg.length, multicastGroup, port);
@@ -113,10 +105,6 @@ public class AdHocConnection implements Connection {
         if (isConnected) {
             int length;
             while (true) {
-                Packet toSend = sendingQueue.poll();
-                if (toSend != null) {
-                    sendPacket(toSend);
-                }
                 byte[] buf = new byte[4];
                 DatagramPacket recv = new DatagramPacket(buf, buf.length);
                 length = recv.getLength();
