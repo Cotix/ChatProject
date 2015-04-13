@@ -39,10 +39,16 @@ public class ChatSwitcher {
     public void showList(Chat chat){
         if (chat != null && chat.getMessages().size() > 0) {
             this.chatModel.removeAllElements();
+            Message previous = null;
             for (Message mess : chat.getMessages()) {
-                this.chatModel.addElement(String.format("%s: %s", clientsMap.getNick(mess.getSenderPair()), mess.getMessage()));
+                if (previous == null || mess.getSenderPair() != previous.getSenderPair()) {
+                    this.chatModel.addElement(String.format("<html><font color=green size=+1>%s</font></html>", clientsMap.getNick(mess.getSenderPair())));
+                }
+                this.chatModel.addElement(String.format("<html><span> %s</html>", mess.getMessage()));
                 this.chatList.setModel(this.chatModel);
                 this.chatList.ensureIndexIsVisible(this.chatModel.size() - 1);
+
+                previous = mess;
             }
         } else {
             System.out.println("Empty list");

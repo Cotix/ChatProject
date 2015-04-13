@@ -56,7 +56,7 @@ public class Address {
      * @return
      */
     public String toString() {
-        return address.toString();
+        return String.valueOf(address.hashCode());
     }
 
     /**

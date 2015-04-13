@@ -65,7 +65,6 @@ public class Chat {
      * Removes all Messages from the Chat.
      */
     public void removeAll(){
-        System.out.println("Chat test");
         messages.clear();
     }
 }

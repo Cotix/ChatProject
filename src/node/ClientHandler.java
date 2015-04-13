@@ -1,7 +1,5 @@
 package node;
 
-import log.Log;
-import log.LogLevel;
 import network.connection.Connection;
 import network.connection.TCPConnection;
 import network.connection.packet.Packet;

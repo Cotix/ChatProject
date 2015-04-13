@@ -69,6 +69,15 @@ public class ClientsMap {
         return false;
     }
 
+    public boolean contains(Address address) {
+        for (Address client : clients) {
+            if (client.equals(address)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Address> getMap(){
         return this.clients;
     }
