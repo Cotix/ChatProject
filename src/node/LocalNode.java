@@ -404,7 +404,9 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
-            routing.removeOldClient();
+            if (routing.removeOldClient()) {
+                sendDistanceTableToAll();
+            }
             for (ClientHandler c : clients) {
                 if (c.getRunning() == false) {
                     clients.remove(c);

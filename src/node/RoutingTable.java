@@ -44,7 +44,7 @@ public class RoutingTable {
         return clients.values();
     }
 
-    public void removeOldClient() {
+    public boolean removeOldClient() {
         boolean update = false;
         for (Address a : clients.keySet()) {
             if (clients.get(a).getRunning() == false) {
@@ -54,8 +54,9 @@ public class RoutingTable {
             }
         }
         if (update) {
-            update();
+            return update();
         }
+        return false;
     }
 
     public DistancePacket getMyDistanceTable() {
