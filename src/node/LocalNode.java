@@ -381,7 +381,7 @@ public class LocalNode extends Thread {
             }
             //Add a random node that announced itself.
             //A small random chance so we do not add every one right away
-            if (msg != null && msg.contains("HELLO") && Math.random() >= 0.75) {
+            if (msg != null && msg.contains("HELLO")) {
                 String[] announcements = msg.split("HELLO");
                 for (String announcement : announcements) {
                     String[] split = announcement.split(":");
