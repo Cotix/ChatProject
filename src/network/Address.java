@@ -38,7 +38,7 @@ public class Address {
     }
 
     public String toString() {
-        return address.toString();
+        return String.valueOf(address.hashCode());
     }
 
     public String getNickName(){

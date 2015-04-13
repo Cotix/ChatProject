@@ -1,6 +1,18 @@
 package client.view.chatWindow;
 
+import client.controller.ClientController;
+import client.model.Chat;
+import client.model.ChatMap;
+import client.model.ClientsMap;
+import client.model.Message;
+import com.sun.security.ntlm.Client;
+import log.Log;
+import log.LogLevel;
+import network.Address;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 public class ClientFrame extends JFrame {
@@ -8,8 +20,10 @@ public class ClientFrame extends JFrame {
     public static final int WIDTH = 500;
     public static final int HEIGHT = 700;
 
-    private JList<String> clientList;
-    private DefaultListModel<String> clientListModel;
+    private ClientController client;
+
+    private JList<Address> clientList;
+    private DefaultListModel<Address> clientListModel;
 
     private JList<String> chatView;
     private DefaultListModel<String> chatViewModel;
@@ -21,11 +35,22 @@ public class ClientFrame extends JFrame {
     private GridBagConstraints gbc;
 
     public ClientFrame() {
+        this.client = ClientController.getInstance();
+
         this.gbc = new GridBagConstraints();
         this.panel = new JPanel(new GridBagLayout());
 
         this.clientList = new JList<>();
         this.clientListModel = new DefaultListModel<>();
+        this.clientList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                Log.log("Toggle chats", LogLevel.INFO);
+                if (clientList.getSelectedValue() != null) {
+                    Log.log(String.valueOf(clientList.getSelectedValue().hashCode()), LogLevel.INFO);
+                }
+            }
+        });
 
         this.chatView = new JList<>();
         this.chatViewModel = new DefaultListModel<>();
@@ -63,11 +88,11 @@ public class ClientFrame extends JFrame {
         this.setVisible(true);
     }
 
-    public JList<String> getClientList() {
+    public JList<Address> getClientList() {
         return clientList;
     }
 
-    public DefaultListModel<String> getClientListModel() {
+    public DefaultListModel<Address> getClientListModel() {
         return clientListModel;
     }
 
@@ -79,7 +104,11 @@ public class ClientFrame extends JFrame {
         return chatViewModel;
     }
 
-    public void updateMessages() {
-
+    public void showMessages(Chat chat) {
+        chatViewModel.clear();
+        for (Message message : chat.getMessages()) {
+            chatViewModel.addElement(message.getMessage());
+        }
+        chatView.setModel(chatViewModel);
     }
 }

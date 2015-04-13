@@ -18,4 +18,5 @@ public class Configuration {
     public static String SIGN_INSTANCE = "SHA256withRSA";
     public static int SIGN_LENGTH = 128; //Has to be determined
     public static String RANDOM_SOURCE = "SHA1PRNG";
+    public static final String NICKNAME = "Erik";
 }

@@ -57,13 +57,17 @@ public class ClientController implements Runnable {
     public void run() {
         while (running) {
             for (Message m : networkController.getMessage()) {
-                Log.log(m.getMessage(), LogLevel.INFO);
+                Log.log(String.format("%s: %s", m.getSenderPair().hashCode(), m.getMessage()), LogLevel.INFO);
             }
         }
     }
 
     public ClientsMap getClients() {
         return clients;
+    }
+
+    public ChatMap getChats() {
+        return chats;
     }
 
     /**
@@ -91,10 +95,9 @@ public class ClientController implements Runnable {
     }
 
     public void updateClients(DistanceTable distanceTable) {
-        Log.log("shooop", LogLevel.INFO);
         view.getClientListModel().clear();
         for(Address a : distanceTable.getTable().keySet()) {
-            view.getClientListModel().addElement(Integer.toString(a.hashCode()));
+            view.getClientListModel().addElement(a);
             if (!clients.contains(a)) {
                 clients.addClient(a);
                 chats.addChat(new Chat(a));

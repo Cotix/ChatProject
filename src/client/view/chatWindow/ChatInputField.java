@@ -34,7 +34,7 @@ public class ChatInputField extends JTextField implements KeyListener {
                         Message message = new Message(
                                 this.getText(),
                                 client.getKeyPair(),
-                                client.getClients().getClientByName(client.getView().getClientList().getSelectedValue()).getAddress(),
+                                client.getView().getClientList().getSelectedValue().getAddress(),
                                 System.currentTimeMillis()
                         );
                         client.getNetworkController().sendMessage(message);
