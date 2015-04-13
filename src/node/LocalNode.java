@@ -241,10 +241,12 @@ public class LocalNode extends Thread {
                 Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
             case MESSAGE:
+                Log.log("Received message from other node to forward.", LogLevel.INFO);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
+                    Log.log("Sending message directly to client", LogLevel.INFO);
                     client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);
@@ -281,6 +283,7 @@ public class LocalNode extends Thread {
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
+                    Log.log("Sending message packet directly to node", LogLevel.INFO);
                     client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);

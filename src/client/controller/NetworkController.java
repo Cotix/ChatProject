@@ -92,6 +92,7 @@ public class NetworkController implements Runnable {
             if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.DISTANCE) {
                 distanceTable.update(new DistancePacket(p.getData()));
             } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.MESSAGE) {
+                Log.log("Client received a message!", LogLevel.INFO);
                 list.add(Message.makeMessage(p, myKeyPair));
             }
         }
