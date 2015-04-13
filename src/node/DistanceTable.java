@@ -1,5 +1,7 @@
 package node;
 
+import log.Log;
+import log.LogLevel;
 import network.Address;
 import network.connection.packet.DistancePacket;
 
@@ -53,7 +55,11 @@ public class DistanceTable {
         for (String line : packet.split("\n")) {
             if (line.length() == 0) continue;
             String[] parts = line.split(",");
-            result.put(new Address(parts[0]), Integer.parseInt(parts[1]));
+            try {
+                result.put(new Address(parts[0]), Integer.parseInt(parts[1]));
+            } catch(Exception e) {
+                Log.log("Something went wrong decoding the address: " + parts[0], LogLevel.ERROR);
+            }
         }
         return result;
     }

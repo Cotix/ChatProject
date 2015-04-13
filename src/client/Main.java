@@ -9,7 +9,7 @@ public class Main {
         com.sun.org.apache.xml.internal.security.Init.init();
         Log.enableAllLevels();
 
-        LocalNode node = new LocalNode("192.168.5.1");
+        LocalNode node = new LocalNode("192.168.5.4");
         node.start();
 
         ClientController client = ClientController.getInstance();
