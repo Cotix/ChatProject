@@ -253,7 +253,7 @@ public class LocalNode extends Thread {
                         forwardNode = routing.getAlternativeNode(dest, n);
                     }
                     if (forwardNode == null) {
-                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                        Log.log("Can not find route to address: " + dest, LogLevel.NONE);
                         return false;
                     }
                     Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
@@ -303,6 +303,9 @@ public class LocalNode extends Thread {
         for (Node n : peers) {
             if (packetBuffer.containsKey(n)) {
                 List<Packet> packets = packetBuffer.get(n);
+                if (packets.size() >= 100) {
+                    Log.log(packets.size() + " packets in queue for node: " + n.getIp(), LogLevel.WARNING);
+                }
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
                     if (handlePacket(p, n)) {
@@ -315,6 +318,9 @@ public class LocalNode extends Thread {
         for (ClientHandler c : clients) {
             if (clientBuffer.containsKey(c)) {
                 List<Packet> packets = clientBuffer.get(c);
+                if (packets.size() >= 100) {
+                    Log.log(packets.size() + " packets in queue for client", LogLevel.WARNING);
+                }
                 List<Packet> toRemove = new LinkedList<>();
                 for (Packet p : packets) {
                     if (handlePacket(p, c)) {
