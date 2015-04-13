@@ -49,11 +49,11 @@ public class EntryBar extends JTextField implements KeyListener {
 
                         Message tempMess = new Message(
                                 this.getText(),
-                                this.clientsMap.getOwnAddress().getAddress(),
+                                this.networkController.getMyKeyPair(),
                                 this.clientsMap.getClientByName(lobbyList.getSelectedValue()).getAddress(),
                                 System.currentTimeMillis()
                         );
-
+                        System.out.println(chats.getChatByKey(clientsMap.getKeyPair(lobbyList.getSelectedValue())));
                         chats.getChatByKey(clientsMap.getKeyPair(lobbyList.getSelectedValue())).addMessage(tempMess);
 
                         this.setText("");
