@@ -2,6 +2,9 @@ package network.connection.packet;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * An allround packet, constructed from input data. This can be either a String or byte array.
+ */
 //A very allround packet. Constructs a regular packet from input data
 //Can be either a string or a byte array.
 
@@ -31,20 +34,36 @@ public class StringPacket implements Packet{
         this(pData.getBytes("US-ASCII"), type);
     }
 
+    /**
+     * Returns the data inside the packet
+     * @return
+     */
     public byte[] getData() {
         byte[] ret = new byte[data.length - 5];
         System.arraycopy(data, 5, ret, 0, ret.length);
         return ret;
     }
 
+    /**
+     * Returns the raw data inside the packet
+     * @return
+     */
     public byte[] getRawData() {
         return data;
     }
 
+    /**
+     * Returns the size of the packet
+     * @return
+     */
     public int getSize() {
         return data.length;
     }
 
+    /**
+     * Returns the first DataByte of the packet
+     * @return
+     */
     public byte getFirstDataByte() {
         if (data == null || data.length <= 4) {
             return -128;
@@ -52,6 +71,10 @@ public class StringPacket implements Packet{
         return data[4];
     }
 
+    /**
+     * Returns the data in the packet, represented as String
+     * @return
+     */
     public String getDataAsString() {
         try {
             return new String(getData(), "US-ASCII");
