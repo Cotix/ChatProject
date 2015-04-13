@@ -54,10 +54,9 @@ public class NetworkController implements Runnable {
     /**
      * Sends a MESSAGE packet to the node.
      * @param message Message to send
-     * @param recvKeyPair keypair of the receiver
      * @throws UnsupportedEncodingException
      */
-    public void sendMessage(Message message, CryptoKeyPair recvKeyPair) throws UnsupportedEncodingException {
+    public void sendMessage(Message message) throws UnsupportedEncodingException {
         connection.sendPacket(message.makePacket());
     }
 
