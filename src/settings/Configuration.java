@@ -19,4 +19,5 @@ public class Configuration {
     public static int SIGN_LENGTH = 128; //Has to be determined
     public static String RANDOM_SOURCE = "SHA1PRNG";
     public static int ADHOC_IDENTIFIER_LENGTH = 8;
+    public static long TIMEOUT = 5000;
 }
