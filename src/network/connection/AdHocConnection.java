@@ -4,6 +4,7 @@ import log.Log;
 import log.LogLevel;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
+import network.connection.packet.PacketUtils;
 import network.connection.packet.StringPacket;
 import settings.Configuration;
 
@@ -23,7 +24,8 @@ public class AdHocConnection implements Connection {
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
     private byte[] identifier;
-
+    private Queue<Packet> sendingQueue;
+    private int ackCount;
 
     public AdHocConnection(short p) {
         identifier = new byte[Configuration.ADHOC_IDENTIFIER_LENGTH];
@@ -42,8 +44,15 @@ public class AdHocConnection implements Connection {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            multicastSocket.setSoTimeout(10);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         isConnected = true;
         packetQueue = new ConcurrentLinkedQueue<>();
+        sendingQueue = new ConcurrentLinkedQueue<>();
+        ackCount = 1;
     }
 
     @Override
@@ -83,6 +92,10 @@ public class AdHocConnection implements Connection {
 
     @Override
     public void sendPacket(Packet pckt) {
+        if (ackCount <= 0) {
+            sendingQueue.add(pckt);
+            return;
+        }
         byte[] data;
         byte[] msg = addIdentifier(pckt.getRawData());
         DatagramPacket packet = new DatagramPacket(msg, msg.length, multicastGroup, port);
@@ -98,8 +111,12 @@ public class AdHocConnection implements Connection {
     public void handleConnection() {
         sendPacket(new CurrentTimePacket());
         if (isConnected) {
-        int length;
+            int length;
             while (true) {
+                Packet toSend = sendingQueue.poll();
+                if (toSend != null) {
+                    sendPacket(toSend);
+                }
                 byte[] buf = new byte[4];
                 DatagramPacket recv = new DatagramPacket(buf, buf.length);
                 length = recv.getLength();
@@ -120,10 +137,16 @@ public class AdHocConnection implements Connection {
                 length = recv.getLength();
                 if (dataSize != length) {
                     Log.log("Wrong length prefix!", LogLevel.ERROR);
+                    continue;
                 }
                 byte[] d = checkIdentifier(data);
                 if (d != null) {
-                    packetQueue.add(new StringPacket(d));
+                    if (d[0] == PacketUtils.PacketType.ACK.getValue()) {
+                        ackCount++;
+                        Log.log("Received ack!", LogLevel.INFO);
+                    } else {
+                        packetQueue.add(new StringPacket(d));
+                    }
                 }
             }
         }
@@ -141,6 +164,6 @@ public class AdHocConnection implements Connection {
 
     @Override
     public String getConnectionInfo() {
-        return "TCPConnection(multicast:" + port + ") is " + (isConnected ? "" : "not ") + "connected.";
+        return "AdHocConnection(multicast:" + port + ") is " + (isConnected ? "" : "not ") + "connected.";
     }
 }
