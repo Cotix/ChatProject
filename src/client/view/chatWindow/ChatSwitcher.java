@@ -51,7 +51,7 @@ public class ChatSwitcher {
                 previous = mess;
             }
         } else {
-            System.out.println("Empty list");
+            //System.out.println("Empty list");
         }
     }
 }
