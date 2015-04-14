@@ -84,7 +84,7 @@ public class ClientFrame extends JFrame {
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("WhatSwag Messenger" + " " +  client.getKeyPair().hashCode());
+        this.setTitle("WhatSwag Messenger" + " " + client.getKeyPair().hashCode());
         this.clientListModel.removeElement(client.getKeyPair());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -112,24 +112,28 @@ public class ClientFrame extends JFrame {
     }
 
     public void updateMessages() {
-        if (getClientList().getSelectedValue() != null) {
-            final Chat chat = client.getChats().getChatByKey(getClientList().getSelectedValue().getAddress());
-            if (chat != null && (chat.updated() || this.switched)){
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        chatViewModel.clear();
-                        for (Message m : chat.getMessages()) {
-                            chatViewModel.addElement(m);
+        try {
+            if (getClientList().getSelectedValue() != null) {
+                final Chat chat = client.getChats().getChatByKey(getClientList().getSelectedValue().getAddress());
+                if (chat != null && (chat.updated() || this.switched)) {
+                    EventQueue.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatViewModel.clear();
+                            for (Message m : chat.getMessages()) {
+                                chatViewModel.addElement(m);
+                            }
+                            chatView.setModel(chatViewModel);
+                            chatView.ensureIndexIsVisible(chatViewModel.size() - 1);
+                            if (switched) {
+                                switched = false;
+                            }
                         }
-                        chatView.setModel(chatViewModel);
-                        chatView.ensureIndexIsVisible(chatViewModel.size() - 1);
-                        if (switched){
-                            switched = false;
-                        }
-                    }
-                });
+                    });
+                }
             }
+        } catch (Throwable e){
+            System.out.println("HELP");
         }
     }
 }
