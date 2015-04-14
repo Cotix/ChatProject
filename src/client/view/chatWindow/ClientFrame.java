@@ -45,7 +45,6 @@ public class ClientFrame extends JFrame {
         this.clientList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                Log.log("Toggle chats", LogLevel.NONE);
                 if (clientList.getSelectedValue() != null) {
                     Log.log(String.valueOf(clientList.getSelectedValue().hashCode()), LogLevel.INFO);
                 }
@@ -55,13 +54,11 @@ public class ClientFrame extends JFrame {
         this.chatView = new JList<>();
         this.chatViewModel = new DefaultListModel<>();
 
-        this.chatButton = new JButton("New Chat");
-
         this.input = new ChatInputField();
 
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
-        gbc.weighty = 1;
+        gbc.weighty = 9;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -73,10 +70,8 @@ public class ClientFrame extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(chatButton, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.weighty = 1;
+        gbc.gridwidth = 2;
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
