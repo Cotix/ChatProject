@@ -186,6 +186,13 @@ public class LocalNode extends Thread {
                     Log.log("Added " + packets.size() + " packets to the queue.", LogLevel.NONE);
                     packetBuffer.get(n).addAll(packets);
                 }
+            } else {
+                Log.log("Removing node " + n.getIp() + ":" + n.getPort(), LogLevel.INFO);
+                peers.remove(n);
+                routing.removeNode(n);
+                if (routing.update()) {
+                    sendDistanceTableToAll();
+                }
             }
         }
         for (ClientHandler c : clients) {
