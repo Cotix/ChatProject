@@ -185,20 +185,16 @@ public class CryptoKeyPair {
     public String toString() {
         return Base64.encode(publicKey.getEncoded()).replace("\n","");
     }
-
     public int hashCode() {
         byte[] data = publicKey.getEncoded();
-        int res = 0;
-        long multiplier = 65353;
+        int res = 5381;
         for (int i = 0; i != data.length; ++i) {
-            res += data[i] * multiplier;
-            multiplier *= 23331 + 7331;
+            res = ((res << 5)  + res) + data[i];
         }
         return res;
     }
 
     public boolean equals(Object k) {
-
         return Arrays.equals(((CryptoKeyPair)k).getRawPublicKey(), getRawPublicKey());
     }
 }
