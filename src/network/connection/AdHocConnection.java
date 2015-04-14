@@ -131,7 +131,7 @@ public class AdHocConnection implements Connection {
                 if (d != null) {
                     if (d[0] == PacketUtils.PacketType.ACK.getValue()) {
                         ackCount++;
-                        Log.log("Received ack!", LogLevel.INFO);
+                        Log.log("Received ack!", LogLevel.NONE);
                     } else {
                         packetQueue.add(new StringPacket(d));
                     }

@@ -57,7 +57,7 @@ public class ClientController implements Runnable {
     public void run() {
         while (running) {
             for (Message m : networkController.getMessage()) {
-                Log.log(String.format("%s: %s", m.getSenderPair().hashCode(), m.getMessage()), LogLevel.INFO);
+                Log.log(String.format("%s: %s", m.getSenderPair().hashCode(), m.getMessage()), LogLevel.HIGHEST);
             }
         }
     }
