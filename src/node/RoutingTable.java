@@ -3,6 +3,7 @@ package node;
 import log.Log;
 import log.LogLevel;
 import network.Address;
+import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.DistancePacket;
 import network.connection.packet.Packet;
 
@@ -66,7 +67,7 @@ public class RoutingTable {
         try {
             return new DistancePacket(lowestDelays);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.log("Encoding exception in getMyDistanceTable", LogLevel.ERROR);
         }
         return null;
     }

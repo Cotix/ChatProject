@@ -198,7 +198,6 @@ public class CryptoKeyPair {
     }
 
     public boolean equals(Object k) {
-
         return Arrays.equals(((CryptoKeyPair)k).getRawPublicKey(), getRawPublicKey());
     }
 }
