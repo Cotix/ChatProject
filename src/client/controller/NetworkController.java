@@ -7,10 +7,7 @@ import log.Log;
 import log.LogLevel;
 import network.Address;
 import network.connection.TCPConnection;
-import network.connection.packet.DistancePacket;
-import network.connection.packet.Packet;
-import network.connection.packet.PacketUtils;
-import network.connection.packet.StringPacket;
+import network.connection.packet.*;
 import node.DistanceTable;
 import settings.Configuration;
 
@@ -89,6 +86,10 @@ public class NetworkController implements Runnable {
             if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.DISTANCE) {
                 distanceTable.update(new DistancePacket(p.getData()));
                 client.updateClients(distanceTable);
+            } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.PING) {
+                CurrentTimePacket pong = new CurrentTimePacket(p.getRawData());
+                pong.setType(PacketUtils.PacketType.PONG);
+                connection.sendPacket(pong);
             } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.MESSAGE) {
                 Log.log("Client received a message!", LogLevel.INFO);
                 list.add(Message.makeMessage(p, client.getKeyPair()));
