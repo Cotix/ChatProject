@@ -20,12 +20,14 @@ public class RoutingTable {
     private Map<Address, Integer> lowestDelays;
     private Map<Node, Integer> delayNodes;
     private Map<Address, ClientHandler> clients;
+    private Map<ClientHandler, Integer> clientLatency;
     public RoutingTable() {
         routes = new HashMap<>();
         lowestDelays = null;
         neighbourNodes = new HashMap<>();
         delayNodes = new HashMap<>();
         clients = new HashMap<>();
+        clientLatency = new HashMap<>();
     }
 
     public void updateNodePing(Node n, int latency) {
@@ -39,6 +41,10 @@ public class RoutingTable {
         clients.put(address, client);
         update();
         return true;
+    }
+
+    public void clientSetPing(ClientHandler c, int latency) {
+        clientLatency.put(c, latency);
     }
 
     public Collection<ClientHandler> getClients() {
@@ -121,7 +127,13 @@ public class RoutingTable {
         routes = new HashMap<>();
         //First add our clients, we have the fastest connection to them!
         for (Address client : clients.keySet()) {
-            lowestDelays.put(client, 1); // TODO: Belangrijk om de delay niet vast in te stellen voor privacy redenen! MOET GEFIXED WORDEN
+            int latency;
+            if (clientLatency.containsKey(clients.get(client))) {
+                latency = clientLatency.get(clients.get(client));
+            } else {
+                latency = (int)(Math.random() * 50);
+            }
+            lowestDelays.put(client, latency);
         }
         for (Node n : neighbourNodes.keySet()) {
             if (!delayNodes.containsKey(n)) {
