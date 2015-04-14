@@ -136,8 +136,9 @@ public class TCPConnection implements Connection {
                     int recvLen = in.read(data);
                     if (recvLen != length) {
                         Log.log("Wrong length prefix!", LogLevel.ERROR);
+                    } else {
+                        packetQueue.add(new StringPacket(data));
                     }
-                    packetQueue.add(new StringPacket(data));
                 }
             } catch (EOFException e) {
                 //Reached end of stream!
