@@ -2,6 +2,7 @@ package node;
 
 import network.connection.Connection;
 import network.connection.TCPConnection;
+import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.Packet;
 
 import java.net.Socket;
@@ -77,5 +78,9 @@ public class ClientHandler implements Runnable {
             }
             list.add(p);
         }
+    }
+
+    public void ping() {
+        send(new CurrentTimePacket());
     }
 }

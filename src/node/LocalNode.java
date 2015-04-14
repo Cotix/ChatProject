@@ -169,6 +169,9 @@ public class LocalNode extends Thread {
         for (Node n : peers) {
             n.ping();
         }
+        for (ClientHandler c : routing.getClients()) {
+            c.ping();
+        }
     }
     //This function handles all the node and client connections
     //It polls the packet queues and saves it to our own queue
@@ -267,6 +270,10 @@ public class LocalNode extends Thread {
     private boolean handlePacket(Packet packet, ClientHandler c) {
         PacketType type = getPacketType(packet);
         switch (type) {
+            case PING:
+                CurrentTimePacket cPacket = new CurrentTimePacket(packet.getData());
+                routing.clientSetPing(c, cPacket.getTimeDifference());
+                break;
             case IDENTIFY:
                 Log.log("Received an identify packet!", LogLevel.INFO);
                 byte[] key = packet.getData();
