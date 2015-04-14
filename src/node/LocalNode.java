@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static network.connection.packet.PacketUtils.*;
@@ -55,8 +56,8 @@ public class LocalNode extends Thread {
 
     private short clientPort;
     private short nodePort;
-    private List<Node> peers;
-    private List<ClientHandler> clients;
+    private SynchronizedLinkedList<Node> peers;
+    private SynchronizedLinkedList<ClientHandler> clients;
     private long lastAnounce;
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
@@ -87,10 +88,10 @@ public class LocalNode extends Thread {
         lastAnounce = 0;
         clientPort = cPort;
         nodePort = nPort;
-        packetBuffer = new HashMap<>();
-        clientBuffer = new HashMap<>();
-        peers = new LinkedList<>();
-        clients = new LinkedList<>();
+        packetBuffer = new ConcurrentHashMap<>();
+        clientBuffer = new ConcurrentHashMap<>();
+        peers = new SynchronizedLinkedList<>();
+        clients = new SynchronizedLinkedList<>();
         try {
             multicastSocket.setSoTimeout(1);
         } catch (SocketException e) {
@@ -175,6 +176,7 @@ public class LocalNode extends Thread {
     //This function handles all the node and client connections
     //It polls the packet queues and saves it to our own queue
     public void handleConnections() {
+        List<Node> toRemove = new LinkedList<>();
         for (Node n : peers) {
             if (n.isConnected()) {
                 List<Packet> packets = n.handleConnection();
@@ -187,11 +189,14 @@ public class LocalNode extends Thread {
                 }
             } else {
                 Log.log("Removing node " + n.getIp() + ":" + n.getPort(), LogLevel.INFO);
-                peers.remove(n);
-                routing.removeNode(n);
-                if (routing.update()) {
-                    sendDistanceTableToAll();
-                }
+                toRemove.add(n);
+            }
+        }
+        for (Node n : toRemove) {
+            peers.remove(n);
+            routing.removeNode(n);
+            if (routing.update()) {
+                sendDistanceTableToAll();
             }
         }
         for (ClientHandler c : clients) {
