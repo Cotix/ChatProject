@@ -4,6 +4,8 @@ package network;
  */
 import client.security.CryptoKeyPair;
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import log.Log;
+import log.LogLevel;
 
 public class Address {
     private CryptoKeyPair address;
@@ -13,7 +15,7 @@ public class Address {
         try {
             this.address = new CryptoKeyPair(address);
         } catch (Base64DecodingException e) {
-            e.printStackTrace();
+            Log.log("Error while decoding address " + address + ": " + e.getMessage(), LogLevel.ERROR);
         }
     }
 
