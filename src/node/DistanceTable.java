@@ -46,6 +46,7 @@ public class DistanceTable {
      */
     public boolean update(DistancePacket packet) {
         Map<Address, Integer> old = this.getTable();
+        //Log.log(packet.getDataAsString(), LogLevel.INFO);
         this.table = stringToMap(packet.getDataAsString());
         return !equalMap(old);
     }
