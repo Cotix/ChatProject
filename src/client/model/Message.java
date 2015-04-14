@@ -167,6 +167,6 @@ public class Message {
      * @return
      */
     public String toString() {
-        return String.format("%d %s", getSenderPair().hashCode(), message);
+        return String.format("%d %s %s", getSenderPair().hashCode(), ": ", message);
     }
 }
