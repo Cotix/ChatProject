@@ -34,6 +34,10 @@ public class RoutingTable {
         delayNodes.put(n, latency);
     }
 
+    public void removeNode(Node n) {
+        neighbourNodes.remove(n);
+    }
+
     public boolean addClient(Address address, ClientHandler client) {
         if (clients.containsKey(address)) {
             return false;
