@@ -1,8 +1,6 @@
 package client.controller;
 
 import client.model.Message;
-import client.security.CryptoKeyPair;
-import com.sun.security.ntlm.Client;
 import log.Log;
 import log.LogLevel;
 import network.Address;
@@ -36,6 +34,7 @@ public class NetworkController implements Runnable {
         this.connection = new TCPConnection(host, port);
         this.distanceTable = new DistanceTable();
         this.address = new Address(client.getKeyPair(), Configuration.NICKNAME);
+
 
         connection.connect();
         sendIdentify();
@@ -84,8 +83,9 @@ public class NetworkController implements Runnable {
                 return list;
             }
             if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.DISTANCE) {
-                distanceTable.update(new DistancePacket(p.getData()));
-                client.updateClients(distanceTable);
+                if (distanceTable.update(new DistancePacket(p.getData()))){
+                    client.updateClients(distanceTable);
+                }
             } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.PING) {
                 CurrentTimePacket pong = new CurrentTimePacket(p.getRawData());
                 pong.setType(PacketUtils.PacketType.PONG);
