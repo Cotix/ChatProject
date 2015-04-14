@@ -249,12 +249,12 @@ public class LocalNode extends Thread {
                 Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
             case MESSAGE:
-                Log.log("Received message from other node to forward.", LogLevel.INFO);
+                Log.log("Received message from other node to forward.", LogLevel.NONE);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
-                    Log.log("Sending message directly to client", LogLevel.INFO);
+                    Log.log("Sending message directly to client", LogLevel.NONE);
                     client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);
@@ -281,7 +281,7 @@ public class LocalNode extends Thread {
                 routing.clientSetPing(c, cPacket.getTimeDifference());
                 break;
             case IDENTIFY:
-                Log.log("Received an identify packet!", LogLevel.INFO);
+                Log.log("Received an identify packet!", LogLevel.NONE);
                 byte[] key = packet.getData();
                 CryptoKeyPair keyPublic = new CryptoKeyPair(key);
                 if (routing.addClient(new Address(keyPublic), c)) {
@@ -290,12 +290,12 @@ public class LocalNode extends Thread {
                 Log.log("New client with public key: " + keyPublic, LogLevel.INFO);
                 break;
             case MESSAGE:
-                Log.log("Received a chat packet from the client!", LogLevel.INFO);
+                Log.log("Received a chat packet from the client!", LogLevel.NONE);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
                 if (client != null) {
-                    Log.log("Sending message packet directly to node", LogLevel.INFO);
+                    Log.log("Sending message packet directly to node", LogLevel.NONE);
                     client.send(p);
                 } else {
                     Node forwardNode = routing.getNode(dest);
