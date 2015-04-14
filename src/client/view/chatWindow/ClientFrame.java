@@ -45,7 +45,7 @@ public class ClientFrame extends JFrame {
         this.clientList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                Log.log("Toggle chats", LogLevel.INFO);
+                Log.log("Toggle chats", LogLevel.NONE);
                 if (clientList.getSelectedValue() != null) {
                     Log.log(String.valueOf(clientList.getSelectedValue().hashCode()), LogLevel.INFO);
                 }

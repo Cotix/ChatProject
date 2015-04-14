@@ -91,7 +91,7 @@ public class NetworkController implements Runnable {
                 pong.setType(PacketUtils.PacketType.PONG);
                 connection.sendPacket(pong);
             } else if (PacketUtils.getPacketType(p) == PacketUtils.PacketType.MESSAGE) {
-                Log.log("Client received a message!", LogLevel.INFO);
+                Log.log("Client received a message!", LogLevel.NONE);
                 list.add(Message.makeMessage(p, client.getKeyPair()));
             }
         }
