@@ -11,7 +11,7 @@ public class Main {
         Log.enableAllLevels();
         Log.disableLevel(LogLevel.NONE);
 
-        LocalNode node = new LocalNode("192.168.5.3");
+        LocalNode node = new LocalNode("localhost");
         node.start();
 
         ClientController client = ClientController.getInstance();

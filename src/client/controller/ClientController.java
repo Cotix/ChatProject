@@ -101,6 +101,9 @@ public class ClientController implements Runnable {
             public void run() {
                 view.getClientListModel().clear();
                 for (Address a : distanceTable.getTable().keySet()) {
+                    if (a.getAddress().equals(myKeyPair)) {
+                        continue;
+                    }
                     view.getClientListModel().addElement(a);
                     if (!clients.contains(a)) {
                         clients.addClient(a);
