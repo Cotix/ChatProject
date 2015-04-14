@@ -17,18 +17,19 @@ import java.awt.*;
 
 public class ClientFrame extends JFrame {
 
-    public static final int WIDTH = 500;
-    public static final int HEIGHT = 700;
+    public static final int WIDTH = 700;
+    public static final int HEIGHT = 500;
 
     private ClientController client;
 
+    private JScrollPane clientPane;
     private JList<Address> clientList;
     private DefaultListModel<Address> clientListModel;
 
+    private JScrollPane chatPane;
     private JList<Message> chatView;
     private DefaultListModel<Message> chatViewModel;
 
-    private JButton chatButton;
     private JTextField input;
     private JPanel panel;
 
@@ -50,9 +51,12 @@ public class ClientFrame extends JFrame {
                 }
             }
         });
+        this.clientPane = new JScrollPane(clientList);
 
         this.chatView = new JList<>();
         this.chatViewModel = new DefaultListModel<>();
+        this.chatPane = new JScrollPane(chatView);
+
 
         this.input = new ChatInputField();
 
@@ -62,11 +66,11 @@ public class ClientFrame extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(clientList, gbc);
+        panel.add(clientPane, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        panel.add(chatView, gbc);
+        panel.add(chatPane, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -79,6 +83,8 @@ public class ClientFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(panel);
+
+        chatPane.setAutoscrolls(true);
 
         this.setVisible(true);
     }
@@ -111,6 +117,7 @@ public class ClientFrame extends JFrame {
                             chatViewModel.addElement(m);
                         }
                         chatView.setModel(chatViewModel);
+                        chatView.ensureIndexIsVisible(chatViewModel.size() - 1);
                     }
                 });
             }
