@@ -84,7 +84,8 @@ public class ClientFrame extends JFrame {
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("WhatSwag Messenger" + " " +  client.getKeyPair().getPublicKey().hashCode());
+        this.setTitle("WhatSwag Messenger" + " " +  client.getKeyPair().hashCode());
+        this.clientListModel.removeElement(client.getKeyPair());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(panel);
