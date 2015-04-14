@@ -25,8 +25,8 @@ public class ClientFrame extends JFrame {
     private JList<Address> clientList;
     private DefaultListModel<Address> clientListModel;
 
-    private JList<String> chatView;
-    private DefaultListModel<String> chatViewModel;
+    private JList<Message> chatView;
+    private DefaultListModel<Message> chatViewModel;
 
     private JButton chatButton;
     private JTextField input;
@@ -91,19 +91,29 @@ public class ClientFrame extends JFrame {
         return clientListModel;
     }
 
-    public JList<String> getChatView() {
+    public JList<Message> getChatView() {
         return chatView;
     }
 
-    public DefaultListModel<String> getChatViewModel() {
+    public DefaultListModel<Message> getChatViewModel() {
         return chatViewModel;
     }
 
-    public void showMessages(Chat chat) {
-        chatViewModel.clear();
-        for (Message message : chat.getMessages()) {
-            chatViewModel.addElement(message.getMessage());
+    public void updateMessages() {
+        if (getClientList().getSelectedValue() != null) {
+            final Chat chat = client.getChats().getChatByKey(getClientList().getSelectedValue().getAddress());
+            if (chat != null && chat.updated()) {
+                EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatViewModel.clear();
+                        for (Message m : chat.getMessages()) {
+                            chatViewModel.addElement(m);
+                        }
+                        chatView.setModel(chatViewModel);
+                    }
+                });
+            }
         }
-        chatView.setModel(chatViewModel);
     }
 }

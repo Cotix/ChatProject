@@ -12,6 +12,8 @@ import network.Address;
 import node.DistanceTable;
 import settings.Configuration;
 
+import java.awt.*;
+
 /**
  * ClientController which is the central controller of the client.
  */
@@ -56,9 +58,8 @@ public class ClientController implements Runnable {
 
     public void run() {
         while (running) {
-            for (Message m : networkController.getMessage()) {
-                Log.log(String.format("%s: %s", m.getSenderPair().hashCode(), m.getMessage()), LogLevel.HIGHEST);
-            }
+            chats.handleNewMessages(networkController.getMessage());
+            view.updateMessages();
         }
     }
 
@@ -94,15 +95,20 @@ public class ClientController implements Runnable {
         return myKeyPair;
     }
 
-    public void updateClients(DistanceTable distanceTable) {
-        view.getClientListModel().clear();
-        for(Address a : distanceTable.getTable().keySet()) {
-            view.getClientListModel().addElement(a);
-            if (!clients.contains(a)) {
-                clients.addClient(a);
-                chats.addChat(new Chat(a));
+    public void updateClients(final DistanceTable distanceTable) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                view.getClientListModel().clear();
+                for (Address a : distanceTable.getTable().keySet()) {
+                    view.getClientListModel().addElement(a);
+                    if (!clients.contains(a)) {
+                        clients.addClient(a);
+                        chats.addChat(new Chat(a));
+                    }
+                }
+                view.getClientList().setModel(view.getClientListModel());
             }
-        }
-        view.getClientList().setModel(view.getClientListModel());
+        });
     }
 }

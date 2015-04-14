@@ -14,6 +14,8 @@ public class Chat {
     private Address address;
     private ArrayList<Message> messages = new ArrayList<>();
 
+    private boolean updated;
+
     /**
      * Constructs a Chat for a client
      * @param address address of the receiver
@@ -43,6 +45,7 @@ public class Chat {
         if (messages.size() > Configuration.BUFFER_SIZE) {
             messages.remove(0);
         }
+        updated = true;
     }
 
     /**
@@ -66,5 +69,9 @@ public class Chat {
      */
     public void removeAll(){
         messages.clear();
+    }
+
+    public boolean updated() {
+        return updated && !(updated = false);
     }
 }

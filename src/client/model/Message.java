@@ -167,6 +167,6 @@ public class Message {
      * @return
      */
     public String toString() {
-        return String.format("%s %s %s %s \n", timestamp, getPublicKeySender(), getPublicKeyReceiver(), message);
+        return String.format("%d %s", getSenderPair().hashCode(), message);
     }
 }
