@@ -150,7 +150,6 @@ public class LocalNode extends Thread {
         if (System.currentTimeMillis() - lastAnounce <= Configuration.ANNOUNCE_TIME) {
             return;
         }
-        sendDistanceTableToAll();
         pingAllNodes();
         String msg;
         //Announcement is in the form of: HELLO127.0.0.1:8000

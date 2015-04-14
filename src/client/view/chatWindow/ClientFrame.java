@@ -47,7 +47,7 @@ public class ClientFrame extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (clientList.getSelectedValue() != null) {
-                    Log.log(String.valueOf(clientList.getSelectedValue().hashCode()), LogLevel.INFO);
+                    Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
                 }
             }
         });
