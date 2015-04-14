@@ -9,10 +9,13 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatInputField extends JTextField implements KeyListener {
 
     private ClientController client;
+
 
     public ChatInputField() {
         super();
@@ -37,6 +40,9 @@ public class ChatInputField extends JTextField implements KeyListener {
                                 client.getView().getClientList().getSelectedValue().getAddress(),
                                 System.currentTimeMillis()
                         );
+
+                        client.getChats().getChatByKey(client.getView().getClientList().getSelectedValue().getAddress()).addMessage(message);
+
                         client.getNetworkController().sendMessage(message);
                         this.setText("");
                     }
