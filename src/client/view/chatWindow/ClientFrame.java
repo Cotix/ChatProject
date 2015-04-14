@@ -22,6 +22,8 @@ public class ClientFrame extends JFrame {
 
     private ClientController client;
 
+    private boolean switched;
+
     private JScrollPane clientPane;
     private JList<Address> clientList;
     private DefaultListModel<Address> clientListModel;
@@ -36,6 +38,8 @@ public class ClientFrame extends JFrame {
     private GridBagConstraints gbc;
 
     public ClientFrame() {
+        this.switched = false;
+
         this.client = ClientController.getInstance();
 
         this.gbc = new GridBagConstraints();
@@ -48,6 +52,7 @@ public class ClientFrame extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if (clientList.getSelectedValue() != null) {
                     Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
+                    switched = true;
                 }
             }
         });
@@ -79,7 +84,7 @@ public class ClientFrame extends JFrame {
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("WhatSwag Messenger");
+        this.setTitle("WhatSwag Messenger" + " " +  client.getKeyPair().getPublicKey().hashCode());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(panel);
@@ -108,7 +113,7 @@ public class ClientFrame extends JFrame {
     public void updateMessages() {
         if (getClientList().getSelectedValue() != null) {
             final Chat chat = client.getChats().getChatByKey(getClientList().getSelectedValue().getAddress());
-            if (chat != null && chat.updated()) {
+            if (chat != null && (chat.updated() || this.switched)){
                 EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -118,6 +123,9 @@ public class ClientFrame extends JFrame {
                         }
                         chatView.setModel(chatViewModel);
                         chatView.ensureIndexIsVisible(chatViewModel.size() - 1);
+                        if (switched){
+                            switched = false;
+                        }
                     }
                 });
             }
