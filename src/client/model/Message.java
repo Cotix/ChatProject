@@ -176,6 +176,6 @@ public class Message {
         cal1.setTimeInMillis(timeInMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat(" h:mm a");
         String date = dateFormat.format(cal1.getTime());
-        return String.format("%s  :  %s %s %s",date, nick, ": ", message);
+        return String.format("<html><font color=green>%s</font>  :  %s %s %s</html>",date, nick, ": ", message);
     }
 }
