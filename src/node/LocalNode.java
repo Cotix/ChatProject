@@ -473,7 +473,7 @@ public class LocalNode extends Thread {
                 sendDistanceTableToAll();
             }
             for (ClientHandler c : clients) {
-                if (c.getRunning() == false) {
+                if (!c.getRunning()) {
                     clients.remove(c);
                 }
             }
