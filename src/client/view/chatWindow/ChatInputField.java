@@ -2,15 +2,11 @@ package client.view.chatWindow;
 
 import client.controller.ClientController;
 import client.model.Message;
-import log.Log;
-import log.LogLevel;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatInputField extends JTextField implements KeyListener {
 

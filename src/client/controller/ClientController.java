@@ -3,11 +3,10 @@ package client.controller;
 import client.model.Chat;
 import client.model.ChatMap;
 import client.model.ClientsMap;
-import client.model.Message;
+
 import client.security.CryptoKeyPair;
 import client.view.chatWindow.ClientFrame;
-import log.Log;
-import log.LogLevel;
+
 import network.Address;
 import node.DistanceTable;
 import settings.Configuration;
