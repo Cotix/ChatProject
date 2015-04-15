@@ -29,19 +29,16 @@ public class Chat {
      * @param message message to add
      */
     public void addMessage(Message message) {
-        messages.add(message);
-
-        // TODO: This did not work properly, needs fixing for correct ordering.
-        /*if (messages.size() != 0) {
-            for (int i = 0; i < messages.size(); i++) {
+        if (messages.size() != 0) {
+            for (int i = messages.size() - 1; i >= 0; i--) {
                 if (message.getTimestamp() > messages.get(i).getTimestamp()) {
-                    messages.add(i, message);
+                    messages.add(i + 1, message);
                     break;
                 }
             }
         } else {
             messages.add(message);
-        }*/
+        }
         if (messages.size() > Configuration.BUFFER_SIZE) {
             messages.remove(0);
         }

@@ -9,6 +9,7 @@ import com.sun.security.ntlm.Client;
 import log.Log;
 import log.LogLevel;
 import network.Address;
+import settings.Configuration;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -100,7 +101,7 @@ public class ClientFrame extends JFrame {
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("WhatSwag Messenger" + "  |  Your own public key is: " + client.getKeyPair().hashCode());
+        this.setTitle("WhatSwag Messenger" + "   |   " + Configuration.NICKNAME + " with hash: " + client.getKeyPair().hashCode());
         this.clientListModel.removeElement(client.getKeyPair());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
