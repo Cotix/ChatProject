@@ -3,10 +3,11 @@ package client.controller;
 import client.model.Chat;
 import client.model.ChatMap;
 import client.model.ClientsMap;
-
+import client.model.Message;
 import client.security.CryptoKeyPair;
 import client.view.chatWindow.ClientFrame;
-
+import log.Log;
+import log.LogLevel;
 import network.Address;
 import node.DistanceTable;
 import settings.Configuration;
@@ -98,7 +99,6 @@ public class ClientController implements Runnable {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                int index = view.getClientList().getSelectedIndex();
                 view.getClientListModel().clear();
                 for (Address a : distanceTable.getTable().keySet()) {
                     if (a.getAddress().equals(myKeyPair)) {
@@ -111,7 +111,6 @@ public class ClientController implements Runnable {
                     }
                 }
                 view.getClientList().setModel(view.getClientListModel());
-                view.getClientList().setSelectedIndex(index);
             }
         });
     }

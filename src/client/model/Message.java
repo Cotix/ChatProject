@@ -1,6 +1,5 @@
 package client.model;
 
-import client.controller.ClientController;
 import client.security.CryptoKeyPair;
 import network.connection.packet.Packet;
 import network.connection.packet.PacketUtils;
@@ -9,9 +8,7 @@ import settings.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 
 /**
  * Message that holds a receiver, origin, message and timestamp.
@@ -170,12 +167,6 @@ public class Message {
      * @return
      */
     public String toString() {
-        String nick = ClientController.getInstance().getKeyPair() == getSenderPair() ? Configuration.NICKNAME : String.valueOf(getSenderPair().hashCode());
-        long timeInMillis = this.getTimestamp();
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTimeInMillis(timeInMillis);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(" h:mm a");
-        String date = dateFormat.format(cal1.getTime());
-        return String.format("<html><font color=green>%s</font>  :  %s %s %s</html>",date, nick, ": ", message);
+        return String.format("%d %s %s", getSenderPair().hashCode(), ": ", message);
     }
 }

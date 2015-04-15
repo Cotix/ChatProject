@@ -9,7 +9,6 @@ import com.sun.security.ntlm.Client;
 import log.Log;
 import log.LogLevel;
 import network.Address;
-import settings.Configuration;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -52,27 +51,8 @@ public class ClientFrame extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (clientList.getSelectedValue() != null) {
-                    if (clientList.getSelectedValue().getNickName() == null){
-                        /*
-                        String uName = JOptionPane.showInputDialog(getContentPane(), "Please enter a new Nickname: ",
-                            "Enter new Nickname", JOptionPane.QUESTION_MESSAGE);
-                        boolean validName = false;
-                        while (!validName){
-                            if ((!(onlyContainsLetters(uName))) || (uName.length() <=0) || (uName.contains(" "))){
-                                uName = JOptionPane.showInputDialog(getContentPane(), "Please enter a valid Nickname: ",
-                                        "Enter valid Nickname", JOptionPane.QUESTION_MESSAGE);
-                            } else {
-                                validName = true;
-                            }
-                        }
-                        clientList.getSelectedValue().setNickName(uName);
-                        clientList.getSelectedValue().setHasNick();
-                        Log.log(uName, LogLevel.INFO);
-                        Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
-                        */
-                        switched = true;
-
-                    }
+                    Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
+                    switched = true;
                 }
             }
         });
@@ -104,7 +84,7 @@ public class ClientFrame extends JFrame {
         panel.add(input, gbc);
 
         this.setSize(WIDTH, HEIGHT);
-        this.setTitle("WhatSwag Messenger" + "   |   " + Configuration.NICKNAME + " with hash: " + client.getKeyPair().hashCode());
+        this.setTitle("WhatSwag Messenger" + " " + client.getKeyPair().hashCode());
         this.clientListModel.removeElement(client.getKeyPair());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -152,22 +132,8 @@ public class ClientFrame extends JFrame {
                     });
                 }
             }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public boolean onlyContainsLetters(String s){
-        if (s != null) {
-            char[] cs = s.toCharArray();
-            for (char c : cs) {
-                if (!(Character.isLetter(c))) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return false;
+        } catch (Throwable e){
+            System.out.println("HELP");
         }
     }
 }

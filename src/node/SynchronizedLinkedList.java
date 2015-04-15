@@ -1,4 +1,4 @@
-package datatypes;
+package node;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,13 +59,6 @@ public class SynchronizedLinkedList<T> implements Iterable<T>  {
     public String toString() {
         lock.lock();
         String res = list.toString();
-        lock.unlock();
-        return res;
-    }
-
-    public boolean contains(T e) {
-        lock.lock();
-        boolean res = list.contains(e);
         lock.unlock();
         return res;
     }

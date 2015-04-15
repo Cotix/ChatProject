@@ -133,14 +133,10 @@ public class TCPConnection implements Connection {
                         continue;
                     }
                     byte[] data = new byte[length];
-                    int atByte = 0;
-                    while (atByte < length) {
-                        int recvLen = in.read(data, atByte, length-atByte);
-                        atByte += recvLen;
-                    }
-                    if (atByte != length) {
-                        Log.log("Wrong length prefix! " + " " + length, LogLevel.ERROR);
-                    } else {
+                    int recvLen = in.read(data);
+                    if (recvLen != length) {
+                        Log.log("Wrong length prefix!", LogLevel.ERROR);
+                    }else {
                         packetQueue.add(new StringPacket(data));
                     }
                 }

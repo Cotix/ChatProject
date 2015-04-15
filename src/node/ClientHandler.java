@@ -81,6 +81,6 @@ public class ClientHandler implements Runnable {
     }
 
     public void ping() {
-        //send(new CurrentTimePacket());
+        send(new CurrentTimePacket());
     }
 }

@@ -1,8 +1,6 @@
 package node;
 
 import client.security.CryptoKeyPair;
-import datatypes.Bytes;
-import datatypes.SynchronizedLinkedList;
 import log.Log;
 import log.LogLevel;
 import network.Address;
@@ -10,11 +8,11 @@ import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.MessagePacket;
 import network.connection.packet.Packet;
-import network.connection.packet.StringPacket;
 import settings.Configuration;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +56,6 @@ public class LocalNode extends Thread {
 
     private short clientPort;
     private short nodePort;
-    private Map<Bytes, Long>  sentData;
     private SynchronizedLinkedList<Node> peers;
     private SynchronizedLinkedList<ClientHandler> clients;
     private long lastAnounce;
@@ -95,7 +92,6 @@ public class LocalNode extends Thread {
         clientBuffer = new ConcurrentHashMap<>();
         peers = new SynchronizedLinkedList<>();
         clients = new SynchronizedLinkedList<>();
-        sentData = new ConcurrentHashMap<>();
         try {
             multicastSocket.setSoTimeout(1);
         } catch (SocketException e) {
@@ -255,48 +251,27 @@ public class LocalNode extends Thread {
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
                 int diff = pongPacket.getTimeDifference();
                 routing.updateNodePing(n, diff);
-                if (routing.update()) {
-                    sendDistanceTableToAll();
-                }
                 Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
             case MESSAGE:
                 Log.log("Received message from other node to forward.", LogLevel.NONE);
-                if (sentData.containsKey(new Bytes(packet.getData()))) {
-                    Log.log("Messages was already forwarded by this node, so loop detected!", LogLevel.NONE);
+                MessagePacket p = new MessagePacket(packet.getRawData());
+                Address dest = p.getRecipient();
+                ClientHandler client = routing.getDirectConnection(dest);
+                if (client != null) {
+                    Log.log("Sending message directly to client", LogLevel.NONE);
+                    client.send(p);
                 } else {
-                    Packet ackPacket = new StringPacket(packet.getData(), PacketType.ACK);
-                    n.send(ackPacket);
-                    sentData.put(new Bytes(packet.getData()), System.currentTimeMillis());
-                    MessagePacket p = new MessagePacket(packet.getRawData());
-                    Address dest = p.getRecipient();
-                    ClientHandler client = routing.getDirectConnection(dest);
-                    if (client != null) {
-                        Log.log("Sending message directly to client", LogLevel.NONE);
-                        sentData.remove(new Bytes(packet.getData()));
-                        client.send(p);
-                    } else {
-                        Node forwardNode = routing.getNode(dest);
-                        if (forwardNode == n) {
-                            forwardNode = routing.getAlternativeNode(dest, n);
-                        }
-                        if (forwardNode == null) {
-                            sentData.remove(new Bytes(packet.getData()));
-                            Log.log("Can not find route to address: " + dest, LogLevel.NONE);
-                            return false;
-                        }
-                        Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
-                        forwardNode.send(p);
-
+                    Node forwardNode = routing.getNode(dest);
+                    if (forwardNode == n) {
+                        forwardNode = routing.getAlternativeNode(dest, n);
                     }
-                }
-                break;
-            case ACK:
-                Log.log("Received an ACK", LogLevel.NONE);
-                if (sentData.containsKey(new Bytes(packet.getData()))) {
-                    sentData.remove(new Bytes(packet.getData()));
-                } else {
-                    Log.log("Got an ACK from node " + n.getIp() + ":" + n.getPort() + " but it is not our packet!", LogLevel.WARNING);
+                    if (forwardNode == null) {
+                        Log.log("Can not find route to address: " + dest, LogLevel.NONE);
+                        return false;
+                    }
+                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                    forwardNode.send(p);
                 }
                 break;
         }
@@ -320,7 +295,6 @@ public class LocalNode extends Thread {
                 Log.log("New client with public key: " + keyPublic, LogLevel.INFO);
                 break;
             case MESSAGE:
-                sentData.put(new Bytes(packet.getData()), System.currentTimeMillis());
                 Log.log("Received a chat packet from the client!", LogLevel.NONE);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
@@ -397,32 +371,6 @@ public class LocalNode extends Thread {
             addClient(client);
         }
     }
-
-    private void handlePacketTimeouts() {
-        for (Bytes d : sentData.keySet()) {
-            byte[] data = d.getBytes();
-            if (System.currentTimeMillis() - sentData.get(d) >= Configuration.TIMEOUT) {
-                Log.log("Time out for a packet timed out! time to resend..", LogLevel.INFO);
-                sentData.put(new Bytes(data), System.currentTimeMillis());
-                MessagePacket p = new MessagePacket(new StringPacket(data, PacketType.MESSAGE).getRawData());
-                Address dest = p.getRecipient();
-                ClientHandler client = routing.getDirectConnection(dest);
-                if (client != null) {
-                    Log.log("Resending message packet directly to node", LogLevel.NONE);
-                    client.send(p);
-                } else {
-                    Node forwardNode = routing.getNode(dest);
-                    if (forwardNode == null) {
-                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
-                    } else {
-                        Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
-                        forwardNode.send(p);
-                    }
-                }
-            }
-        }
-    }
-
     //The main loop
     @Override
     public void run() {
@@ -474,15 +422,11 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
-            handlePacketTimeouts();
             if (routing.removeOldClient()) {
                 sendDistanceTableToAll();
             }
-            if (routing.removeOldNode()) {
-                sendDistanceTableToAll();
-            }
             for (ClientHandler c : clients) {
-                if (!c.getRunning()) {
+                if (c.getRunning() == false) {
                     clients.remove(c);
                 }
             }

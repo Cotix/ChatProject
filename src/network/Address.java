@@ -11,10 +11,7 @@ public class Address {
     private CryptoKeyPair address;
     private String nickName;
 
-    boolean hasNick;
-
     public Address(String address) {
-        hasNick = false;
         try {
             this.address = new CryptoKeyPair(address);
         } catch (Base64DecodingException e) {
@@ -23,12 +20,10 @@ public class Address {
     }
 
     public Address(CryptoKeyPair a) {
-        hasNick = false;
         address = a;
     }
 
     public Address(CryptoKeyPair a, String nickName){
-        hasNick = false;
         address = a;
         this.nickName = nickName;
     }
@@ -59,15 +54,11 @@ public class Address {
     }
 
     /**
-     * Returns the string representation of an adress, the nick if available, otherwise the hashcode
+     * Returns the string representation of an adress
      * @return
      */
     public String toString() {
-        if(!hasNick) {
-            return String.valueOf(address.hashCode());
-        } else {
-            return this.getNickName();
-        }
+        return String.valueOf(address.hashCode());
     }
 
     /**
@@ -84,12 +75,5 @@ public class Address {
      */
     public CryptoKeyPair getAddress(){
         return this.address;
-    }
-
-    /**
-     * Sets the address to know it has a nickname
-     */
-    public void setHasNick(){
-        this.hasNick = true;
     }
 }
