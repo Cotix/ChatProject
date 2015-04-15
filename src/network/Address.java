@@ -87,7 +87,7 @@ public class Address {
     }
 
     /**
-     *
+     * Sets the address to know it has a nickname
      */
     public void setHasNick(){
         this.hasNick = true;

@@ -154,12 +154,16 @@ public class ClientFrame extends JFrame {
     }
 
     public boolean onlyContainsLetters(String s){
-        char[] cs = s.toCharArray();
-        for (char c : cs){
-            if (!(Character.isLetter(c))){
-                return false;
+        if (s != null) {
+            char[] cs = s.toCharArray();
+            for (char c : cs) {
+                if (!(Character.isLetter(c))) {
+                    return false;
+                }
             }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 }
