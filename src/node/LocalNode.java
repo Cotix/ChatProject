@@ -8,6 +8,7 @@ import network.connection.TCPConnection;
 import network.connection.packet.CurrentTimePacket;
 import network.connection.packet.MessagePacket;
 import network.connection.packet.Packet;
+import network.connection.packet.StringPacket;
 import settings.Configuration;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class LocalNode extends Thread {
 
     private short clientPort;
     private short nodePort;
+    private Map<byte[], Long>  sentData;
     private SynchronizedLinkedList<Node> peers;
     private SynchronizedLinkedList<ClientHandler> clients;
     private long lastAnounce;
@@ -92,6 +94,7 @@ public class LocalNode extends Thread {
         clientBuffer = new ConcurrentHashMap<>();
         peers = new SynchronizedLinkedList<>();
         clients = new SynchronizedLinkedList<>();
+        sentData = new ConcurrentHashMap<>();
         try {
             multicastSocket.setSoTimeout(1);
         } catch (SocketException e) {
@@ -255,23 +258,38 @@ public class LocalNode extends Thread {
                 break;
             case MESSAGE:
                 Log.log("Received message from other node to forward.", LogLevel.NONE);
-                MessagePacket p = new MessagePacket(packet.getRawData());
-                Address dest = p.getRecipient();
-                ClientHandler client = routing.getDirectConnection(dest);
-                if (client != null) {
-                    Log.log("Sending message directly to client", LogLevel.NONE);
-                    client.send(p);
+                if (sentData.containsKey(packet.getData())) {
+                    Log.log("Messages was already forwarded by this node, so loop detected!", LogLevel.NONE);
                 } else {
-                    Node forwardNode = routing.getNode(dest);
-                    if (forwardNode == n) {
-                        forwardNode = routing.getAlternativeNode(dest, n);
+                    Packet ackPacket = new StringPacket(packet.getData(), PacketType.ACK);
+                    n.send(ackPacket);
+                    sentData.put(packet.getData(), System.currentTimeMillis());
+                    MessagePacket p = new MessagePacket(packet.getRawData());
+                    Address dest = p.getRecipient();
+                    ClientHandler client = routing.getDirectConnection(dest);
+                    if (client != null) {
+                        Log.log("Sending message directly to client", LogLevel.NONE);
+                        client.send(p);
+                    } else {
+                        Node forwardNode = routing.getNode(dest);
+                        if (forwardNode == n) {
+                            forwardNode = routing.getAlternativeNode(dest, n);
+                        }
+                        if (forwardNode == null) {
+                            Log.log("Can not find route to address: " + dest, LogLevel.NONE);
+                            return false;
+                        }
+                        Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                        forwardNode.send(p);
                     }
-                    if (forwardNode == null) {
-                        Log.log("Can not find route to address: " + dest, LogLevel.NONE);
-                        return false;
-                    }
-                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
-                    forwardNode.send(p);
+                }
+                break;
+            case ACK:
+                Log.log("Received an ACK", LogLevel.NONE);
+                if (sentData.containsKey(packet.getData())) {
+                    sentData.remove(packet.getData());
+                } else {
+                    Log.log("Got an ACK from node " + n.getIp() + ":" + n.getPort() + " but it is not our packet!", LogLevel.WARNING);
                 }
                 break;
         }
@@ -295,6 +313,7 @@ public class LocalNode extends Thread {
                 Log.log("New client with public key: " + keyPublic, LogLevel.INFO);
                 break;
             case MESSAGE:
+                sentData.put(packet.getData(), System.currentTimeMillis());
                 Log.log("Received a chat packet from the client!", LogLevel.NONE);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
@@ -371,6 +390,30 @@ public class LocalNode extends Thread {
             addClient(client);
         }
     }
+
+    private void handlePacketTimeouts() {
+        for (byte[] data : sentData.keySet()) {
+            if (System.currentTimeMillis() - sentData.get(data) >= Configuration.TIMEOUT) {
+                Log.log("Time out for a packet timed out! time to resend..", LogLevel.INFO);
+                sentData.put(data, System.currentTimeMillis());
+                MessagePacket p = new MessagePacket(new StringPacket(data, PacketType.MESSAGE).getRawData());
+                Address dest = p.getRecipient();
+                ClientHandler client = routing.getDirectConnection(dest);
+                if (client != null) {
+                    Log.log("Resending message packet directly to node", LogLevel.NONE);
+                    client.send(p);
+                } else {
+                    Node forwardNode = routing.getNode(dest);
+                    if (forwardNode == null) {
+                        Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                    }
+                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                    forwardNode.send(p);
+                }
+            }
+        }
+    }
+
     //The main loop
     @Override
     public void run() {
@@ -422,6 +465,7 @@ public class LocalNode extends Thread {
             forwardPackets();
             acceptNodeConnections();
             acceptClientConnections();
+            handlePacketTimeouts();
             if (routing.removeOldClient()) {
                 sendDistanceTableToAll();
             }

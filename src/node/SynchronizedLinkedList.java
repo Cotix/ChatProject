@@ -62,4 +62,11 @@ public class SynchronizedLinkedList<T> implements Iterable<T>  {
         lock.unlock();
         return res;
     }
+
+    public boolean contains(T e) {
+        lock.lock();
+        boolean res = list.contains(e);
+        lock.unlock();
+        return res;
+    }
 }
