@@ -411,9 +411,10 @@ public class LocalNode extends Thread {
                     Node forwardNode = routing.getNode(dest);
                     if (forwardNode == null) {
                         Log.log("Can not find route to address: " + dest, LogLevel.INFO);
+                    } else {
+                        Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
+                        forwardNode.send(p);
                     }
-                    Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
-                    forwardNode.send(p);
                 }
             }
         }
