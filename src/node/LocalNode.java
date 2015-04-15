@@ -425,6 +425,9 @@ public class LocalNode extends Thread {
             if (routing.removeOldClient()) {
                 sendDistanceTableToAll();
             }
+            if (routing.removeOldNode()) {
+                sendDistanceTableToAll();
+            }
             for (ClientHandler c : clients) {
                 if (c.getRunning() == false) {
                     clients.remove(c);
