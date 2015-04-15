@@ -71,7 +71,6 @@ public class ClientFrame extends JFrame {
                         Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
                         */
                         switched = true;
-
                     }
                 }
             }

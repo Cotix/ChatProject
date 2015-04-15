@@ -2,6 +2,7 @@ package network;
 /**
  * A simple class that allows us for advanced address handling
  */
+import client.controller.ClientController;
 import client.security.CryptoKeyPair;
 import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import log.Log;
@@ -64,7 +65,10 @@ public class Address {
      */
     public String toString() {
         if(!hasNick) {
-            return String.valueOf(address.hashCode());
+            String result = this.getNickName();
+            int unread;
+            if ((unread = ClientController.getInstance().getChats().getChatByKey(address).getUnread()) > 0) result += unread + " new";
+            return result;
         } else {
             return this.getNickName();
         }
