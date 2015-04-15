@@ -53,6 +53,7 @@ public class ClientFrame extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if (clientList.getSelectedValue() != null) {
                     if (clientList.getSelectedValue().getNickName() == null){
+                        /*
                         String uName = JOptionPane.showInputDialog(getContentPane(), "Please enter a new Nickname: ",
                             "Enter new Nickname", JOptionPane.QUESTION_MESSAGE);
                         boolean validName = false;
@@ -69,6 +70,7 @@ public class ClientFrame extends JFrame {
                         Log.log(uName, LogLevel.INFO);
                         Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
                         switched = true;
+                        */
                     }
                 }
             }
