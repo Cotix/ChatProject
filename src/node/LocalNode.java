@@ -270,6 +270,7 @@ public class LocalNode extends Thread {
                     ClientHandler client = routing.getDirectConnection(dest);
                     if (client != null) {
                         Log.log("Sending message directly to client", LogLevel.NONE);
+                        sentData.remove(new Bytes(packet.getData()));
                         client.send(p);
                     } else {
                         Node forwardNode = routing.getNode(dest);
@@ -277,11 +278,13 @@ public class LocalNode extends Thread {
                             forwardNode = routing.getAlternativeNode(dest, n);
                         }
                         if (forwardNode == null) {
+                            sentData.remove(new Bytes(packet.getData()));
                             Log.log("Can not find route to address: " + dest, LogLevel.NONE);
                             return false;
                         }
                         Log.log("Routing packet for address " + dest + " to node " + forwardNode.getIp(), LogLevel.INFO);
                         forwardNode.send(p);
+
                     }
                 }
                 break;
