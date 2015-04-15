@@ -255,6 +255,9 @@ public class LocalNode extends Thread {
                 CurrentTimePacket pongPacket = new CurrentTimePacket(packet.getRawData());
                 int diff = pongPacket.getTimeDifference();
                 routing.updateNodePing(n, diff);
+                if (routing.update()) {
+                    sendDistanceTableToAll();
+                }
                 Log.log("Received a pong packet time diff: " + diff, LogLevel.NONE);
                 break;
             case MESSAGE:
