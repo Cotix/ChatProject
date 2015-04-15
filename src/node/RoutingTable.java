@@ -8,9 +8,7 @@ import network.connection.packet.DistancePacket;
 import network.connection.packet.Packet;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //This class does all the routing calculations
 
@@ -57,12 +55,35 @@ public class RoutingTable {
 
     public boolean removeOldClient() {
         boolean update = false;
+        List<Address> toRemove = new LinkedList<>();
         for (Address a : clients.keySet()) {
             if (clients.get(a).getRunning() == false) {
-                clients.remove(a);
-                Log.log("Removed client " + a, LogLevel.INFO);
-                update = true;
+                toRemove.add(a);
             }
+        }
+        for (Address a : toRemove) {
+            clients.remove(a);
+            Log.log("Removed client " + a, LogLevel.INFO);
+            update = true;
+        }
+        if (update) {
+            return update();
+        }
+        return false;
+    }
+
+    public boolean removeOldNode() {
+        boolean update = false;
+        List<Node> toRemove = new LinkedList<>();
+        for (Node n : neighbourNodes.keySet()) {
+            if (n.isConnected() == false) {
+                toRemove.add(n);
+            }
+        }
+        for (Node n : toRemove) {
+            neighbourNodes.remove(n);
+            Log.log("Removed node " + n.getIp() + ":" + n.getPort(), LogLevel.INFO);
+            update = true;
         }
         if (update) {
             return update();

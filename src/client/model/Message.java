@@ -1,5 +1,6 @@
 package client.model;
 
+import client.controller.ClientController;
 import client.security.CryptoKeyPair;
 import network.connection.packet.Packet;
 import network.connection.packet.PacketUtils;
@@ -167,6 +168,7 @@ public class Message {
      * @return
      */
     public String toString() {
-        return String.format("%d %s %s", getSenderPair().hashCode(), ": ", message);
+        String nick = ClientController.getInstance().getKeyPair() == getSenderPair() ? Configuration.NICKNAME : String.valueOf(getSenderPair().hashCode());
+        return String.format("%s %s %s", nick, ": ", message);
     }
 }
