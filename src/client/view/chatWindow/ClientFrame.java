@@ -67,6 +67,7 @@ public class ClientFrame extends JFrame {
                         clientList.getSelectedValue().setHasNick();
                         Log.log(uName, LogLevel.INFO);
                         Log.log(String.valueOf("Client selected:" + clientList.getSelectedValue().hashCode()), LogLevel.NONE);
+                        client.getChats().getChatByKey(clientList.getSelectedValue().getAddress()).resetUnread();
                         switched = true;
                     }
                 }

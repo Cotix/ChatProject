@@ -168,7 +168,7 @@ public class Message {
      * @return
      */
     public String toString() {
-        String nick = ClientController.getInstance().getKeyPair() == getSenderPair() ? Configuration.NICKNAME : String.valueOf(getSenderPair().hashCode());
+        String nick = ClientController.getInstance().getKeyPair() == getSenderPair() ? Configuration.NICKNAME : ClientController.getInstance().getChats().getChatByKey(getSenderPair()).getAddress().toString();
         return String.format("%s %s %s", nick, ": ", message);
     }
 }

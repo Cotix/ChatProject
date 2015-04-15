@@ -15,6 +15,7 @@ public class Chat {
     private ArrayList<Message> messages = new ArrayList<>();
 
     private boolean updated;
+    private int unread;
 
     /**
      * Constructs a Chat for a client
@@ -45,6 +46,7 @@ public class Chat {
         if (messages.size() > Configuration.BUFFER_SIZE) {
             messages.remove(0);
         }
+        unread++;
         updated = true;
     }
 
@@ -73,5 +75,13 @@ public class Chat {
 
     public boolean updated() {
         return updated && !(updated = false);
+    }
+
+    public int getUnread() {
+        return unread;
+    }
+
+    public void resetUnread() {
+        this.unread = 0;
     }
 }
