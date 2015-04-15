@@ -1,6 +1,8 @@
 package node;
 
 import client.security.CryptoKeyPair;
+import datatypes.Bytes;
+import datatypes.SynchronizedLinkedList;
 import log.Log;
 import log.LogLevel;
 import network.Address;
@@ -13,7 +15,6 @@ import settings.Configuration;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class LocalNode extends Thread {
 
     private short clientPort;
     private short nodePort;
-    private Map<byte[], Long>  sentData;
+    private Map<Bytes, Long>  sentData;
     private SynchronizedLinkedList<Node> peers;
     private SynchronizedLinkedList<ClientHandler> clients;
     private long lastAnounce;
@@ -263,7 +264,7 @@ public class LocalNode extends Thread {
                 } else {
                     Packet ackPacket = new StringPacket(packet.getData(), PacketType.ACK);
                     n.send(ackPacket);
-                    sentData.put(packet.getData(), System.currentTimeMillis());
+                    sentData.put(new Bytes(packet.getData()), System.currentTimeMillis());
                     MessagePacket p = new MessagePacket(packet.getRawData());
                     Address dest = p.getRecipient();
                     ClientHandler client = routing.getDirectConnection(dest);
@@ -313,7 +314,7 @@ public class LocalNode extends Thread {
                 Log.log("New client with public key: " + keyPublic, LogLevel.INFO);
                 break;
             case MESSAGE:
-                sentData.put(packet.getData(), System.currentTimeMillis());
+                sentData.put(new Bytes(packet.getData()), System.currentTimeMillis());
                 Log.log("Received a chat packet from the client!", LogLevel.NONE);
                 MessagePacket p = new MessagePacket(packet.getRawData());
                 Address dest = p.getRecipient();
@@ -392,10 +393,11 @@ public class LocalNode extends Thread {
     }
 
     private void handlePacketTimeouts() {
-        for (byte[] data : sentData.keySet()) {
+        for (Bytes d : sentData.keySet()) {
+            byte[] data = d.getBytes();
             if (System.currentTimeMillis() - sentData.get(data) >= Configuration.TIMEOUT) {
                 Log.log("Time out for a packet timed out! time to resend..", LogLevel.INFO);
-                sentData.put(data, System.currentTimeMillis());
+                sentData.put(new Bytes(data), System.currentTimeMillis());
                 MessagePacket p = new MessagePacket(new StringPacket(data, PacketType.MESSAGE).getRawData());
                 Address dest = p.getRecipient();
                 ClientHandler client = routing.getDirectConnection(dest);
