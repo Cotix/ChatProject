@@ -4,3 +4,6 @@ out/
 # JetBrains
 .idea/
 *.iml
+
+src/client/Main.java
+src/settings/Configuration.java
