@@ -9,7 +9,9 @@ import settings.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * Message that holds a receiver, origin, message and timestamp.
@@ -169,6 +171,11 @@ public class Message {
      */
     public String toString() {
         String nick = ClientController.getInstance().getKeyPair() == getSenderPair() ? Configuration.NICKNAME : String.valueOf(getSenderPair().hashCode());
-        return String.format("%s %s %s", nick, ": ", message);
+        long timeInMillis = this.getTimestamp();
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(timeInMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(" h:mm a");
+        String date = dateFormat.format(cal1.getTime());
+        return String.format("%s  :  %s %s %s",date, nick, ": ", message);
     }
 }
