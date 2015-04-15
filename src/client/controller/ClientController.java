@@ -98,6 +98,7 @@ public class ClientController implements Runnable {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                int index = view.getClientList().getSelectedIndex();
                 view.getClientListModel().clear();
                 for (Address a : distanceTable.getTable().keySet()) {
                     if (a.getAddress().equals(myKeyPair)) {
@@ -110,6 +111,7 @@ public class ClientController implements Runnable {
                     }
                 }
                 view.getClientList().setModel(view.getClientListModel());
+                view.getClientList().setSelectedIndex(index);
             }
         });
     }
