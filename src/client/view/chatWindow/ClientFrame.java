@@ -152,8 +152,8 @@ public class ClientFrame extends JFrame {
                     });
                 }
             }
-        } catch (Throwable e){
-            System.out.println("HELP");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 

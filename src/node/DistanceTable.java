@@ -46,14 +46,12 @@ public class DistanceTable {
      */
     public boolean update(DistancePacket packet) {
         Map<Address, Integer> old = this.getTable();
-        Log.log(packet.getDataAsString(), LogLevel.INFO);
         this.table = stringToMap(packet.getDataAsString());
         return !equalMap(old);
     }
 
     public static Map<Address, Integer> stringToMap(String packet) {
         Map<Address, Integer> result = new HashMap<Address, Integer>();
-        Log.log("Decoding string: " + packet, LogLevel.INFO);
         for (String line : packet.split("\n")) {
             if (line.length() == 0) continue;
             String[] parts = line.split(",");
