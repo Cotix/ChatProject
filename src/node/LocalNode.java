@@ -259,7 +259,7 @@ public class LocalNode extends Thread {
                 break;
             case MESSAGE:
                 Log.log("Received message from other node to forward.", LogLevel.NONE);
-                if (sentData.containsKey(packet.getData())) {
+                if (sentData.containsKey(new Bytes(packet.getData()))) {
                     Log.log("Messages was already forwarded by this node, so loop detected!", LogLevel.NONE);
                 } else {
                     Packet ackPacket = new StringPacket(packet.getData(), PacketType.ACK);
