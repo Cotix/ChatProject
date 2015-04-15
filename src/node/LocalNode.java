@@ -287,8 +287,8 @@ public class LocalNode extends Thread {
                 break;
             case ACK:
                 Log.log("Received an ACK", LogLevel.NONE);
-                if (sentData.containsKey(packet.getData())) {
-                    sentData.remove(packet.getData());
+                if (sentData.containsKey(new Bytes(packet.getData()))) {
+                    sentData.remove(new Bytes(packet.getData()));
                 } else {
                     Log.log("Got an ACK from node " + n.getIp() + ":" + n.getPort() + " but it is not our packet!", LogLevel.WARNING);
                 }
@@ -395,7 +395,7 @@ public class LocalNode extends Thread {
     private void handlePacketTimeouts() {
         for (Bytes d : sentData.keySet()) {
             byte[] data = d.getBytes();
-            if (System.currentTimeMillis() - sentData.get(data) >= Configuration.TIMEOUT) {
+            if (System.currentTimeMillis() - sentData.get(d) >= Configuration.TIMEOUT) {
                 Log.log("Time out for a packet timed out! time to resend..", LogLevel.INFO);
                 sentData.put(new Bytes(data), System.currentTimeMillis());
                 MessagePacket p = new MessagePacket(new StringPacket(data, PacketType.MESSAGE).getRawData());
